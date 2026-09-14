@@ -95,6 +95,22 @@ def standalone(sentence: Sentence, rng: random.Random) -> None:
 # from background prose and, out of vocabulary, their character-hash
 # neighborhood lands on day-part/unit vocabulary — so the corpus must teach
 # them explicitly as O tokens adjacent to expressions.
+# "roz" is Hinglish "daily": teach it as RECUR whether alone or after "har".
+ROZ_CLOCKS = ["10 baje", "9 baje", "8 pm", "9 am", "shaam ko 8 baje", "raat 10 baje"]
+
+
+def roz_family(sentence: Sentence, rng: random.Random) -> None:
+    form = rng.choice(["roz", "har roz", "roz", "हर रोज़", "रोज़"])
+    for piece in form.split():
+        sentence.add(piece, "RECUR")
+    clock = rng.choice(ROZ_CLOCKS)
+    for piece, label in [
+        (word, "GLUE" if word in ("ko",) else "HOUR" if word.isdigit() else "MERIDIEM" if word in ("pm", "am", "baje") else "DAYPART")
+        for word in clock.split()
+    ]:
+        sentence.add(piece, label)
+
+
 CARRIERS = [
     ("call", "mom"), ("call", "dad"), ("call", "mum"), ("call", "mother"),
     ("call", "papa"), ("call", "zoya"), ("call", "rohan"), ("call", "priya"),
@@ -161,7 +177,9 @@ def render(rng: random.Random) -> Sentence:
         bare_relative_day(sentence, rng)
     else:
         period_qualified(sentence, rng)
-    if rng.random() < 0.15:
+    if rng.random() < 0.12:
+        roz_family(sentence, rng)
+    elif rng.random() < 0.15:
         explicit_duration(sentence, rng)
     elif rng.random() < 0.12:
         bare_day_selector(sentence, rng)

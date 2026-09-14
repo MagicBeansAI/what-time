@@ -1016,6 +1016,11 @@ fn compile_date_and_time(
                         .get(index + 1)
                         .is_some_and(|token| token.label == Role::Hour)
                 {
+                    // fall through: the clock arm consumes it
+                } else if let Some(part) = day_part(&word) {
+                    // A bare day-part word arriving as MERIDIEM ("every
+                    // night 10pm") qualifies the clock that follows.
+                    pending_day_part = Some(part);
                 } else {
                     return fail(
                         token,
@@ -1427,12 +1432,17 @@ fn compile_clause(input: &[Token], diagnostics: &mut Vec<Diagnostic>) -> Compile
         }
         return fail(last, "incomplete-range", "A range needs an end value.");
     }
+    let day_part_selects = |token: &Token| {
+        token.label == Role::DayPart
+            || (token.label == Role::Meridiem
+                && day_part(&token.raw.text.to_lowercase()).is_some())
+    };
     if input.iter().any(|token| token.label == Role::Recur)
         && !input.iter().any(|token| {
             matches!(
                 token.label,
                 Role::Unit | Role::Freq | Role::Weekday | Role::DayGroup | Role::Month
-            )
+            ) || day_part_selects(token)
         })
     {
         return fail(
@@ -1479,6 +1489,27 @@ fn compile_clause(input: &[Token], diagnostics: &mut Vec<Diagnostic>) -> Compile
 
         if token.label == Role::Recur {
             recurrence.get_or_insert_with(|| empty_recurrence(Frequency::weekly));
+            // "every morning 9am" / "every night 10pm": the day part right
+            // after the recurrence marker selects a daily frequency and
+            // will bias the clock that follows.
+            if let Some(next) = tokens.get(index + 1) {
+                let as_part = if next.label == Role::DayPart {
+                    day_part(&next.raw.text.to_lowercase())
+                } else if next.label == Role::Meridiem {
+                    day_part(&next.raw.text.to_lowercase())
+                } else {
+                    None
+                };
+                if as_part.is_some() {
+                    if let Some(rule) = recurrence.as_mut() {
+                        rule.freq = Frequency::daily;
+                    }
+                    // the day-part token itself is consumed by the body's
+                    // own DayPart handling, which queues it for the clock
+                    index += 1;
+                    continue;
+                }
+            }
             index += 1;
             continue;
         }

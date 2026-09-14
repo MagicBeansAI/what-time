@@ -196,7 +196,7 @@ Vocabulary mapping (extend naturally, do not limit yourself to this list):
 | MERIDIEM | बजे (o'clock, after an hour number), सुबह/रात after an hour also marks time of day |
 | CLOCK_OFFSET | सवा (quarter past: सवा चार = 4:15), पौने (quarter to: पौने पाँच = 4:45), डेढ़ (1:30), ढाई (2:30), आधा/आधे (half) |
 | NUM | एक दो तीन चार पाँच छह सात आठ नौ दस ग्यारह बारह, plus digits |
-| RECUR | हर, हरेक (every), ... से हर हफ़्ते |
+| RECUR | हर, हरेक, रोज़/roz (daily, alone or after हर/har), ... से हर हफ़्ते |
 | RANGE_START / RANGE_END | से / तक (from / until) |
 | HOLIDAY | दिवाली, होली, ईद, गणेश चतुर्थी, स्वतंत्रता दिवस |
 | GLUE | को (to/at), में (in), पर (on), का/की/के (of), और (and → JOIN) |
