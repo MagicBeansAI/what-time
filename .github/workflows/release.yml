@@ -72,7 +72,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           set +e
-          npm access ls-packages @magicbeansai > /tmp/access.log 2>&1
+          npm org ls magicbeansai > /tmp/access.log 2>&1
           code=$?
           set -e
           if [ "$code" -ne 0 ]; then
