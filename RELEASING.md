@@ -10,12 +10,18 @@ the full gate and publishes `@magicbeansai/what-time` to npm.
 | -- | -- | -- |
 | GitHub → Settings → Secrets → Actions | `NPM_TOKEN` secret (npm publish token) | done |
 | GitHub → Settings → Environments | `npm` environment (optional protection rules) | done |
-| [npmjs.com/org/create](https://www.npmjs.com/org/create) | org named exactly **`magicbeansai`** (free, public plan) — scoped packages cannot publish to a scope that does not exist | **required — publish fails with 404 until this exists** |
-| npm token settings | Granular tokens must grant read-and-write on `@magicbeansai`; classic publish tokens work once the org exists | verify |
+| [npmjs.com/org/create](https://www.npmjs.com/org/create) | org named exactly **`magicbeansai`** (free, public plan) — scoped packages cannot publish to a scope that does not exist | done |
+| npm token | must be a **classic Automation token** (or granular with "Bypass 2FA" enabled) — plain granular tokens fail publish with `403 Two-factor authentication or granular access token with bypass 2fa enabled is required` | done |
 
-If the publish step fails and the log shows `ResourceNotFound` or 404, the
-org is missing — create it, then re-run the failed jobs from the Actions
-page (no re-tag needed).
+If the publish step fails:
+- **404 / ResourceNotFound** — the npm org is missing; create it at
+  [npmjs.com/org/create](https://www.npmjs.com/org/create), then re-run the
+  failed jobs from the Actions page (no re-tag needed).
+- **403 "Two-factor authentication or granular access token with bypass 2fa
+  enabled is required"** — the `NPM_TOKEN` secret is a granular token
+  without 2FA bypass. Replace it with a **classic Automation token**
+  (npmjs.com → Access Tokens → Generate → Classic → Automation) and update
+  the secret.
 
 ## Release ritual
 
