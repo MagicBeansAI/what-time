@@ -34,6 +34,44 @@ jobs:
           name: clippy-failure-log
           path: /tmp/clippy-failure.log
 
+  gpu-kernels:
+    # The wgpu feature and its WGSL kernels compile on every push. Runners
+    # have no GPU, so parity runs stay local; this catches build breakage.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.92.0
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust
+      - name: Check GPU feature (wgpu + kernels.wgsl compile)
+        run: cargo check --manifest-path rust/Cargo.toml -p what-time --features gpu
+
+  release:
+    # Release profile with LTO, plus CLI smoke tests with agent exit codes.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.92.0
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust
+      - name: Release build
+        run: cargo build --release --workspace --manifest-path rust/Cargo.toml
+      - name: CLI smoke — parsed (exit 0, JSON out)
+        run: |
+          rust/target/release/what-time "call mom on sunday evening" -r 2026-09-13T10:00:00Z -t Asia/Kolkata -j > /tmp/out.json
+          grep -q '"occurrences"' /tmp/out.json
+      - name: CLI smoke — nothing found (exit 1)
+        run: |
+          set +e
+          rust/target/release/what-time "florb" -r 2026-09-13T10:00:00Z > /dev/null 2>&1
+          code=$?
+          set -e
+          [ "$code" -eq 1 ]
+      - name: CLI smoke — version flag
+        run: rust/target/release/what-time --version | grep -E '^what-time [0-9]+\.[0-9]+'
+
   wasm:
     runs-on: ubuntu-latest
     steps:
@@ -50,6 +88,12 @@ jobs:
         run: |
           cargo build --manifest-path rust/Cargo.toml -p what-time-wasm --target wasm32-unknown-unknown --release
           wasm-bindgen --target web --out-dir /tmp/wasm-check rust/target/wasm32-unknown-unknown/release/what_time_wasm.wasm
+      - name: Build the static single-file playground
+        run: bash rust/site/build.sh
+      - name: Verify the single file is self-contained
+        run: |
+          grep -q "WASM_B64" rust/site/what-time.html
+          test -s rust/site/what-time.html
 
   wrapper:
     runs-on: ubuntu-latest

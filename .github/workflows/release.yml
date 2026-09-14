@@ -1,0 +1,74 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: npm
+    steps:
+      - uses: actions/checkout@v4
+
+      # Version consistency: tag, Rust workspace, and npm package must agree.
+      - name: Verify version consistency
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          CARGO_V=$(grep -m1 '^version' rust/Cargo.toml | sed 's/version = "\(.*\)"/\1/')
+          NPM_V=$(node -p "require('./packages/what-time/package.json').version")
+          echo "tag=$TAG cargo=$CARGO_V npm=$NPM_V"
+          [ "$TAG" = "$CARGO_V" ] || { echo "tag ($TAG) != rust workspace ($CARGO_V)"; exit 1; }
+          [ "$TAG" = "$NPM_V" ] || { echo "tag ($TAG) != npm package ($NPM_V)"; exit 1; }
+
+      - uses: dtolnay/rust-toolchain@1.92.0
+        with:
+          targets: wasm32-unknown-unknown
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust
+      - name: Full test gate
+        run: cargo test --workspace --manifest-path rust/Cargo.toml
+
+      - name: Build wasm module
+        run: |
+          cargo build --manifest-path rust/Cargo.toml -p what-time-wasm --target wasm32-unknown-unknown --release
+          cargo install wasm-bindgen-cli --version 0.2.128
+          wasm-bindgen --target web --out-dir packages/what-time/wasm rust/target/wasm32-unknown-unknown/release/what_time_wasm.wasm
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.13.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build and test the wrapper against the fresh wasm
+        run: |
+          pnpm --filter @magicbeansai/what-time build
+          pnpm --filter @magicbeansai/what-time test
+
+      - name: Publish to npm
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: npm publish --access public
+        working-directory: packages/what-time
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Attach release artifacts
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-artifact@v4
+        with:
+          name: what-time-${{ github.ref_name }}
+          path: |
+            rust/site/what-time.html
+            rust/target/release/what-time
+          if-no-files-found: error
