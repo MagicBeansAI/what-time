@@ -323,14 +323,19 @@ function escapeHtml(value) {
 /* ---------- input highlighting (functional port; visual treatment is our own) ---------- */
 
 const hour = "one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve";
+const devaDay = "सोमवार|मंगलवार|बुधवार|गुरुवार|शुक्रवार|शनिवार|रविवार";
+const hinglishDay = "somvaar|somwar|mangalvaar|mangal|budhvaar|budh|guruvaar|guruwar|shukravaar|shukrawar|shanivaar|shanivar|ravivaar|raviwar";
+const devaMonth = "जनवरी|फरवरी|मार्च|अप्रैल|मई|जून|जुलाई|अगस्त|सितंबर|अक्टूबर|नवंबर|दिसंबर";
 const patterns = [
-  ["repeat", /\b(every other|every|each|all|weekdays?|weekends?|daily|weekly|biweekly|monthly|yearly|annually|except)\b/gi],
+  ["repeat", /\b(every other|every|each|all|weekdays?|weekends?|daily|weekly|biweekly|monthly|yearly|annually|except)\b|\b(har|harek|roz|haftewar|mahinewar|salwar)\b|\b(हर|हरेक|रोज़|रोज)\b/gi],
   ["duration", /\b(for|in)\s+(an?|half an?|\d+(\.\d+)?)\s*(and a half\s+)?(hours?|hrs?|minutes?|mins?|days?|weeks?|months?)\b/gi],
   ["time", new RegExp(`\\b(from\\s+)?(\\d{1,2}(:\\d{2})?|${hour})\\s*(am|pm)?\\s*(-|–|to|until|till|through)\\s*(\\d{1,2}(:\\d{2})?|${hour})\\s*(am|pm)?\\b`, "gi")],
-  ["time", new RegExp(`\\b(at\\s+)?(\\d{1,2}(:\\d{2})?|${hour})\\s*(am|pm|o'?clock)\\b|\\b(noon|midnight|morning|afternoon|evening|midday)\\b|\\b(half past|quarter (to|past))\\s+\\S+`, "gi")],
-  ["date", /\b((mon|tues?|wednes|thurs?|fri|satur|sun)day|mon|tue|wed|thu|fri|sat|sun)\b/gi],
-  ["date", /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.?\s*\d{0,2}(st|nd|rd|th)?\b/gi],
-  ["date", /\b(today|tomorrow|tonight|yesterday)\b|\b(next|this|last|first|second|third|fourth)\s+\S+|\b\d{1,2}(st|nd|rd|th)\b|\b\d{1,2}\/\d{1,2}(\/\d{2,4})?\b/gi],
+  ["time", new RegExp(`\\b(at\\s+)?(\\d{1,2}(:\\d{2})?|${hour})\\s*(am|pm|o'?clock)\\b|\\b(noon|midnight|morning|afternoon|evening|night|midday|subah|savere|savera|saavere|dopahar|shaam|raat|shaamko|raatko)\\b|(सुबह|सवेरे|सवेरा|दोपहर|शाम|रात|बजे)|(half past|quarter (to|past))\\s+\\S+`, "gi")],
+  ["time", /\b\d{1,2}:\d{2}\b|\b\d{1,2}\s*baje\b/gi],
+  ["time", new RegExp(`\\b(\\d{1,2}|${hour})\\s*(baje)\\b`, "gi")],
+  ["date", new RegExp(`\\b((mon|tues?|wednes|thurs?|fri|satur|sun)day|mon|tue|wed|thu|fri|sat|sun)\\b|\\b(${hinglishDay})\\b|(${devaDay})`, "gi")],
+  ["date", new RegExp(`\\b(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\\.?\\s*\\d{0,2}(st|nd|rd|th)?\\b|(${devaMonth})`, "gi")],
+  ["date", /\b(today|tomorrow|tonight|yesterday|aaj|kal|parso|parson)\b|(आज|कल|परसों)|\b(next|this|last|first|second|third|fourth|agle|agla|pichhle|pichhla)\s+\S+|(अगले|अगली|पिछले|पिछली|इस)\s*\S+|\b\d{1,2}(st|nd|rd|th)\b|\b\d{1,2}\/\d{1,2}(\/\d{2,4})?\b/gi],
 ];
 
 function highlight(text) {
