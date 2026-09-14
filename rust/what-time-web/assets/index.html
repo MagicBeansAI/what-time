@@ -321,7 +321,7 @@ const patterns = [
   ["repeat", /\b(every other|every|each|all|weekdays?|weekends?|daily|weekly|biweekly|monthly|yearly|annually|except)\b|\b(har|harek|roz|haftewar|mahinewar|salwar)\b|\b(हर|हरेक|रोज़|रोज)\b/gi],
   ["duration", /\b(for|in)\s+(an?|half an?|\d+(\.\d+)?)\s*(and a half\s+)?(hours?|hrs?|minutes?|mins?|days?|weeks?|months?)\b/gi],
   ["time", new RegExp(`\\b(from\\s+)?(\\d{1,2}(:\\d{2})?|${hour})\\s*(am|pm)?\\s*(-|–|to|until|till|through)\\s*(\\d{1,2}(:\\d{2})?|${hour})\\s*(am|pm)?\\b`, "gi")],
-  ["time", new RegExp(`\\b(at\\s+)?(\\d{1,2}(:\\d{2})?|${hour})\\s*(am|pm|o'?clock)\\b|\\b(noon|midnight|morning|afternoon|evening|night|midday|subah|dopahar|shaam|raat)\\b|(सुबह|दोपहर|शाम|रात|बजे)|(half past|quarter (to|past))\\s+\\S+`, "gi")],
+  ["time", new RegExp(`\\b(at\\s+)?(\\d{1,2}(:\\d{2})?|${hour})\\s*(am|pm|o'?clock)\\b|\\b(noon|midnight|morning|afternoon|evening|night|midday|subah|savere|savera|saavere|dopahar|shaam|raat|shaamko|raatko)\\b|(सुबह|सवेरे|सवेरा|दोपहर|शाम|रात|बजे)|(half past|quarter (to|past))\\s+\\S+`, "gi")],
   ["time", /\b\d{1,2}:\d{2}\b|\b\d{1,2}\s*baje\b/gi],
   ["time", new RegExp(`\\b(\\d{1,2}|${hour})\\s*(baje)\\b`, "gi")],
   ["date", new RegExp(`\\b((mon|tues?|wednes|thurs?|fri|satur|sun)day|mon|tue|wed|thu|fri|sat|sun)\\b|\\b(${hinglishDay})\\b|(${devaDay})`, "gi")],
