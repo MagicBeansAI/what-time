@@ -83,11 +83,15 @@ fn hindi_relative_offset(pair: (i64, i64), tokens: &[Token]) -> i64 {
         "गया था",
         "हुआ था",
         "किया था",
+        "बीता हुआ",
+        "थी",
         "tha",
         "aaya tha",
         "gaya tha",
         "hua tha",
         "kiya tha",
+        "beeta hua",
+        "thi",
     ]
     .iter()
     .any(|cue| joined.contains(cue));

@@ -125,6 +125,21 @@ def year_negative(sentence: Sentence, rng: random.Random) -> None:
     sentence.add(rng.choice(YEAR_NEGATIVES), 'O')
 
 
+# Standalone day-group reinforcement: runs that over-train the bare-day
+# selector family drift "weekdays"/"weekends" off DAYGROUP (grammar-028).
+DAYGROUPS = ['weekdays', 'weekends', 'weekday', 'weekend']
+
+
+def daygroup_reinforce(sentence: Sentence, rng: random.Random) -> None:
+    word = rng.choice(DAYGROUPS)
+    label = 'DAYGROUP'
+    sentence.add(word, label)
+    if rng.random() < 0.5:
+        sentence.add('at', 'GLUE')
+        sentence.add(str(rng.randint(1, 12)), 'HOUR')
+        sentence.add(rng.choice(['am', 'pm']), 'MERIDIEM')
+
+
 CARRIERS = [
     ("call", "mom"), ("call", "dad"), ("call", "mum"), ("call", "mother"),
     ("call", "papa"), ("call", "zoya"), ("call", "rohan"), ("call", "priya"),
@@ -193,6 +208,9 @@ def render(rng: random.Random) -> Sentence:
         period_qualified(sentence, rng)
     if rng.random() < 0.08:
         year_negative(sentence, rng)
+        return sentence
+    if rng.random() < 0.1:
+        daygroup_reinforce(sentence, rng)
         return sentence
     if rng.random() < 0.12:
         roz_family(sentence, rng)
