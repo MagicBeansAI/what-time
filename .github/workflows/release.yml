@@ -66,14 +66,23 @@ jobs:
           pnpm --filter @magicbeansai/what-time build
           pnpm --filter @magicbeansai/what-time test
 
-      - name: Verify the npm org exists (fail fast with guidance)
+      - name: Verify npm publish rights on the scope
         if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          status=$(curl -s -o /dev/null -w "%{http_code}" "https://registry.npmjs.org/-/user/org.couchdbuser:magicbeansai")
-          if [ "$status" = "404" ]; then
-            echo "::error::The npm org 'magicbeansai' does not exist. Create it at https://www.npmjs.com/org/create (free), then re-run this job. Full runbook: RELEASING.md"
+          set +e
+          npm access ls-packages @magicbeansai > /tmp/access.log 2>&1
+          code=$?
+          set -e
+          if [ "$code" -ne 0 ]; then
+            echo "npm access failed:"
+            cat /tmp/access.log
+            echo "::error::The token cannot list packages in the @magicbeansai scope. Either the npmjs.com org 'magicbeansai' does not exist (create at https://www.npmjs.com/org/create, free) or the token lacks read/write on the scope (granular tokens need it explicit; classic publish tokens work once the org exists). Fix, then re-run this job. Runbook: RELEASING.md"
             exit 1
           fi
+          echo "scope access ok:"
+          cat /tmp/access.log
 
       - name: Publish to npm
         if: startsWith(github.ref, 'refs/tags/v')
