@@ -1,0 +1,15 @@
+[package]
+name = "what-time-wasm"
+version.workspace = true
+edition = "2021"
+description = "WebAssembly bindings for the what-time schedule parser."
+license = "MIT"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wasm-bindgen = "0.2.128"
+what-time = { path = "../what-time" }
+serde_json = "1"

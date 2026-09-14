@@ -1,0 +1,13 @@
+{
+  "name": "@what-time/training",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "gen": "uv run --project . python torch/generate.py",
+    "gen:llm": "uv run --project . python torch/generate_llm_corpus.py",
+    "validate:llm": "uv run --project . python torch/validate_llm_corpus.py",
+    "check:natural": "uv run --project . python torch/check-natural.py",
+    "train": "uv run --project . python torch/train_transformer.py"
+  }
+}

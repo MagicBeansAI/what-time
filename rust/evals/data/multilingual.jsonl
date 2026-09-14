@@ -1,0 +1,15 @@
+{"id":"multilingual-001","language":"english","schedule":{"clauses":[{"date":{"kind":"relativeDay","offset":2},"time":{"start":{"hour":20,"minute":0}}}]},"text":"can you book it for day after tomorrow at 8 pm"}
+{"id":"multilingual-002","language":"english","schedule":{"clauses":[{"date":{"day":24,"kind":"periodCalendar","modifier":"last","month":8,"period":"year"}}]},"text":"24th august last year"}
+{"id":"multilingual-003","language":"english","schedule":{"clauses":[{"recurrence":{"byDay":["FR"],"freq":"weekly","interval":1},"time":{"start":{"hour":19,"minute":30}}}]},"text":"game night every Friday at 7:30pm"}
+{"id":"multilingual-004","language":"english","schedule":{"clauses":[{"date":{"days":["FR"],"kind":"periodWeekday","modifier":"last"}}]},"text":"friday last week"}
+{"id":"multilingual-005","language":"hindi","schedule":{"clauses":[{"date":{"kind":"relativeDay","offset":1},"time":{"start":{"hour":20,"minute":0}}}]},"text":"कल शाम को आठ बजे मीटिंग"}
+{"id":"multilingual-006","language":"hindi","schedule":{"clauses":[{"recurrence":{"byDay":["MO"],"freq":"weekly","interval":1},"time":{"start":{"hour":9,"minute":0}}}]},"text":"हर सोमवार को सुबह नौ बजे"}
+{"id":"multilingual-007","language":"hindi","schedule":{"clauses":[{"date":{"day":21,"kind":"periodCalendar","modifier":"next","period":"month"}}]},"text":"अगले महीने की 21st को"}
+{"id":"multilingual-008","language":"hindi","schedule":{"clauses":[{"date":{"kind":"relativeDay","offset":2}}]},"text":"परसों सुबह"}
+{"id":"multilingual-009","language":"hindi","schedule":{"clauses":[{"recurrence":{"byDay":["FR"],"freq":"weekly","interval":1},"time":{"start":{"part":"evening"}}}]},"text":"हर हफ़्ते शुक्रवार को शाम"}
+{"id":"multilingual-010","language":"hindi","schedule":{"clauses":[{"date":{"kind":"relativeDay","offset":0},"time":{"start":{"hour":15,"minute":0}}}]},"text":"आज दोपहर तीन बजे"}
+{"id":"multilingual-011","language":"hinglish","schedule":{"clauses":[{"date":{"kind":"relativeDay","offset":1},"time":{"start":{"hour":20,"minute":0}}}]},"text":"kal shaam ko 8 baje call kar dena"}
+{"id":"multilingual-012","language":"hinglish","schedule":{"clauses":[{"recurrence":{"byDay":["TU"],"freq":"weekly","interval":1}}]},"text":"har hafte Tuesday ko gym"}
+{"id":"multilingual-013","language":"hinglish","schedule":{"clauses":[{"date":{"kind":"relativeDay","offset":2},"time":{"start":{"hour":10,"minute":0}}}]},"text":"parso subah 10 baje"}
+{"id":"multilingual-014","language":"hinglish","schedule":{"clauses":[{"date":{"day":21,"kind":"periodCalendar","modifier":"next","period":"month"}}]},"text":"agle mahine ki 21st"}
+{"id":"multilingual-015","language":"hinglish","schedule":{"clauses":[{"date":{"kind":"relativeDay","offset":0},"time":{"start":{"hour":15,"minute":0}}}]},"text":"aaj dopahar 3 baje"}

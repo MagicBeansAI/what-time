@@ -1,0 +1,41 @@
+{
+  "name": "@magicbeansai/what-time",
+  "version": "0.1.0",
+  "description": "Neural parser for English, Hindi, and Hinglish time expressions — dates, ranges, and RFC 5545 rules, in-process via WebAssembly.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "wasm",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node scripts/write-version.mjs && tsc -p tsconfig.json",
+    "test": "node --test src/test.node.mjs",
+    "prepublishOnly": "pnpm build && pnpm test"
+  },
+  "keywords": [
+    "date",
+    "time",
+    "parser",
+    "nlp",
+    "schedule",
+    "recurrence",
+    "rrule",
+    "hindi",
+    "hinglish",
+    "wasm"
+  ],
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "5.9.3"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>what-time — schedule parser playground</title>
+<style>
+  :root {
+    --paper: #faf9f6;
+    --card: #ffffff;
+    --ink: #1c1917;
+    --line: #e7e2d8;
+    --line-soft: #efeae0;
+    --muted: #78716c;
+    --faint: #a8a29e;
+    --accent: #9a3412;
+    --danger: #b91c1c;
+    /* marker-sweep tints — deliberately not the reference demo's pastels */
+    --t-date: #c9d9f6;
+    --t-time: #c2e6de;
+    --t-repeat: #efbad2;
+    --t-duration: #efdfba;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 15px/1.55 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 620px; margin: 0 auto; padding: 52px 22px 100px; }
+
+  /* ---------- masthead ---------- */
+  .masthead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .wordmark { font: 700 20px/1.2 var(--serif); letter-spacing: -0.02em; margin: 0; }
+  .wordmark .dot { color: var(--accent); }
+  .badge {
+    font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--muted); border: 1px solid var(--line); border-radius: 999px;
+    padding: 3px 10px; background: var(--card); white-space: nowrap;
+  }
+  .lede { font: italic 400 26px/1.25 var(--serif); letter-spacing: -0.01em; margin: 30px 0 6px; }
+  .lede-lang { display: inline-block; min-width: 3.6em; transition: opacity 0.25s ease; }
+  .lede-lang.fade { opacity: 0; }
+  .sub { color: var(--muted); margin: 0 0 30px; max-width: 46ch; }
+  .sub q { font-style: normal; quotes: "“" "”"; }
+
+  /* ---------- parse card ---------- */
+  .parse-card {
+    background: var(--card);
+    border: 1.5px solid var(--ink);
+    border-radius: 18px;
+    padding: 8px;
+    display: flex; align-items: stretch; gap: 8px;
+    box-shadow: 4px 4px 0 rgba(28, 25, 23, 0.08);
+  }
+  .field { position: relative; flex: 1; min-width: 0; border-radius: 12px; height: 58px; }
+  /* Both layers share one box and identical text metrics, so the caret,
+     the transparent input text, and the marker sweeps stay pixel-locked.
+     No letter-spacing (WebKit's input caret ignores it) and no kerning or
+     ligatures (form controls and DOM text would diverge in advance widths). */
+  #highlight, #text {
+    position: absolute; inset: 0;
+    font: 17px/34px var(--sans);
+    padding: 12px 14px;
+    white-space: pre;
+    margin: 0;
+    letter-spacing: normal;
+    text-indent: 0;
+    font-kerning: none;
+    font-variant-ligatures: none;
+    font-feature-settings: normal;
+  }
+  #highlight {
+    overflow: hidden; pointer-events: none; color: var(--ink);
+  }
+  #text {
+    width: 100%; height: 100%;
+    border: 0; background: transparent; color: transparent;
+    caret-color: var(--ink); outline: none; overflow-x: auto;
+  }
+  .run {
+    align-self: center;
+    background: var(--ink); color: #fff;
+    border: 1.5px solid var(--ink);
+    border-radius: 12px;
+    padding: 10px 18px;
+    font: 600 14px var(--sans);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .run:disabled { opacity: 0.55; cursor: default; }
+  .run:not(:disabled):hover { background: #000; }
+
+  /* solid tint covering the full glyph height. Vertical padding extends the
+     painted area past the font box (covers ascenders/descenders when the
+     engine paints inline backgrounds short) without shifting text
+     horizontally, so the caret stays locked to the visible glyphs. */
+  .mark { border-radius: 3px; padding: 3px 0; }
+  .mark[data-kind="date"] { background: var(--t-date); }
+  .mark[data-kind="time"] { background: var(--t-time); }
+  .mark[data-kind="repeat"] { background: var(--t-repeat); }
+  .mark[data-kind="duration"] { background: var(--t-duration); }
+
+  /* ---------- results ---------- */
+  .results { margin-top: 26px; }
+  .result-head {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline;
+    gap: 4px 14px; margin-bottom: 12px;
+  }
+  .count { font: italic 500 15px var(--serif); }
+  .count.error { color: var(--danger); font-style: normal; }
+  .meta { font-size: 12px; color: var(--faint); }
+  .occs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .occ {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 14px; padding: 10px 16px 10px 10px;
+  }
+  .tile {
+    flex: none; width: 58px; text-align: center;
+    border: 1px solid var(--line); border-radius: 10px;
+    background: var(--paper); padding: 5px 0 6px;
+  }
+  .tile .dow { display: block; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  .tile .dom { display: block; font: 700 21px/1.15 var(--serif); }
+  .tile .mon { display: block; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .occ-body { min-width: 0; }
+  .occ-date { font-weight: 600; font-size: 14.5px; letter-spacing: -0.01em; }
+  .occ-time { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; margin-top: 1px; }
+  .notices { display: flex; flex-direction: column; gap: 6px; margin: 0 0 10px; }
+  .notice {
+    border-left: 3px solid var(--t-duration);
+    background: var(--card); border-top: 1px solid var(--line-soft);
+    border-right: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft);
+    border-radius: 0 10px 10px 0;
+    font-size: 13px; padding: 7px 12px; color: var(--muted);
+  }
+  .notice.error { border-left-color: var(--danger); color: var(--ink); }
+  .notice code { font: 11px var(--mono); color: var(--faint); margin-right: 6px; }
+
+  /* ---------- key line ---------- */
+  .key {
+    margin: 22px 0 30px; font-size: 12.5px; color: var(--muted);
+    display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline;
+  }
+  .key .k { margin-right: 2px; }
+
+  /* ---------- examples ---------- */
+  .examples { margin: 0 0 26px; }
+  .examples-lead { font: italic 500 14px var(--serif); margin: 0 0 8px; }
+  .examples ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  .example {
+    background: none; border: 0; padding: 0; cursor: pointer; text-align: left;
+    font: 14px var(--sans); color: var(--ink);
+  }
+  .example .use { color: var(--faint); font-size: 12px; margin-right: 7px; }
+  .example .phrase { border-bottom: 1px dotted #c8c2b6; }
+  .example:hover .phrase { border-bottom-style: solid; border-bottom-color: var(--ink); }
+
+  /* ---------- disclosures ---------- */
+  details.panel { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 12px; }
+  details.panel summary {
+    cursor: pointer; list-style: none; display: flex; align-items: baseline; gap: 8px;
+    font: italic 500 14px var(--serif); color: var(--ink);
+  }
+  details.panel summary::-webkit-details-marker { display: none; }
+  details.panel summary::after { content: "+"; font: 400 15px var(--mono); color: var(--faint); }
+  details.panel[open] summary::after { content: "–"; }
+  details.panel summary .note { font: 400 11px var(--sans); color: var(--faint); font-style: normal; }
+  .panel-body { padding-top: 10px; }
+
+  .controls { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; }
+  .controls .full { grid-column: 1 / -1; }
+  .controls label { display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: var(--muted); min-width: 0; }
+  .controls label input { min-width: 0; }
+  .controls input, .controls select {
+    background: var(--card); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 8px;
+    padding: 7px 9px; font: 12.5px var(--mono); width: 100%;
+  }
+  .controls input:focus, .controls select:focus { outline: 1px solid var(--ink); border-color: var(--ink); }
+  .controls .with-button { display: flex; gap: 6px; }
+  .controls .with-button input { flex: 1; }
+  .tiny {
+    background: var(--card); border: 1px solid var(--line); color: var(--muted);
+    border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 12px;
+  }
+  .tiny:hover { color: var(--ink); border-color: var(--ink); }
+
+  .rrules { display: flex; flex-direction: column; gap: 8px; }
+  pre {
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+    padding: 10px 12px; overflow-x: auto; font-size: 12px; margin: 0; color: #44403c;
+  }
+  .expression { margin-bottom: 8px; }
+  .expression summary {
+    cursor: pointer; list-style: none; font-size: 13px; color: var(--ink);
+    display: flex; justify-content: space-between; gap: 10px;
+  }
+  .expression summary::-webkit-details-marker { display: none; }
+  .expression summary .conf { color: var(--faint); font: 11.5px var(--mono); }
+  .expression pre { margin-top: 6px; }
+  .timings { color: var(--faint); font-size: 11px; margin-top: 8px; font-family: var(--mono); }
+  .hint { color: var(--faint); font-size: 12px; }
+</style>
+</head>
+<body>
+<main>
+  <header class="masthead">
+    <h1 class="wordmark">what-time<span class="dot">.</span></h1>
+    <span class="badge" id="mode-badge">…</span>
+  </header>
+
+  <p class="lede">Say it in <span class="lede-lang" id="lede-lang">English</span>.</p>
+  <p class="sub">Type a phrase like <q>yoga every Tuesday and Thursday at 7am</q> and the model returns
+    real occurrences, recurrences, and an RFC&nbsp;5545 rule — resolved in your time zone.</p>
+
+  <form class="parse-card" id="form">
+    <div class="field">
+      <div id="highlight" aria-hidden="true"></div>
+      <input id="text" type="text" maxlength="500" spellcheck="false" autocomplete="off" aria-label="Schedule expression">
+    </div>
+    <button class="run" id="parse" type="submit">Parse</button>
+  </form>
+
+  <section class="results" aria-live="polite" aria-atomic="true">
+    <div class="result-head">
+      <span class="count" id="count">Reading…</span>
+      <span class="meta" id="context"></span>
+    </div>
+    <div class="notices" id="notices"></div>
+    <ul class="occs" id="rows"></ul>
+  </section>
+
+  <p class="key">
+    <span class="k">marks:</span>
+    <span><span class="mark" data-kind="date">dates</span>,</span>
+    <span><span class="mark" data-kind="time">times</span>,</span>
+    <span><span class="mark" data-kind="repeat">repeats</span>,</span>
+    <span><span class="mark" data-kind="duration">durations</span></span>
+  </p>
+
+  <section class="examples">
+    <p class="examples-lead">Try one of these —</p>
+    <ul id="examples"></ul>
+  </section>
+
+  <details class="panel" id="context-panel">
+    <summary>Resolve context <span class="note">reference instant · time zone · limits</span></summary>
+    <div class="panel-body">
+      <div class="controls">
+        <label class="full">Reference instant (ISO, Z or offset)
+          <span class="with-button">
+            <input id="reference" spellcheck="false">
+            <button class="tiny" id="now" title="Set to the current time" type="button">now</button>
+          </span>
+        </label>
+        <label>Time zone (IANA)
+          <input id="timezone" list="zones" value="UTC" spellcheck="false">
+          <datalist id="zones">
+            <option>UTC</option><option>America/New_York</option><option>America/Los_Angeles</option>
+            <option>Europe/London</option><option>Europe/Paris</option><option>Europe/Berlin</option>
+            <option>Asia/Dhaka</option><option>Asia/Kolkata</option><option>Asia/Tokyo</option>
+            <option>Australia/Lord_Howe</option><option>Pacific/Apia</option>
+          </datalist>
+        </label>
+        <label>Limit
+          <input id="limit" type="number" min="1" max="1000" value="3">
+        </label>
+        <label>Date order
+          <select id="dateOrder">
+            <option value="MDY">MDY</option>
+            <option value="DMY">DMY</option>
+          </select>
+        </label>
+      </div>
+    </div>
+  </details>
+
+  <div id="extras"></div>
+</main>
+
+<script type="module">
+import init, { parse, parse_expressions } from "./wasm/what_time_wasm.js";
+const wasmReady = init();
+globalThis.wasmParse = parse;
+globalThis.wasmExpressions = parse_expressions;
+globalThis.wasmReady = wasmReady;
+</script>
+<script>
+const DEFAULT_PHRASE = "yoga every Tuesday and Thursday at 7am";
+
+const EXAMPLES = [
+  { use: "a call home", text: "call mom on Sunday evening" },
+  { use: "an appointment", text: "dentist on Nov 3 at 9:30" },
+  { use: "a training plan", text: "gym every Mon Wed and Fri at 6am" },
+  { use: "rent day", text: "pay rent on the 1st of each month" },
+  { use: "out of office", text: "out of office from Dec 22 until Jan 2" },
+  { use: "a quick sync", text: "catch up in 45 minutes" },
+  { use: "game night", text: "game night every Friday at 7:30pm" },
+  { use: "plant care", text: "water the plants every 3 days" },
+  { use: "हिन्दी · a meeting", text: "कल शाम को आठ बजे मीटिंग" },
+  { use: "हिन्दी · recurring", text: "हर सोमवार को सुबह नौ बजे" },
+  { use: "हिन्दी · a deadline", text: "अगले महीने की 21st को" },
+  { use: "hinglish · a call", text: "kal shaam ko 8 baje call kar dena" },
+  { use: "hinglish · weekly", text: "har hafte Tuesday ko gym" },
+  { use: "hinglish · day after", text: "parso subah 10 baje" },
+];
+
+const $ = (id) => document.getElementById(id);
+
+function escapeHtml(value) {
+  return value.replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  })[c]);
+}
+
+/* ---------- input highlighting (functional port; visual treatment is our own) ---------- */
+
+const hour = "one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve";
+const patterns = [
+  ["repeat", /\b(every other|every|each|all|weekdays?|weekends?|daily|weekly|biweekly|monthly|yearly|annually|except)\b/gi],
+  ["duration", /\b(for|in)\s+(an?|half an?|\d+(\.\d+)?)\s*(and a half\s+)?(hours?|hrs?|minutes?|mins?|days?|weeks?|months?)\b/gi],
+  ["time", new RegExp(`\\b(from\\s+)?(\\d{1,2}(:\\d{2})?|${hour})\\s*(am|pm)?\\s*(-|–|to|until|till|through)\\s*(\\d{1,2}(:\\d{2})?|${hour})\\s*(am|pm)?\\b`, "gi")],
+  ["time", new RegExp(`\\b(at\\s+)?(\\d{1,2}(:\\d{2})?|${hour})\\s*(am|pm|o'?clock)\\b|\\b(noon|midnight|morning|afternoon|evening|midday)\\b|\\b(half past|quarter (to|past))\\s+\\S+`, "gi")],
+  ["date", /\b((mon|tues?|wednes|thurs?|fri|satur|sun)day|mon|tue|wed|thu|fri|sat|sun)\b/gi],
+  ["date", /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.?\s*\d{0,2}(st|nd|rd|th)?\b/gi],
+  ["date", /\b(today|tomorrow|tonight|yesterday)\b|\b(next|this|last|first|second|third|fourth)\s+\S+|\b\d{1,2}(st|nd|rd|th)\b|\b\d{1,2}\/\d{1,2}(\/\d{2,4})?\b/gi],
+];
+
+function highlight(text) {
+  const claims = [];
+  for (const [kind, pattern] of patterns) {
+    pattern.lastIndex = 0;
+    for (const match of text.matchAll(pattern)) {
+      const start = match.index;
+      const end = start + match[0].length;
+      if (claims.some((claim) => start < claim.end && end > claim.start)) continue;
+      claims.push({ start, end, kind });
+    }
+  }
+  claims.sort((first, second) => first.start - second.start);
+
+  const parts = [];
+  let at = 0;
+  for (const claim of claims) {
+    if (claim.start > at) parts.push({ text: text.slice(at, claim.start) });
+    parts.push({ text: text.slice(claim.start, claim.end), kind: claim.kind });
+    at = claim.end;
+  }
+  if (at < text.length) parts.push({ text: text.slice(at) });
+  return parts;
+}
+
+function renderHighlight(text) {
+  $("highlight").innerHTML = highlight(text)
+    .map((part) =>
+      part.kind
+        ? `<span class="mark" data-kind="${part.kind}">${escapeHtml(part.text)}</span>`
+        : escapeHtml(part.text))
+    .join("");
+}
+
+/* ---------- result formatting ---------- */
+
+function formatParts(date, formatter) {
+  const out = {};
+  for (const part of formatter.formatToParts(date)) out[part.type] = part.value;
+  return out;
+}
+
+function format(result, reference, timeZone) {
+  const shortDate = new Intl.DateTimeFormat("en-US", {
+    timeZone, weekday: "short", month: "short", day: "numeric", year: "numeric",
+  });
+  const longDate = new Intl.DateTimeFormat("en-US", {
+    timeZone, weekday: "long", month: "long", day: "numeric", year: "numeric",
+  });
+  const tileDate = new Intl.DateTimeFormat("en-US", {
+    timeZone, weekday: "short", month: "short", day: "numeric",
+  });
+  const timeFormat = new Intl.DateTimeFormat("en-US", {
+    timeZone, hour: "numeric", minute: "2-digit",
+  });
+
+  const n = result.occurrences.length;
+  const count = n === 0 && result.diagnostics.length
+    ? result.diagnostics.map((diagnostic) => diagnostic.message).join(" ")
+    : n === 0
+      ? "Nothing scheduled — try a date or a time window."
+      : result.truncated
+        ? `Next ${n} occurrences`
+        : n === 1
+          ? "One occurrence"
+          : `${n} occurrences`;
+
+  const items = result.occurrences.map((occurrence) => {
+    const start = new Date(occurrence.start);
+    const end = occurrence.end ? new Date(occurrence.end) : start;
+    let detail;
+    if (!occurrence.end) {
+      detail = occurrence.allDay ? "All day" : timeFormat.format(start);
+    } else if (occurrence.allDay) {
+      // Date-only ranges have an exclusive end at the next midnight.
+      const lastDay = new Date(end.getTime() - 1);
+      detail = shortDate.format(start) === shortDate.format(lastDay)
+        ? "All day"
+        : `Through ${shortDate.format(lastDay)} · all day`;
+    } else {
+      const endDate = shortDate.format(start) === shortDate.format(end)
+        ? ""
+        : `${shortDate.format(end)}, `;
+      detail = `${timeFormat.format(start)} – ${endDate}${timeFormat.format(end)}`;
+    }
+    const tile = formatParts(start, tileDate);
+    return { tile: { dow: tile.weekday, dom: tile.day, mon: tile.month }, full: longDate.format(start), detail };
+  });
+
+  return {
+    count,
+    items,
+    context: `resolved from ${shortDate.format(reference)} · ${timeZone}`,
+  };
+}
+
+/* ---------- playground plumbing ---------- */
+
+let seq = 0;
+let debounce = null;
+
+async function run() {
+  const value = $("text").value.trim();
+  if (!value) return;
+  const ticket = ++seq;
+  $("parse").disabled = true;
+  try {
+    await wasmReady;
+    const resultText = wasmParse(
+      value,
+      $("reference").value,
+      $("timezone").value,
+      BigInt(Number($("limit").value) || 3),
+      $("dateOrder").value,
+    );
+    if (ticket !== seq) return;
+    const result = JSON.parse(resultText);
+    if (result.error) {
+      showError(result.error);
+      return;
+    }
+    const expressions = JSON.parse(wasmExpressions(value) || "[]");
+    render({ result, expressions: Array.isArray(expressions) ? expressions : [] });
+  } catch (error) {
+    if (ticket !== seq) return;
+    showError("The parser could not run: " + error);
+  } finally {
+    if (ticket === seq) $("parse").disabled = false;
+  }
+}
+
+function showError(message) {
+  const count = $("count");
+  count.textContent = message;
+  count.classList.add("error");
+  $("rows").innerHTML = "";
+  $("notices").innerHTML = "";
+  $("context").textContent = "";
+  $("extras").innerHTML = "";
+}
+
+function render(body) {
+  const result = body.result;
+  const reference = new Date($("reference").value);
+  const timeZone = $("timezone").value;
+  const formatted = format(result, reference, timeZone);
+
+  const count = $("count");
+  count.classList.remove("error");
+  count.classList.toggle("error", result.diagnostics.some((value) => value.severity === "error"));
+  count.textContent = formatted.count;
+  $("rows").innerHTML = formatted.items.map((item) => `
+    <li class="occ">
+      <div class="tile"><span class="dow">${escapeHtml(item.tile.dow)}</span><span class="dom">${escapeHtml(item.tile.dom)}</span><span class="mon">${escapeHtml(item.tile.mon)}</span></div>
+      <div class="occ-body">
+        <div class="occ-date">${escapeHtml(item.full)}</div>
+        <div class="occ-time">${escapeHtml(item.detail)}</div>
+      </div>
+    </li>`).join("");
+  $("notices").innerHTML = result.diagnostics.map((d) =>
+    `<div class="notice ${d.severity}"><code>${escapeHtml(d.code)}</code>${escapeHtml(d.message)}</div>`).join("");
+  $("context").textContent = formatted.context;
+
+  const extras = [];
+  if (result.rrules && result.rrules.length) {
+    extras.push(`<details class="panel" open><summary>RRULE export</summary><div class="panel-body rrules">`);
+    extras.push(result.rrules.map((rule) => `<pre>${escapeHtml(rule)}</pre>`).join(""));
+    extras.push(`</div></details>`);
+  }
+
+  const t = result.timings;
+  const expressions = body.expressions || [];
+  extras.push(`<details class="panel"><summary>Model output <span class="note">confidence · schedule JSON · timings</span></summary><div class="panel-body">`);
+  extras.push(expressions.length
+    ? expressions.map((expression) => `
+        <details class="expression">
+          <summary><span>${escapeHtml(expression.text || "(empty)")}</span><span class="conf">confidence ${expression.confidence.toFixed(3)}</span></summary>
+          <pre>${escapeHtml(JSON.stringify(expression.schedule, null, 2))}</pre>
+        </details>`).join("")
+    : '<span class="hint">The model found no schedule expression in the input.</span>');
+  extras.push(`<div class="timings">tokenize ${t.tokenizeMs.toFixed(3)} ms · infer ${t.inferMs.toFixed(3)} ms · resolve ${t.resolveMs.toFixed(3)} ms · backend: ${result.backend}</div>`);
+  extras.push(`</div></details>`);
+  $("extras").innerHTML = extras.join("");
+}
+
+function schedule() {
+  clearTimeout(debounce);
+  debounce = setTimeout(run, 150);
+}
+
+async function init() {
+  $("reference").value = new Date().toISOString();
+  try {
+    const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (zone) $("timezone").value = zone;
+  } catch { /* keep UTC */ }
+
+  const list = $("examples");
+  for (const example of EXAMPLES) {
+    const li = document.createElement("li");
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "example";
+    button.innerHTML = `<span class="use">${escapeHtml(example.use)}</span><span class="phrase">${escapeHtml(example.text)}</span>`;
+    button.addEventListener("click", () => {
+      $("text").value = example.text;
+      renderHighlight(example.text);
+      run();
+    });
+    li.appendChild(button);
+    list.appendChild(li);
+  }
+
+  $("form").addEventListener("submit", (event) => { event.preventDefault(); run(); });
+  $("text").addEventListener("input", () => {
+    renderHighlight($("text").value);
+    schedule();
+  });
+  $("text").addEventListener("scroll", () => {
+    $("highlight").scrollLeft = $("text").scrollLeft;
+  });
+  $("now").addEventListener("click", () => {
+    $("reference").value = new Date().toISOString();
+    schedule();
+  });
+  for (const id of ["reference", "timezone", "limit", "dateOrder"]) {
+    $(id).addEventListener("change", schedule);
+  }
+
+  const langs = ["English", "हिन्दी", "Hinglish"];
+  let langIndex = 0;
+  setInterval(() => {
+    const el = $("lede-lang");
+    el.classList.add("fade");
+    setTimeout(() => {
+      langIndex = (langIndex + 1) % langs.length;
+      el.textContent = langs[langIndex];
+      el.classList.remove("fade");
+    }, 250);
+  }, 2600);
+
+  const badge = $("mode-badge");
+  const delivery = location.protocol === "file:" ? "local file" : "server";
+  badge.textContent = `in-page wasm · ${delivery}`;
+
+  $("text").value = DEFAULT_PHRASE;
+  renderHighlight(DEFAULT_PHRASE);
+  run();
+}
+
+init();
+</script>
+</body>
+</html>

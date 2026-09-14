@@ -1,0 +1,12 @@
+{
+  "name": "what-time-monorepo",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.13.1",
+  "scripts": {
+    "test": "cargo test --workspace --manifest-path rust/Cargo.toml",
+    "build:wasm": "rust/site/build.sh",
+    "build:wrapper": "pnpm --filter @magicbeansai/what-time build",
+    "train": "pnpm --filter @what-time/training train"
+  }
+}

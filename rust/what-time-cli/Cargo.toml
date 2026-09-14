@@ -1,0 +1,14 @@
+[package]
+name = "what-time-cli"
+version.workspace = true
+description = "Command-line interface for the what-time schedule parser"
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+what-time = { path = "../what-time" }
+serde_json = { workspace = true }
+
+[[bin]]
+name = "what-time"
+path = "src/main.rs"

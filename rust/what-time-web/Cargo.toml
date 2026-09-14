@@ -1,0 +1,12 @@
+[package]
+name = "what-time-web"
+version.workspace = true
+description = "Local web UI for testing the what-time schedule parser"
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+what-time = { path = "../what-time" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tiny_http = "0.12"
