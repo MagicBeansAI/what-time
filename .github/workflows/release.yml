@@ -1,3 +1,13 @@
+# Tag-driven npm publish. The full ritual — including the one-time npm org
+# setup that makes or breaks the publish step — is documented in RELEASING.md
+# at the repo root. Short version:
+#   1. bump rust/Cargo.toml [workspace.package] version AND package.json (must match)
+#   2. rust/site/build.sh && pnpm --filter @magicbeansai/what-time build
+#   3. git commit && git tag vX.Y.Z && git push origin vX.Y.Z
+# If publish fails with 404/ResourceNotFound: the npmjs.com org "magicbeansai"
+# does not exist yet — create it at https://www.npmjs.com/org/create, then
+# "Re-run failed jobs". See RELEASING.md for details.
+
 name: Release
 
 on:
@@ -55,6 +65,15 @@ jobs:
         run: |
           pnpm --filter @magicbeansai/what-time build
           pnpm --filter @magicbeansai/what-time test
+
+      - name: Verify the npm org exists (fail fast with guidance)
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          status=$(curl -s -o /dev/null -w "%{http_code}" "https://registry.npmjs.org/-/user/org.couchdbuser:magicbeansai")
+          if [ "$status" = "404" ]; then
+            echo "::error::The npm org 'magicbeansai' does not exist. Create it at https://www.npmjs.com/org/create (free), then re-run this job. Full runbook: RELEASING.md"
+            exit 1
+          fi
 
       - name: Publish to npm
         if: startsWith(github.ref, 'refs/tags/v')

@@ -48,6 +48,14 @@ cd packages/training && pnpm train           # retrain + export weights
 - The repo derives from an MIT-licensed project; keep the original
   copyright line in `LICENSE` intact.
 
+## Releasing
+
+Follow `RELEASING.md`. Tag-driven (`git tag vX.Y.Z`); the workflow gates on
+tag = cargo workspace version = package.json version, runs the full test
+suite, builds wasm fresh, publishes `@magicbeansai/what-time`. Known failure
+mode: publish 404 = npmjs.com org `magicbeansai` missing (create once, then
+re-run failed jobs); the workflow now checks for this and says so.
+
 ## History
 
 The first iteration was a TypeScript/WebGPU implementation with a

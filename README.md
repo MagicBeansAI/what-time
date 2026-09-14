@@ -148,6 +148,8 @@ rust/site/build.sh                            # rebuild wasm + static playground
 cargo run --release -p what-time --example bench-bulk --features gpu -- 10000  # GPU bulk bench
 ```
 
+- To release: follow [RELEASING.md](RELEASING.md) — tag-driven, gated, with
+  the one-time npm org setup documented.
 - Python is always invoked through `uv` inside `packages/training`.
 - The Rust toolchain lives at `~/.cargo/bin` when not on `PATH`.
 - Weights and parity fixtures move together via the training export; the test
