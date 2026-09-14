@@ -161,7 +161,6 @@ fn main() {
             labels.truncate(base);
             boundaries.truncate(base);
             kinds.truncate(base);
-            neighbors.truncate(base);
             continue;
         }
         let mut next: i64 = -1;

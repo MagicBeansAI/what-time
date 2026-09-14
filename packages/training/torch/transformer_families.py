@@ -111,6 +111,20 @@ def roz_family(sentence: Sentence, rng: random.Random) -> None:
         sentence.add(piece, label)
 
 
+# Bare-year false-positive guards: the negatives corpus tracks these. A
+# lone year in a technical sentence must stay O so it never extracts.
+YEAR_NEGATIVES = [
+    'build 2026 failed with 3 warnings',
+    'version 2026 is ready',
+    'release 2026 shipped on time',
+    'error 2026 in module 7',
+]
+
+
+def year_negative(sentence: Sentence, rng: random.Random) -> None:
+    sentence.add(rng.choice(YEAR_NEGATIVES), 'O')
+
+
 CARRIERS = [
     ("call", "mom"), ("call", "dad"), ("call", "mum"), ("call", "mother"),
     ("call", "papa"), ("call", "zoya"), ("call", "rohan"), ("call", "priya"),
@@ -177,6 +191,9 @@ def render(rng: random.Random) -> Sentence:
         bare_relative_day(sentence, rng)
     else:
         period_qualified(sentence, rng)
+    if rng.random() < 0.08:
+        year_negative(sentence, rng)
+        return sentence
     if rng.random() < 0.12:
         roz_family(sentence, rng)
     elif rng.random() < 0.15:

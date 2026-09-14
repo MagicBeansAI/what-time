@@ -120,7 +120,7 @@ fn frequency_word(word: &str) -> Option<(Frequency, bool)> {
     // (frequency, doubles the interval)
     match word {
         "hourly" => Some((Frequency::hourly, false)),
-        "daily" => Some((Frequency::daily, false)),
+        "daily" | "roz" | "रोज़" => Some((Frequency::daily, false)),
         "weekly" => Some((Frequency::weekly, false)),
         "biweekly" | "fortnightly" => Some((Frequency::weekly, true)),
         "monthly" => Some((Frequency::monthly, false)),
@@ -1434,8 +1434,7 @@ fn compile_clause(input: &[Token], diagnostics: &mut Vec<Diagnostic>) -> Compile
     }
     let day_part_selects = |token: &Token| {
         token.label == Role::DayPart
-            || (token.label == Role::Meridiem
-                && day_part(&token.raw.text.to_lowercase()).is_some())
+            || (token.label == Role::Meridiem && day_part(&token.raw.text.to_lowercase()).is_some())
     };
     if input.iter().any(|token| token.label == Role::Recur)
         && !input.iter().any(|token| {
@@ -1443,6 +1442,9 @@ fn compile_clause(input: &[Token], diagnostics: &mut Vec<Diagnostic>) -> Compile
                 token.label,
                 Role::Unit | Role::Freq | Role::Weekday | Role::DayGroup | Role::Month
             ) || day_part_selects(token)
+                // "roz" arrives as RECUR but names a frequency itself
+                || (token.label == Role::Recur
+                    && frequency_word(&token.raw.text.to_lowercase()).is_some())
         })
     {
         return fail(
@@ -1489,24 +1491,46 @@ fn compile_clause(input: &[Token], diagnostics: &mut Vec<Diagnostic>) -> Compile
 
         if token.label == Role::Recur {
             recurrence.get_or_insert_with(|| empty_recurrence(Frequency::weekly));
+            // A lone "roz" / "रोज़" names its own frequency.
+            if let Some((freq, doubled)) = frequency_word(&token.raw.text.to_lowercase())
+                && let Some(rule) = recurrence.as_mut()
+            {
+                rule.freq = freq;
+                if doubled {
+                    rule.interval = 2;
+                }
+            }
             // "every morning 9am" / "every night 10pm": the day part right
             // after the recurrence marker selects a daily frequency and
             // will bias the clock that follows.
             if let Some(next) = tokens.get(index + 1) {
-                let as_part = if next.label == Role::DayPart {
-                    day_part(&next.raw.text.to_lowercase())
-                } else if next.label == Role::Meridiem {
+                let as_part = if matches!(next.label, Role::DayPart | Role::Meridiem) {
                     day_part(&next.raw.text.to_lowercase())
                 } else {
                     None
                 };
-                if as_part.is_some() {
+                if let Some(part) = as_part {
                     if let Some(rule) = recurrence.as_mut() {
                         rule.freq = Frequency::daily;
                     }
                     // the day-part token itself is consumed by the body's
                     // own DayPart handling, which queues it for the clock
+                    let _ = part;
                     index += 1;
+                    continue;
+                }
+                // "har roz" / "रोज़": a second RECUR token that names a
+                // frequency ("roz" = daily) merges into the recurrence.
+                if next.label == Role::Recur
+                    && let Some((freq, doubled)) = frequency_word(&next.raw.text.to_lowercase())
+                {
+                    if let Some(rule) = recurrence.as_mut() {
+                        rule.freq = freq;
+                        if doubled {
+                            rule.interval = 2;
+                        }
+                    }
+                    index += 2;
                     continue;
                 }
             }
