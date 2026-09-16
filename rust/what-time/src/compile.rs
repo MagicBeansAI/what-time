@@ -1,7 +1,7 @@
 //! Compiles predicted roles into typed schedules.
 
 use crate::labels::Role;
-use crate::lexicon::{compound_ordinal, holiday_name, month, number, unit, weekday};
+use crate::lexicon::{compound_ordinal, decimal_digit, holiday_name, month, normalize_digits, number, unit, weekday};
 use crate::quantity::{read_duration, read_number};
 use crate::types::{
     CalendarDate, Clause, ClockTime, DateSpec, DayGroup, DayPart, Diagnostic, Direction, Duration,
@@ -55,7 +55,7 @@ fn filler(word: &str) -> bool {
 fn relative_day(phrase: &str) -> Option<i64> {
     match phrase {
         "today" | "tonight" | "tonite" | "आज" | "aaj" => Some(0),
-        "tomorrow" | "tmrw" | "tmr" => Some(1),
+        "tomorrow" | "tmrw" | "tmr" | "2mrw" => Some(1),
         "yesterday" => Some(-1),
         "the day after tomorrow" | "day after tomorrow" => Some(2),
         "the day before yesterday" | "day before yesterday" => Some(-2),
@@ -65,44 +65,37 @@ fn relative_day(phrase: &str) -> Option<i64> {
 
 fn hindi_relative(phrase: &str) -> Option<(i64, i64)> {
     match phrase {
-        "कल" | "kal" => Some((1, -1)),
+        "कल" | "kal" | "kl" => Some((1, -1)),
         "परसों" | "parso" | "parson" => Some((2, -2)),
         _ => None,
     }
 }
 
-fn hindi_relative_offset(pair: (i64, i64), tokens: &[Token]) -> i64 {
-    let joined = tokens
-        .iter()
-        .map(|token| token.raw.text.to_lowercase())
-        .collect::<Vec<_>>()
-        .join(" ");
-    let past = [
-        "था",
-        "आया था",
-        "गया था",
-        "हुआ था",
-        "किया था",
-        "बीता हुआ",
-        "थी",
-        "tha",
-        "aaya tha",
-        "gaya tha",
-        "hua tha",
-        "kiya tha",
-        "beeta hua",
-        "thi",
-    ]
-    .iter()
-    .any(|cue| joined.contains(cue));
-    if past { pair.1 } else { pair.0 }
+fn hindi_relative_offset(pair: (i64, i64), tokens: &[Token], start: usize) -> i64 {
+    // Tense cues are background tokens. Consult the original sentence before
+    // expression extraction discards them, stopping at the next relative day
+    // or sentence boundary. Whole tokens avoid matching names such as Nathan.
+    let Some(index) = tokens.iter().position(|token| token.raw.start == start) else {
+        return pair.0;
+    };
+    let boundary = |token: &&Token| token.label == Role::RelDay
+        || matches!(token.raw.text.as_str(), "." | "!" | "?" | ";" | "।");
+    let cue = |token: &Token| match token.raw.text.to_lowercase().as_str() {
+        "था" | "थी" | "थे" | "थीं" | "tha" | "thi" | "बीता" | "beeta" => Some(pair.1),
+        "आएगा" | "आएगी" | "आएंगे" | "आएँगे" | "जाएँगे" | "है"
+        | "aayega" | "aayegi" | "aayenge" | "jayenge" | "jaayenge" | "hai" => Some(pair.0),
+        _ => None,
+    };
+    tokens[index + 1..].iter().take_while(|token| !boundary(token)).find_map(cue)
+        .or_else(|| tokens[..index].iter().rev().take_while(|token| !boundary(token)).find_map(cue))
+        .unwrap_or(pair.0)
 }
 
 fn day_part(word: &str) -> Option<DayPart> {
     match word {
         "morning" | "सुबह" | "subah" => Some(DayPart::morning),
         "afternoon" | "दोपहर" | "dopahar" => Some(DayPart::afternoon),
-        "evening" | "शाम" | "shaam" => Some(DayPart::evening),
+        "evening" | "evng" | "शाम" | "shaam" => Some(DayPart::evening),
         "night" | "रात" | "raat" => Some(DayPart::night),
         _ => None,
     }
@@ -124,7 +117,7 @@ fn frequency_word(word: &str) -> Option<(Frequency, bool)> {
     // (frequency, doubles the interval)
     match word {
         "hourly" => Some((Frequency::hourly, false)),
-        "daily" | "roz" | "रोज़" => Some((Frequency::daily, false)),
+        "daily" | "roz" | "roj" | "rozz" | "रोज़" => Some((Frequency::daily, false)),
         "weekly" => Some((Frequency::weekly, false)),
         "biweekly" | "fortnightly" => Some((Frequency::weekly, true)),
         "monthly" => Some((Frequency::monthly, false)),
@@ -314,7 +307,8 @@ fn read_clock(tokens: &[Token], index: usize) -> CompileResult<(ParsedClock, usi
 }
 
 fn leading_zero_clock(clock: &ParsedClock) -> bool {
-    let bytes = clock.token.raw.text.as_bytes();
+    let normalized = normalize_digits(&clock.token.raw.text);
+    let bytes = normalized.as_bytes();
     bytes.len() >= 2 && bytes[0] == b'0' && bytes[1].is_ascii_digit()
 }
 
@@ -480,6 +474,7 @@ fn compile_time(
 fn compile_date_and_time(
     tokens: &[Token],
     diagnostics: &mut Vec<Diagnostic>,
+    context: &[Token],
 ) -> CompileResult<Clause> {
     let mut clause = Clause::default();
     let mut days: Vec<Weekday> = Vec::new();
@@ -507,7 +502,18 @@ fn compile_date_and_time(
         let word = token.raw.text.to_lowercase();
 
         match token.label {
-            Role::O | Role::RangeStart | Role::Recur => {}
+            Role::O | Role::Recur => {}
+
+            Role::RangeStart => {
+                // Postposed से follows the date it opens ("20 तारीख से 24
+                // तारीख तक"): mirror the RangeEnd arm below so the date
+                // that follows lands in the end calendar. A preposed
+                // English "from" arrives before any calendar content and
+                // is unaffected.
+                if calendar.is_some() && clocks.is_empty() {
+                    calendar_end.get_or_insert_with(CalendarDate::default);
+                }
+            }
 
             Role::DirBefore | Role::DirAfter => {
                 // extract_shift already took the directions that carry an amount
@@ -550,7 +556,7 @@ fn compile_date_and_time(
                     phrase.push_str(&tokens[index].raw.text.to_lowercase());
                 }
                 let offset = relative_day(&phrase).or_else(|| {
-                    hindi_relative(&phrase).map(|pair| hindi_relative_offset(pair, tokens))
+                    hindi_relative(&phrase).map(|pair| hindi_relative_offset(pair, context, token.raw.start))
                 });
                 let Some(offset) = offset else {
                     return fail(token, "unsupported", "Unknown relative day.");
@@ -587,10 +593,16 @@ fn compile_date_and_time(
             }
 
             Role::Unit => {
-                let Some(value) = unit(&word) else {
+                let shorthand_unit = match word.as_str() {
+                    "eod" | "cob" => Some(Unit::day),
+                    "eow" => Some(Unit::week),
+                    "eom" => Some(Unit::month),
+                    _ => None,
+                };
+                let Some(value) = shorthand_unit.or_else(|| unit(&word)) else {
                     return fail(token, "unsupported", "Unknown calendar unit.");
                 };
-                let boundary = edge.or(
+                let boundary = shorthand_unit.map(|_| Edge::end).or(edge).or(
                     if tokens
                         .iter()
                         .any(|part| part.raw.text.to_lowercase() == "end")
@@ -709,6 +721,8 @@ fn compile_date_and_time(
             }
 
             Role::ClockOffset => {
+                // The explicit fractional clock wins over a preceding day-part.
+                pending_day_part = None;
                 if word == "डेढ़" || word == "dedh" || word == "ढाई" || word == "dhai"
                 {
                     clocks.push(ParsedClock {
@@ -873,7 +887,7 @@ fn compile_date_and_time(
                 };
                 let hour_later = tokens[index + 1..]
                     .iter()
-                    .any(|item| item.label == Role::Hour);
+                    .any(|item| matches!(item.label, Role::Hour | Role::ClockOffset));
                 if hour_later {
                     pending_day_part = Some(part);
                 } else if let Some(clock) = clocks.last_mut().filter(|clock| clock.needs_meridiem) {
@@ -1251,6 +1265,14 @@ fn compile_date_and_time(
                 && token.raw.start > clocks[0].token.raw.start
                 && token.raw.start < clocks[1].token.raw.start
         })
+        // A postposed तक/tak closes after the second clock ("sava char se
+        // paune paanch tak"), so it links the pair without sitting
+        // between them.
+        && !tokens.iter().any(|token| {
+            token.label == Role::RangeEnd
+                && matches!(token.raw.text.to_lowercase().as_str(), "तक" | "tak")
+                && token.raw.start > clocks[1].token.raw.start
+        })
     {
         return fail(
             &clocks[1].token,
@@ -1424,17 +1446,39 @@ fn empty_recurrence(freq: Frequency) -> Recurrence {
     }
 }
 
-fn compile_clause(input: &[Token], diagnostics: &mut Vec<Diagnostic>) -> CompileResult<Clause> {
+fn compile_clause(input: &[Token], diagnostics: &mut Vec<Diagnostic>, context: &[Token]) -> CompileResult<Clause> {
     let last_meaningful = input.iter().rev().find(|token| token.label != Role::O);
     if let Some(last) = last_meaningful.filter(|token| token.label == Role::RangeEnd) {
-        if last.raw.text.to_lowercase() == "until"
+        // Hindi/Hinglish postpose the range end ("20 tareekh se 24 tareekh
+        // tak", "sava char se paune paanch tak"): the closing marker
+        // follows the date or clock it closes, and the opening से is
+        // still present earlier, so the range is complete, not unfinished.
+        let word = last.raw.text.to_lowercase();
+        let postposed = matches!(word.as_str(), "तक" | "tak")
             && input
                 .iter()
-                .any(|token| matches!(token.label, Role::Recur | Role::Freq | Role::DayGroup))
-        {
-            return fail(last, "invalid-bound", "A bound needs a date.");
+                .any(|token| token.label == Role::RangeStart)
+            && input.iter().any(|token| {
+                matches!(
+                    token.label,
+                    Role::Dom
+                        | Role::Month
+                        | Role::Year
+                        | Role::Hour
+                        | Role::TimeNamed
+                        | Role::ClockOffset
+                )
+            });
+        if !postposed {
+            if word == "until"
+                && input
+                    .iter()
+                    .any(|token| matches!(token.label, Role::Recur | Role::Freq | Role::DayGroup))
+            {
+                return fail(last, "invalid-bound", "A bound needs a date.");
+            }
+            return fail(last, "incomplete-range", "A range needs an end value.");
         }
-        return fail(last, "incomplete-range", "A range needs an end value.");
     }
     let day_part_selects = |token: &Token| {
         token.label == Role::DayPart
@@ -1492,6 +1536,24 @@ fn compile_clause(input: &[Token], diagnostics: &mut Vec<Diagnostic>) -> Compile
     let mut index = 0usize;
     while index < tokens.len() {
         let token = &tokens[index];
+
+        if token.label == Role::Unit
+            && matches!(
+                token.raw.text.to_lowercase().as_str(),
+                "तारीख" | "तारीख़" | "tareek" | "tareekh" | "taareekh" | "taareek" | "tarikh"
+            )
+        {
+            // तारीख names a DOM selector, not a recurrence frequency or a
+            // standalone calendar period. The model must also supply its day.
+            let adjacent_day = index.checked_sub(1).and_then(|i| tokens.get(i))
+                .is_some_and(|t| t.label == Role::Dom)
+                || tokens.get(index + 1).is_some_and(|t| t.label == Role::Dom);
+            if !adjacent_day {
+                return fail(token, "invalid-date", "A date selector needs a day of month.");
+            }
+            index += 1;
+            continue;
+        }
 
         if token.label == Role::Recur {
             recurrence.get_or_insert_with(|| empty_recurrence(Frequency::weekly));
@@ -1710,7 +1772,10 @@ fn compile_clause(input: &[Token], diagnostics: &mut Vec<Diagnostic>) -> Compile
                 .get(index + 1)
                 .is_some_and(|token| token.label == Role::Unit);
         if token.label == Role::Dur || bare_duration {
-            let mut amount_index = index + if bare_duration { 0 } else { 1 };
+            // Legacy structural data labels the introducer DUR (for/lasting),
+            // while the corpus briefs put DUR on the quantity itself.
+            let quantity_here = bare_duration || number(&token.raw.text.to_lowercase()).is_some();
+            let mut amount_index = index + if quantity_here { 0 } else { 1 };
             while tokens
                 .get(amount_index)
                 .is_some_and(|token| token.label == Role::O || token.label == Role::Deictic)
@@ -1804,7 +1869,7 @@ fn compile_clause(input: &[Token], diagnostics: &mut Vec<Diagnostic>) -> Compile
             if bound.is_empty() {
                 return fail(token, "invalid-bound", "A bound needs a date.");
             }
-            let date = compile_date_and_time(bound, diagnostics)?.date;
+            let date = compile_date_and_time(bound, diagnostics, context)?.date;
             let Some(date) = date else {
                 return fail(token, "invalid-bound", "A bound needs a date.");
             };
@@ -1839,7 +1904,7 @@ fn compile_clause(input: &[Token], diagnostics: &mut Vec<Diagnostic>) -> Compile
 
     let has_date_or_time = body.iter().any(|token| token.label != Role::O);
     let mut clause = if has_date_or_time {
-        compile_date_and_time(&body, diagnostics)?
+        compile_date_and_time(&body, diagnostics, context)?
     } else {
         Clause::default()
     };
@@ -1990,6 +2055,7 @@ fn merge_clause(first: &Clause, next: Clause) -> Clause {
 fn compile_group(
     tokens: &[Token],
     diagnostics: &mut Vec<Diagnostic>,
+    context: &[Token],
 ) -> CompileResult<Vec<Clause>> {
     let mut clocks = 0;
     for token in tokens.iter() {
@@ -2001,7 +2067,7 @@ fn compile_group(
         }
     }
     if clocks < 2 {
-        return Ok(vec![compile_clause(tokens, diagnostics)?]);
+        return Ok(vec![compile_clause(tokens, diagnostics, context)?]);
     }
     let has_recurrence = tokens
         .iter()
@@ -2030,8 +2096,8 @@ fn compile_group(
             && left.iter().any(&is_clock)
             && right.iter().any(&is_clock)
         {
-            let start = compile_date_and_time(left, diagnostics)?;
-            let end = compile_date_and_time(right, diagnostics)?;
+            let start = compile_date_and_time(left, diagnostics, context)?;
+            let end = compile_date_and_time(right, diagnostics, context)?;
             if start.date.is_none()
                 || end.date.is_none()
                 || start.time.is_none()
@@ -2076,19 +2142,19 @@ fn compile_group(
             }
         }
         if groups.len() > 1 {
-            let first = compile_clause(&groups[0], diagnostics)?;
+            let first = compile_clause(&groups[0], diagnostics, context)?;
             let mut clauses = vec![first.clone()];
             for group in &groups[1..] {
-                let next = compile_clause(group, diagnostics)?;
+                let next = compile_clause(group, diagnostics, context)?;
                 clauses.push(merge_clause(&first, next));
             }
             return Ok(clauses);
         }
     }
-    Ok(vec![compile_clause(tokens, diagnostics)?])
+    Ok(vec![compile_clause(tokens, diagnostics, context)?])
 }
 
-fn compile_expression(text: &str, tokens: Vec<Token>) -> Expression {
+fn compile_expression(text: &str, tokens: Vec<Token>, context: &[Token]) -> Expression {
     let start = tokens.first().map(|token| token.raw.start).unwrap_or(0);
     let end = tokens.last().map(|token| token.raw.end).unwrap_or(0);
     let mut diagnostics: Vec<Diagnostic> = Vec::new();
@@ -2117,7 +2183,7 @@ fn compile_expression(text: &str, tokens: Vec<Token>) -> Expression {
 
     let compiled: Result<Vec<Vec<Clause>>, CompileError> = filtered
         .into_iter()
-        .map(|clause| compile_group(&clause, &mut diagnostics))
+        .map(|clause| compile_group(&clause, &mut diagnostics, context))
         .collect();
 
     match compiled {
@@ -2179,7 +2245,7 @@ fn numeric_date_order(tokens: &[Token], order: crate::types::DateOrder) -> Vec<T
             || (index >= 2
                 && separator(tokens.get(index - 1))
                 && tokens.get(index - 2).map(|token| token.label) == Some(Role::Year));
-        let digits = |text: &str| !text.is_empty() && text.bytes().all(|b| b.is_ascii_digit());
+        let digits = |text: &str| !text.is_empty() && text.chars().all(|c| decimal_digit(c).is_some());
         if !digits(&first.raw.text) || !digits(&second.raw.text) {
             continue;
         }
@@ -2190,8 +2256,8 @@ fn numeric_date_order(tokens: &[Token], order: crate::types::DateOrder) -> Vec<T
             result[index + 2].label = Role::Dom;
             continue;
         }
-        let a: f64 = first.raw.text.parse().unwrap();
-        let b: f64 = second.raw.text.parse().unwrap();
+        let a = number(&first.raw.text).unwrap();
+        let b = number(&second.raw.text).unwrap();
         if !(1.0..=31.0).contains(&a) || !(1.0..=31.0).contains(&b) || (a > 12.0 && b > 12.0) {
             continue;
         }
@@ -2225,7 +2291,7 @@ pub fn compile_predictions(
         .into_iter()
         .map(|expression| {
             let ordered = numeric_date_order(&expression, date_order);
-            compile_expression(text, ordered)
+            compile_expression(text, ordered, tokens)
         })
         .collect()
 }

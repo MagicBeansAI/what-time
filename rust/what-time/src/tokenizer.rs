@@ -7,6 +7,7 @@
 //! JS UTF-16 indices).
 
 use crate::types::RawToken;
+use crate::lexicon::{decimal_digit, normalize_digits};
 
 const PUNCTUATION_CHARACTERS: &str = ":-/.,(');&+@!?_=<>[]{}\\\"%#*~`";
 const PUNCTUATION_CLASSES: [&str; 11] = [":", "-", "/", ".", ",", "(", "'", ";", "&", "+", "@"];
@@ -79,7 +80,7 @@ fn is_punctuation(text: &str) -> bool {
     let Some(character) = text.chars().next() else {
         return false;
     };
-    !character.is_alphabetic() && !character.is_ascii_digit() && !character.is_whitespace()
+    !character.is_alphabetic() && decimal_digit(character).is_none() && !character.is_whitespace()
 }
 
 fn token_kind(text: &str) -> u8 {
@@ -88,7 +89,9 @@ fn token_kind(text: &str) -> u8 {
     };
     if first.is_whitespace() {
         3
-    } else if first.is_ascii_digit() {
+    } else if text.eq_ignore_ascii_case("2mrw") {
+        0
+    } else if decimal_digit(first).is_some() {
         1
     } else if first.is_alphabetic() || first == '_' {
         0
@@ -123,6 +126,10 @@ struct TokenShape {
 }
 
 fn shape(word: &str) -> TokenShape {
+    // Numeral scripts share numeric features, while RawToken retains the
+    // original spelling and byte offsets for source-aligned predictions.
+    let normalized = normalize_digits(word);
+    let word = normalized.as_str();
     let folded = word.to_lowercase();
     let kind = token_kind(word);
     let utf16_length = word.encode_utf16().count() as f64;
@@ -176,12 +183,15 @@ fn is_letter_run(character: char) -> bool {
 /// Equivalent of `/(?:[\p{L}_]\p{M}*)+(?:['’](?:[\p{L}_]\p{M}*)+)*|\d+|\s+|[^\s]/gu`.
 fn scan_tokens(text: &str) -> Vec<&str> {
     let mut parts = Vec::new();
-    let bytes = text.as_bytes();
     let mut index = 0;
     while index < text.len() {
         let start = index;
         let first = text[index..].chars().next().unwrap();
-        if first.is_alphabetic() || first == '_' {
+        if text[index..].get(..4).is_some_and(|word| word.eq_ignore_ascii_case("2mrw"))
+            && text[index + 4..].chars().next().is_none_or(|c| !c.is_alphanumeric() && c != '_')
+        {
+            index += 4;
+        } else if first.is_alphabetic() || first == '_' {
             let mut end = index + first.len_utf8();
             loop {
                 let rest = &text[end..];
@@ -217,10 +227,10 @@ fn scan_tokens(text: &str) -> Vec<&str> {
                 }
             }
             index = end;
-        } else if first.is_ascii_digit() {
-            index += 1;
-            while index < text.len() && bytes[index].is_ascii_digit() {
-                index += 1;
+        } else if decimal_digit(first).is_some() {
+            index += first.len_utf8();
+            while let Some(c) = text[index..].chars().next().filter(|c| decimal_digit(*c).is_some()) {
+                index += c.len_utf8();
             }
         } else if first.is_whitespace() {
             index += first.len_utf8();

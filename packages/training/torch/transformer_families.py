@@ -134,7 +134,9 @@ def daygroup_reinforce(sentence: Sentence, rng: random.Random) -> None:
     word = rng.choice(DAYGROUPS)
     label = 'DAYGROUP'
     sentence.add(word, label)
-    if rng.random() < 0.5:
+    # The bare form is the fragile one (grammar-028/029): keep clocks the
+    # minority so the standalone selector stays solidly DAYGROUP.
+    if rng.random() < 0.3:
         sentence.add('at', 'GLUE')
         sentence.add(str(rng.randint(1, 12)), 'HOUR')
         sentence.add(rng.choice(['am', 'pm']), 'MERIDIEM')
@@ -209,7 +211,7 @@ def render(rng: random.Random) -> Sentence:
     if rng.random() < 0.08:
         year_negative(sentence, rng)
         return sentence
-    if rng.random() < 0.1:
+    if rng.random() < 0.15:
         daygroup_reinforce(sentence, rng)
         return sentence
     if rng.random() < 0.12:

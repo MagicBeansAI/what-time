@@ -1,0 +1,38 @@
+{
+  "corpus-v2": {
+    "lastEpochSequences": {
+      "train": 60000,
+      "extra-train": 39870,
+      "llm": 18501
+    },
+    "v2Fraction": 0.15629672808373674,
+    "finalHeldoutTrainingOverlap": 0
+  },
+  "corpus-v2-final": {
+    "lastEpochSequences": {
+      "train": 200000,
+      "extra-train": 39866,
+      "llm": 18501
+    },
+    "v2Fraction": 0.07160744212689701,
+    "finalHeldoutTrainingOverlap": 0
+  },
+  "corpus-v2-promoted": {
+    "lastEpochSequences": {
+      "train": 200000,
+      "extra-train": 9971,
+      "llm": 18501
+    },
+    "v2Fraction": 0.08097710003851676,
+    "finalHeldoutTrainingOverlap": 0
+  },
+  "corpus-v2-complete": {
+    "lastEpochSequences": {
+      "train": 200000,
+      "extra-train": 9964,
+      "llm": 18501
+    },
+    "v2Fraction": 0.08097958111745782,
+    "finalHeldoutTrainingOverlap": 0
+  }
+}

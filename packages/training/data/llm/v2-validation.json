@@ -1,0 +1,66 @@
+{
+  "raw": 20000,
+  "accepted": 20000,
+  "rejected": 0,
+  "heldout": 1000,
+  "training": 19000,
+  "heldoutSeed": 20260916,
+  "splitUnit": "contrast-group",
+  "byFamily": {
+    "date-selector": {
+      "accepted": 3600,
+      "training": 3434,
+      "heldout": 166
+    },
+    "daily": {
+      "accepted": 3000,
+      "training": 2857,
+      "heldout": 143
+    },
+    "numerals": {
+      "accepted": 1800,
+      "heldout": 98,
+      "training": 1702
+    },
+    "duration": {
+      "accepted": 2100,
+      "training": 1992,
+      "heldout": 108
+    },
+    "bare-dom": {
+      "accepted": 1200,
+      "training": 1143,
+      "heldout": 57
+    },
+    "daypart": {
+      "accepted": 3000,
+      "training": 2860,
+      "heldout": 140
+    },
+    "tense": {
+      "accepted": 1800,
+      "training": 1696,
+      "heldout": 104
+    },
+    "mixed": {
+      "accepted": 900,
+      "training": 849,
+      "heldout": 51
+    },
+    "shorthand": {
+      "accepted": 600,
+      "training": 571,
+      "heldout": 29
+    },
+    "corporate": {
+      "accepted": 800,
+      "training": 764,
+      "heldout": 36
+    },
+    "negative": {
+      "accepted": 1200,
+      "training": 1132,
+      "heldout": 68
+    }
+  }
+}

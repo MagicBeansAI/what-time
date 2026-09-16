@@ -86,9 +86,9 @@ pub fn read_duration(tokens: &[Token], index: usize) -> Option<(Duration, usize)
     let mut next = index;
     while tokens
         .get(next)
-        .is_some_and(|token| token.label == Role::Num)
+        .is_some_and(|token| matches!(token.label, Role::Num | Role::Dur))
     {
-        let (quantity_value, quantity_next) = read_number(tokens, next, Role::Num);
+        let (quantity_value, quantity_next) = read_number(tokens, next, tokens[next].label);
         next = quantity_next;
         // "half an hour": the article belongs to the same quantity.
         if quantity_value.is_some_and(|value| value < 1.0)
@@ -121,7 +121,7 @@ pub fn read_duration(tokens: &[Token], index: usize) -> Option<(Duration, usize)
                 tail += 1;
             }
             if tokens.get(tail).is_some_and(|token| {
-                token.label == Role::Num && token.raw.text.to_lowercase() == "half"
+                matches!(token.label, Role::Num | Role::Dur) && token.raw.text.to_lowercase() == "half"
             }) {
                 amount += 0.5;
                 next = tail + 1;
@@ -145,11 +145,11 @@ pub fn read_duration(tokens: &[Token], index: usize) -> Option<(Duration, usize)
         };
         if !tokens
             .get(candidate)
-            .is_some_and(|token| token.label == Role::Num)
+            .is_some_and(|token| matches!(token.label, Role::Num | Role::Dur))
         {
             break;
         }
-        let following = read_number(tokens, candidate, Role::Num).1;
+        let following = read_number(tokens, candidate, tokens[candidate].label).1;
         if !tokens
             .get(following)
             .is_some_and(|token| token.label == Role::Unit)

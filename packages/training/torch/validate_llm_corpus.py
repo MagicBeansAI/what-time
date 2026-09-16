@@ -2,8 +2,8 @@
 
 Reads data/llm/raw.jsonl ({text, tokens: [[token, label], ...]}), checks the
 label set, the digit-suffix and tokenization conventions, rejects reserved
-carrier phrases, dedupes by structural fingerprint, and (optionally, when the
-Rust workspace is built) asks the oracle compiler whether the labels produce
+carrier phrases, dedupes by fingerprint, and requires the Rust oracle
+compiler to check whether the labels produce
 a schedule. Accepted lines are written to data/llm/accepted.jsonl in the
 featurizer's input shape ({id, text, spans}); rejected ones are reported to
 data/llm/rejected.jsonl for review.
@@ -61,7 +61,12 @@ def _split_word(word: str) -> list[str]:
     n = len(word)
     while i < n:
         ch = word[i]
-        if ch.isdigit():
+        if word[i:i + 4].lower() == "2mrw" and (
+            i + 4 == n or not (word[i + 4].isalnum() or word[i + 4] == "_")
+        ):
+            tokens.append(word[i:i + 4])
+            i += 4
+        elif ch.isdigit():
             j = i + 1
             while j < n and word[j].isdigit():
                 j += 1
@@ -107,9 +112,32 @@ def span_offsets(text: str) -> list[tuple[int, int, str]]:
     for token in split_tokens(text):
         start = text.index(token, position)
         end = start + len(token)
-        spans.append((start, end, token))
+        spans.append((len(text[:start].encode("utf-16-le")) // 2,
+                      len(text[:end].encode("utf-16-le")) // 2, token))
         position = end
     return spans
+
+
+def oracle_failures(result: subprocess.CompletedProcess, count: int) -> dict[int, str]:
+    """Fail closed on crashes or incomplete oracle output, not just bad rows."""
+    summary = re.fullmatch(r"validated (\d+) lines, (\d+) failures \([\d.]+%\)", result.stdout.strip())
+    if result.returncode not in (0, 1) or summary is None:
+        raise RuntimeError(f"corpus oracle did not complete: {result.stderr.strip()}")
+    failed = {}
+    mismatched = 0
+    for line in result.stderr.splitlines():
+        match = re.fullmatch(r"line (\d+): (.+)", line)
+        if not match:
+            raise RuntimeError(f"unexpected oracle diagnostic: {line}")
+        index = int(match[1]) - 1
+        if index in failed or not 0 <= index < count:
+            raise RuntimeError(f"invalid oracle row index: {line}")
+        failed[index] = match[2]
+        if "labels for" in match[2] or match[2].startswith("bad json:"):
+            mismatched += 1
+    if int(summary[2]) != len(failed) or int(summary[1]) + mismatched != count:
+        raise RuntimeError("incomplete corpus oracle report")
+    return failed
 
 
 def main() -> int:
@@ -121,6 +149,8 @@ def main() -> int:
     accepted_path = out_dir / "accepted.jsonl"
     rejected_path = out_dir / "rejected.jsonl"
     out_dir.mkdir(parents=True, exist_ok=True)
+    # Never leave a previous successful batch available after a failed gate.
+    accepted_path.unlink(missing_ok=True)
     rejected_path.write_text("")
     seen: set[str] = set()
     accepted = rejected = 0
@@ -204,14 +234,12 @@ def main() -> int:
         result = subprocess.run(
             [str(binary), str(staged)], capture_output=True, text=True
         )
-        failed_index: set[int] = set()
-        for line in result.stderr.splitlines():
-            if line.startswith("line "):
-                compile_failures += 1
-                try:
-                    failed_index.add(int(line.split()[1].rstrip(":")) - 1)
-                except ValueError:
-                    continue
+        try:
+            failed_index = oracle_failures(result, len(accepted_rows))
+        except RuntimeError as error:
+            print(str(error), file=sys.stderr)
+            return 2
+        compile_failures = len(failed_index)
         if result.stdout.strip():
             print(result.stdout.strip())
         kept: list[dict] = []
@@ -221,7 +249,8 @@ def main() -> int:
                 reasons["compile"] = reasons.get("compile", 0) + 1
                 with rejected_path.open("a") as sink:
                     sink.write(
-                        json.dumps({"reason": "compile", "text": row["text"]}, ensure_ascii=False)
+                        json.dumps({"reason": "compile", "text": row["text"],
+                                    "detail": failed_index[index]}, ensure_ascii=False)
                         + "\n"
                     )
             else:

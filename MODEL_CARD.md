@@ -37,31 +37,48 @@ Two sources, both generator-verifiable:
    by an external model against `packages/training/LLM_CORPUS_PROMPT.md`
    (label taxonomy, hard conventions, reserved-phrase exclusions), then
    filtered by a mechanical gate (`torch/validate_llm_corpus.py`: label set,
-   tokenizer alignment, convention linting, dedupe, and a compile oracle for
-   Latin-script lines). ~89% acceptance; all rejections are reported.
+   tokenizer alignment, convention linting, dedupe, and a compile oracle).
+   The original batch had ~89% acceptance; all rejections are reported.
    Training mixes these at ≤25% with structural data as the anchor.
 
-A 3,000-line LLM held-out split is excluded from training and evaluated
-every epoch. Reserved carrier phrases stay out of training so unseen-carrier
-generalization remains measurable.
+The V2 update uses 20,000 reproducible, template-authored rows following the
+targeted English/Hindi/Hinglish brief. These are synthetic expansions, not
+independent external-model samples. The gate accepts 19,501 rows (97.505%);
+1,000 are reserved for evaluation, keeping contrast groups together, and
+18,501 enter training. The original V1 corpus and its 3,000-row held-out slice
+were not available in this checkout, so that earlier evaluation is not
+repeated. Reserved carrier phrases remain excluded from training.
 
-## Metrics (current checkpoint)
+See [`packages/training/V2_RUN.md`](packages/training/V2_RUN.md) for the
+commands, measured comparison, training proportions and remaining gaps.
 
-- Gold corpora (hand-authored, all three languages): 526/526 schedule
-  structures, 18/18 end-to-end occurrence cases.
-- LLM held-out (unseen external lines): 0.9997 exact token-label sequences.
-- Generator held-out: 0.9498 exact sequences (in-distribution; the
-  structural families are the model's own generators, so this is not a
-  real-user accuracy claim).
+## Metrics (current checkpoint — `llm-ext-r5`, shipped as v0.2.0)
+
+Per-build history lives in [`SCORES.md`](SCORES.md).
+
+- Pinned corpora: 566/568 schedule cases (2 documented known gaps expected
+  to fail), 15/15 multilingual fixtures, 18/18 end-to-end occurrence cases.
+- LLM held-out: 0.9945 exact token-label/boundary sequences on a 2,000-row
+  union slice (1,000 of them from a never-trained external-model corpus).
+- Generator held-out: 0.9606 on 5,000 rows; extra families: 0.9950 on
+  4,983 rows. These are synthetic, generator-related evaluations, not
+  real-user accuracy claims.
 - Numeric parity: exported fixtures reproduce the quantized training
   network's logits within 2e-3 with identical argmax.
 
 ## Known limitations
 
-- Vocabulary outside the training corpora can mislabel: तारीख/tareekh,
-  unsuffixed Hinglish "ki 15" (use "ki 15th"), "roz", and Devanagari
-  numerals are current known gaps; add them to the corpus brief for the
-  next batch.
+- Coverage includes तारीख/tarikh (all common romanizations), bare "ki 15",
+  daily roz/roj/rozz, Devanagari numerals, mins durations, postposed
+  से…तक date and clock ranges, and common shorthand. Unseen contexts and
+  vocabulary can still mislabel.
+- `next quarter` needs a quarter calendar unit; movable holidays (दिवाली)
+  need a holiday-date table. Both return diagnostics today.
+- Ordinal-anchored recurrences compile ("हर महीने के दूसरे सोमवार को" is
+  pinned as a known gap: the compiler accepts the labels, the tagger drops
+  the ordinal). Ambiguous "mn" was omitted from training.
+- EOD/COB/EOW/EOM select the end of a calendar period; they do not imply a
+  configured business closing hour.
 - A day-part before an o'clock-style marker ("शाम को आठ बजे") biases the
   hour; an explicit am/pm always wins.
 - English-only phrasings outside the generator families (terse forms,

@@ -3,6 +3,8 @@
 set -e
 cd "$(dirname "$0")/.."
 export PATH="$HOME/.cargo/bin:$PATH"
+# Keep build-machine home paths out of the shipped wasm (panic locations).
+export RUSTFLAGS="--remap-path-prefix=$HOME="
 cargo build --quiet -p what-time-wasm --target wasm32-unknown-unknown --release
 wasm-bindgen --target web --out-dir site/wasm target/wasm32-unknown-unknown/release/what_time_wasm.wasm
 python3 - <<'PY'
@@ -23,6 +25,7 @@ initSync(new WebAssembly.Module(wasmBytes));
 const wasmReady = Promise.resolve();
 globalThis.wasmParse = parse;
 globalThis.wasmExpressions = parse_expressions;
+globalThis.wasmVersion = version;
 globalThis.wasmReady = wasmReady;
 </script>'''
 pathlib.Path("site/what-time.html").write_text(page.replace(header, inline))

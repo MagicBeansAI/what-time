@@ -47,7 +47,7 @@ jobs:
 
       - name: Build wasm module
         run: |
-          cargo build --manifest-path rust/Cargo.toml -p what-time-wasm --target wasm32-unknown-unknown --release
+          RUSTFLAGS="--remap-path-prefix=$HOME=" cargo build --manifest-path rust/Cargo.toml -p what-time-wasm --target wasm32-unknown-unknown --release
           cargo install wasm-bindgen-cli --version 0.2.128
           wasm-bindgen --target web --out-dir packages/what-time/wasm rust/target/wasm32-unknown-unknown/release/what_time_wasm.wasm
 

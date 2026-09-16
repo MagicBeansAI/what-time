@@ -89,6 +89,17 @@ pub fn spoken_quantity(word: &str) -> Option<f64> {
         "last" => -1.0,
         "एक" | "ek" | "pehla" | "पहला" => 1.0,
         "दो" | "do" | "dusra" | "दूसरा" => 2.0,
+        // Ordinals inflect for gender/number/case in Hindi ("दूसरे सोमवार",
+        // "तीसरी बैठक"); the model's ORD label picks them out, so every
+        // inflected form of first–fifth maps to its number.
+        "पहले" | "पहली" | "pehle" | "pehli" => 1.0,
+        "दूसरे" | "दूसरी" | "doosra" | "doosre" | "doosri" | "dusre" | "dusri" => 2.0,
+        "तीसरा" | "तीसरे" | "तीसरी" | "teesra" | "teesre" | "teesri" => 3.0,
+        "चौथा" | "चौथे" | "चौथी" | "chautha" | "chauthe" | "chauthi" => 4.0,
+        "पाँचवा" | "पाँचवे" | "पाँचवी" | "पांचवा" | "पांचवे" | "पांचवी" | "paanchwa"
+        | "paanchwe"
+        | "paanchvi" => 5.0,
+        "आखिरी" | "आख़िरी" | "aakhri" | "aakhiri" => -1.0,
         "तीन" | "teen" => 3.0,
         "चार" | "char" => 4.0,
         "पाँच" | "पांच" | "paanch" => 5.0,
@@ -99,7 +110,6 @@ pub fn spoken_quantity(word: &str) -> Option<f64> {
         "दस" | "das" => 10.0,
         "ग्यारह" | "gyarah" => 11.0,
         "बारह" | "barah" => 12.0,
-        "आखिरी" => -1.0,
         _ => return None,
     };
     Some(value)
@@ -146,15 +156,25 @@ pub fn number(text: &str) -> Option<f64> {
 }
 
 fn parse_integer(text: &str) -> Option<f64> {
-    let bytes = text.as_bytes();
-    if bytes.is_empty() {
+    let digits = text.strip_prefix('-').unwrap_or(text);
+    if digits.is_empty() || !digits.chars().all(|c| decimal_digit(c).is_some()) {
         return None;
     }
-    let digits = if bytes[0] == b'-' { &bytes[1..] } else { bytes };
-    if digits.is_empty() || !digits.iter().all(u8::is_ascii_digit) {
-        return None;
+    normalize_digits(text).parse::<f64>().ok()
+}
+
+pub(crate) fn decimal_digit(character: char) -> Option<u32> {
+    match character {
+        '0'..='9' => Some(character as u32 - '0' as u32),
+        '०'..='९' => Some(character as u32 - '०' as u32),
+        _ => None,
     }
-    text.parse::<f64>().ok()
+}
+
+pub(crate) fn normalize_digits(text: &str) -> String {
+    text.chars()
+        .map(|c| decimal_digit(c).and_then(|d| char::from_digit(d, 10)).unwrap_or(c))
+        .collect()
 }
 
 pub fn weekday(text: &str) -> Option<Weekday> {

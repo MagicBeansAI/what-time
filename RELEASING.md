@@ -40,7 +40,11 @@ If the publish step fails:
    pnpm --filter @magicbeansai/what-time build         # wrapper dist + VERSION export
    ```
 
-3. Commit, tag, push:
+3. Append a row to `SCORES.md` for the checkpoint being shipped (never
+   edit old rows). The scores come from the training run's final epoch
+   report plus the corpus counts `cargo test` prints.
+
+4. Commit, tag, push:
 
    ```sh
    git add -A && git commit -m "v0.1.1"
@@ -48,7 +52,7 @@ If the publish step fails:
    git tag v0.1.1 && git push origin v0.1.1
    ```
 
-4. The workflow: verifies tag = cargo = npm versions → runs the full Rust
+5. The workflow: verifies tag = cargo = npm versions → runs the full Rust
    test gate → builds the wasm fresh from the tag → builds and tests the
    wrapper against it → `npm publish --access public` → attaches
    `what-time.html` and the CLI binary as artifacts.

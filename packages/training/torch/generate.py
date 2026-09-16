@@ -903,7 +903,19 @@ def generate(
             )[0]
             variant = rng.choice(variants)
             spec = semantic.sample(rng) if family != 23 and rng.random() < 0.8 else None
-            if rng.random() < 0.12:
+            if rng.random() < 0.03:
+                # Bare day-group selectors are a single fragile token
+                # (grammar-028/029); without dedicated weight the tagger
+                # drifts them to O whenever the LLM mix grows.
+                sentence = Sentence(rng)
+                sentence.clause()
+                sentence.add(
+                    rng.choice(["weekdays", "weekends", "weekday", "weekend"]),
+                    "DAYGROUP",
+                )
+                template = "family-bare-daygroup"
+                spec = None
+            elif rng.random() < 0.12:
                 sentence = Sentence(rng)
                 template = terse(sentence, variant)
                 spec = None
@@ -930,6 +942,12 @@ def generate(
                 if tail[:1].isupper():
                     sentence.add(".", separator="")
                 sentence.add(tail)
+            # Whole-sentence casing survives real usage ("FROM 9 IN THE
+            # MORNING TO 5 IN THE AFTERNOON"); per-token augmentation
+            # almost never emits a fully uppercased sentence. ASCII-only
+            # so span offsets stay valid.
+            if sentence.text.isascii() and rng.random() < 0.05:
+                sentence.text = sentence.text.upper()
             row = {
                 "id": f"{split}-{seed}-{index}",
                 "template": template,

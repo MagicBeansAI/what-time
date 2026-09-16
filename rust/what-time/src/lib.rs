@@ -77,18 +77,24 @@ pub mod testing {
     /// Per-token `(text, label-name)` pairs from the real tagging pipeline,
     /// including whitespace tokens (label `GLUE`). Inspection helper.
     pub fn tag_labels(text: &str) -> Vec<(String, &'static str)> {
+        tagged_tokens(text)
+            .into_iter()
+            .map(|token| {
+                (
+                    token.raw.text.clone(),
+                    LABELS.get(token.label as usize).copied().unwrap_or("?"),
+                )
+            })
+            .collect()
+    }
+
+    /// Live-pipeline tokens with labels and per-token confidence, ready for
+    /// `compile_predictions`. `Token::score` is the top1−top2 probability
+    /// gap, so low scores mark uncertain tokens. Failure-mining helper.
+    pub fn tagged_tokens(text: &str) -> Vec<Token> {
         let result = crate::tagger::Tagger::new(crate::types::Backend::Cpu).tag(text);
         match result {
-            Ok(result) => result
-                .tokens
-                .iter()
-                .map(|token| {
-                    (
-                        token.raw.text.clone(),
-                        LABELS.get(token.label as usize).copied().unwrap_or("?"),
-                    )
-                })
-                .collect(),
+            Ok(result) => result.tokens,
             Err(_) => Vec::new(),
         }
     }

@@ -1,0 +1,92 @@
+{
+  "baseline": {
+    "heldout": {
+      "tokens": 51490,
+      "sequences": 5000,
+      "tokenAccuracy": 0.9932608273451156,
+      "exactLabelAndBoundarySequence": 0.9414,
+      "boundaryPrecision": 1.0,
+      "boundaryRecall": 1.0,
+      "boundaryF1": 1.0,
+      "boundaryCounts": {
+        "truePositive": 295,
+        "falsePositive": 0,
+        "falseNegative": 0
+      }
+    },
+    "extra-eval": {
+      "tokens": 46078,
+      "sequences": 4982,
+      "tokenAccuracy": 0.9117583228438735,
+      "exactLabelAndBoundarySequence": 0.6896828582898434,
+      "boundaryPrecision": 0.0,
+      "boundaryRecall": 0.0,
+      "boundaryF1": 0.0,
+      "boundaryCounts": {
+        "truePositive": 0,
+        "falsePositive": 6,
+        "falseNegative": 0
+      }
+    },
+    "llm-eval": {
+      "tokens": 9476,
+      "sequences": 1000,
+      "tokenAccuracy": 0.8575348248205994,
+      "exactLabelAndBoundarySequence": 0.255,
+      "boundaryPrecision": 0.0,
+      "boundaryRecall": 0.0,
+      "boundaryF1": 0.0,
+      "boundaryCounts": {
+        "truePositive": 0,
+        "falsePositive": 0,
+        "falseNegative": 0
+      }
+    },
+    "weightsSha256": "ed61dd56bcb6701539326f250e2fd1405eeef38e89eb9725a222b19404860017"
+  },
+  "v2": {
+    "heldout": {
+      "tokens": 51490,
+      "sequences": 5000,
+      "tokenAccuracy": 0.9928724024082346,
+      "exactLabelAndBoundarySequence": 0.9534,
+      "boundaryPrecision": 0.9966216216216216,
+      "boundaryRecall": 1.0,
+      "boundaryF1": 0.9983079526226735,
+      "boundaryCounts": {
+        "truePositive": 295,
+        "falsePositive": 1,
+        "falseNegative": 0
+      }
+    },
+    "extra-eval": {
+      "tokens": 46078,
+      "sequences": 4982,
+      "tokenAccuracy": 0.9973089109770389,
+      "exactLabelAndBoundarySequence": 0.9927739863508631,
+      "boundaryPrecision": 0.0,
+      "boundaryRecall": 0.0,
+      "boundaryF1": 0.0,
+      "boundaryCounts": {
+        "truePositive": 0,
+        "falsePositive": 0,
+        "falseNegative": 0
+      }
+    },
+    "llm-eval": {
+      "tokens": 9476,
+      "sequences": 1000,
+      "tokenAccuracy": 0.9997889404812157,
+      "exactLabelAndBoundarySequence": 0.998,
+      "boundaryPrecision": 0.0,
+      "boundaryRecall": 0.0,
+      "boundaryF1": 0.0,
+      "boundaryCounts": {
+        "truePositive": 0,
+        "falsePositive": 0,
+        "falseNegative": 0
+      }
+    },
+    "weightsSha256": "740eed4abb38e127151b315531e8720d10ff49325642c22b57f8a9d87b018935"
+  }
+}

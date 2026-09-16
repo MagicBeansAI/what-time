@@ -214,6 +214,7 @@
   <header class="masthead">
     <h1 class="wordmark">what-time<span class="dot">.</span></h1>
     <span class="badge" id="mode-badge">…</span>
+    <span class="badge" id="version-badge" title="library version embedded in this wasm build">v?</span>
   </header>
 
   <p class="lede">Say it in <span class="lede-lang" id="lede-lang">English</span>.</p>
@@ -286,10 +287,11 @@
 </main>
 
 <script type="module">
-import init, { parse, parse_expressions } from "./wasm/what_time_wasm.js";
+import init, { parse, parse_expressions, version } from "./wasm/what_time_wasm.js";
 const wasmReady = init();
 globalThis.wasmParse = parse;
 globalThis.wasmExpressions = parse_expressions;
+globalThis.wasmVersion = version;
 globalThis.wasmReady = wasmReady;
 </script>
 <script>
@@ -306,10 +308,13 @@ const EXAMPLES = [
   { use: "plant care", text: "water the plants every 3 days" },
   { use: "हिन्दी · a meeting", text: "कल शाम को आठ बजे मीटिंग" },
   { use: "हिन्दी · recurring", text: "हर सोमवार को सुबह नौ बजे" },
-  { use: "हिन्दी · a deadline", text: "अगले महीने की 21st को" },
+  { use: "हिन्दी · a date range", text: "इंटरव्यू 24 तारीख से 28 तारीख तक रात को 11 बजे" },
   { use: "hinglish · a call", text: "kal shaam ko 8 baje call kar dena" },
   { use: "hinglish · weekly", text: "har hafte Tuesday ko gym" },
-  { use: "hinglish · day after", text: "parso subah 10 baje" },
+  { use: "hinglish · a date range", text: "15 tareekh se 20 tareekh tak chutti" },
+  { use: "hinglish · quarter past", text: "sava char baje meeting" },
+  { use: "hinglish · a deadline", text: "EOD pe bhej dena" },
+  { use: "hinglish · a date", text: "December ki 14 tarikh ko" },
 ];
 
 const $ = (id) => document.getElementById(id);
@@ -582,12 +587,25 @@ async function init() {
   const delivery = location.protocol === "file:" ? "local file" : "server";
   badge.textContent = `in-page wasm · ${delivery}`;
 
+  globalThis.wasmReady.then(() => {
+    const version = globalThis.wasmVersion ? globalThis.wasmVersion() : null;
+    if (version) $("version-badge").textContent = `v${version}`;
+  }).catch(() => { /* the mode badge still identifies the backend */ });
+
   $("text").value = DEFAULT_PHRASE;
   renderHighlight(DEFAULT_PHRASE);
   run();
 }
 
-init();
+// The wasm loader above is a deferred module script: its globals
+// (wasmReady, wasmParse, …) only exist after it runs, which the HTML
+// spec guarantees happens before DOMContentLoaded. Booting earlier made
+// the initial parse — and the version badge — silently no-op.
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
+}
 </script>
 </body>
 </html>

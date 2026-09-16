@@ -48,6 +48,31 @@ what the external model produced; `accepted.jsonl` is what passed the gate;
 All are git-ignored (regenerable only by the external model, so archive them
 out-of-band if reproducibility matters).
 
+### Targeted V2 batch
+
+`torch/generate-llm-corpus-v2.py` reproducibly expands the V2 brief into
+20,000 template-authored rows; these are synthetic examples, not independent
+external-model samples. `raw.manifest.json` records the seed, generator hash,
+corpus hash and family/register counts. The English/Hindi/Hinglish counts
+describe the carrier register; expressions deliberately mix scripts.
+
+From `packages/training`, after building the Rust `validate-corpus` example:
+
+```sh
+uv run python torch/generate-llm-corpus-v2.py
+uv run python torch/prepare-llm-corpus-v2.py
+uv run python torch/test-corpus-v2.py
+```
+
+The preparation command runs the mandatory acceptance gate, reports coverage
+in `data/llm/v2-validation.json`, and reserves 1,000 accepted rows for
+evaluation. Minimal pairs stay together in the same split. Raw JSONL and its
+grouping sidecar remain ignored; the small manifest and reports are tracked.
+The commands replace this batch's raw corpus and evaluation split, so archive
+an existing external corpus before generating a different batch.
+
+`../V2_RUN.md` records the training run, measured results and remaining gaps.
+
 ## Background prose
 
 `data/prose/` contains the filtered Tatoeba sentences the generators use as

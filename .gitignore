@@ -13,7 +13,8 @@ packages/training/.venv/
 packages/training/data/synth/
 packages/training/data/prose/
 packages/training/data/downloads/
-packages/training/data/llm/*.jsonl
+packages/training/data/llm/**/*.jsonl
+packages/training/data/mining/
 packages/training/*.npz
 packages/training/active/*.npz
 packages/training/runs/*

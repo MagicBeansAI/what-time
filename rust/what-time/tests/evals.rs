@@ -69,8 +69,12 @@ struct ScheduleCase {
     schedule: Option<Schedule>,
 }
 
-/// Known-gapped corpus cases, by id. Currently empty.
-const KNOWN_GAPS: [&str; 0] = [];
+/// Known-gapped corpus cases, by id: the pinned expectation is what the
+/// case SHOULD produce, but the model is not there yet. The suite fails
+/// if a gap starts passing (remove it from this list) and still fails if
+/// it regresses further. Gaps close through training, never by editing
+/// the expectation.
+const KNOWN_GAPS: [&str; 2] = ["user-ordinal-hindi", "user-sava-utth"];
 
 #[test]
 fn schedule_corpora_match() {
@@ -82,6 +86,7 @@ fn schedule_corpora_match() {
         "negatives",
         "grammar-variations",
         "prose",
+        "user-cases",
     ] {
         for line in read_lines(corpus) {
             cases.push(serde_json::from_str(&line).unwrap());
@@ -116,9 +121,10 @@ fn schedule_corpora_match() {
         mismatches.join("\n")
     );
     eprintln!(
-        "schedule eval: {}/{} cases match the recorded expectations (1 known model gap expected to fail)",
+        "schedule eval: {}/{} cases match the recorded expectations ({} known model gap(s) expected to fail)",
         cases.len() - KNOWN_GAPS.len(),
-        cases.len()
+        cases.len(),
+        KNOWN_GAPS.len()
     );
 }
 

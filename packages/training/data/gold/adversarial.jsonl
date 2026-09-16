@@ -23,3 +23,4 @@
 {"id":"adversarial-23","family":"calendar-bound","text":"every Monday until december 31","schedule":{"clauses":[{"recurrence":{"freq":"weekly","interval":1,"byDay":["MO"],"until":{"kind":"calendar","month":12,"day":31}}}]}}
 {"id":"adversarial-24","family":"monthly-list","text":"1st and 15th of each month","schedule":{"clauses":[{"recurrence":{"freq":"monthly","interval":1,"byMonthDay":[1,15]}}]}}
 {"id":"adversarial-25","family":"shared-month-range","text":"June 11-16, 2026","schedule":{"clauses":[{"date":{"kind":"calendarRange","from":{"year":2026,"month":6,"day":11},"to":{"year":2026,"month":6,"day":16}}}]}}
+{"id": "adversarial-fused-clock", "family": "malformed-fusion", "text": "kl 8bjE milte hain", "schedule": null}

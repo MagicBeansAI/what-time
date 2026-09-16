@@ -4,7 +4,7 @@
     <b>Turn "har hafte Tuesday ko gym" into real dates — on-device, in three languages.</b>
   </p>
   <p>
-    <a href="#-install"><img src="https://img.shields.io/badge/what--time-v0.1.0-2563EB.svg" alt="@magicbeansai/what-time v0.1.0" /></a>
+    <a href="#-install"><img src="https://img.shields.io/badge/what--time-v0.2.0-2563EB.svg" alt="@magicbeansai/what-time v0.2.0" /></a>
     <a href="#license"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT" /></a>
     <img src="https://img.shields.io/badge/lang-English%20%7C%20हिन्दी%20%7C%20Hinglish-8B5CF6.svg" alt="English, Hindi, Hinglish" />
     <img src="https://img.shields.io/badge/runtime-WebAssembly%20%2B%20TypeScript-6DA55F.svg" alt="WebAssembly + TypeScript" />
@@ -189,7 +189,7 @@ Synchronous parse — only valid after `await init()`.
 ## ⚠️ Honest limitations
 
 - **Trained phrasing, not all phrasing.** Unusual vocabulary can mislabel
-  (e.g. `for 30 mins` after a clock; use `for 30 minutes`). Rejections come
+  (e.g. `next quarter`; movable holidays like दिवाली). Rejections come
   back as diagnostics, never silent wrong dates.
 - **Three languages by design.** Other languages produce diagnostics, not
   guesses.
