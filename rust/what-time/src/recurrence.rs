@@ -158,6 +158,18 @@ fn matches(date: &Civil, anchor: &Civil, rule: &Recurrence, anchor_week: i64) ->
             }
             rule.by_month_day.is_some() || rule.by_day.is_some() || date.day == anchor.day
         }
+        // A quarter is three months on the calendar; everything else
+        // follows the monthly rules.
+        Frequency::quarterly => {
+            let months = (date.year - anchor.year) as i64 * 12 + (date.month - anchor.month) as i64;
+            if months % (rule.interval * 3) != 0 {
+                return false;
+            }
+            if rule.by_set_pos.is_some() {
+                return matches_position(date, rule);
+            }
+            rule.by_month_day.is_some() || rule.by_day.is_some() || date.day == anchor.day
+        }
         Frequency::yearly => {
             if (date.year - anchor.year) as i64 % rule.interval != 0 {
                 return false;

@@ -43,6 +43,7 @@ pub enum Unit {
     day,
     week,
     month,
+    quarter,
     year,
 }
 
@@ -94,6 +95,7 @@ pub enum HolidayName {
     NewYearsEve,
     halloween,
     valentines,
+    diwali,
 }
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug, Serialize, Deserialize)]
@@ -308,6 +310,7 @@ pub enum Frequency {
     daily,
     weekly,
     monthly,
+    quarterly,
     yearly,
 }
 

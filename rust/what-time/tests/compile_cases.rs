@@ -1008,3 +1008,41 @@ fn compiles_inflected_hindi_ordinals_as_recurrence_positions() {
         }]}),
     );
 }
+
+#[test]
+fn compiles_quarter_periods_and_recurrences() {
+    // "quarter" after a deictic names the calendar period.
+    let text = "next quarter";
+    assert_schedule(
+        text,
+        oracle(text, &["DEICTIC", "UNIT"], &[]),
+        json!({"clauses": [{
+            "date": {"kind": "relativeUnit", "unit": "quarter", "modifier": "next"},
+        }]}),
+    );
+    // The same word in its clock sense is untouched.
+    let clock = "quarter past four";
+    assert_schedule(
+        clock,
+        oracle(clock, &["CLOCK_OFFSET", "CLOCK_OFFSET", "HOUR"], &[]),
+        json!({"clauses": [{"time": {"start": {"hour": 4, "minute": 15}}}]}),
+    );
+    // "every quarter" is a quarterly recurrence.
+    let recur = "every quarter";
+    assert_schedule(
+        recur,
+        oracle(recur, &["RECUR", "UNIT"], &[]),
+        json!({"clauses": [{
+            "recurrence": {"freq": "quarterly", "interval": 1},
+        }]}),
+    );
+    // A unit-labeled word that names a holiday is that holiday.
+    let diwali = "दिवाली को मिलते हैं";
+    assert_schedule(
+        diwali,
+        oracle(diwali, &["UNIT", "GLUE", "O", "O"], &[]),
+        json!({"clauses": [{
+            "date": {"kind": "holiday", "name": "diwali"},
+        }]}),
+    );
+}

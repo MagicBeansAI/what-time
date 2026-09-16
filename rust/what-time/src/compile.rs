@@ -121,6 +121,7 @@ fn frequency_word(word: &str) -> Option<(Frequency, bool)> {
         "weekly" => Some((Frequency::weekly, false)),
         "biweekly" | "fortnightly" => Some((Frequency::weekly, true)),
         "monthly" => Some((Frequency::monthly, false)),
+        "quarterly" => Some((Frequency::quarterly, false)),
         "yearly" | "annually" => Some((Frequency::yearly, false)),
         _ => None,
     }
@@ -132,6 +133,7 @@ fn unit_frequency(unit: Unit) -> Option<Frequency> {
         Unit::day => Some(Frequency::daily),
         Unit::week => Some(Frequency::weekly),
         Unit::month => Some(Frequency::monthly),
+        Unit::quarter => Some(Frequency::quarterly),
         Unit::year => Some(Frequency::yearly),
         Unit::minute => None,
     }
@@ -1447,6 +1449,37 @@ fn empty_recurrence(freq: Frequency) -> Recurrence {
 }
 
 fn compile_clause(input: &[Token], diagnostics: &mut Vec<Diagnostic>, context: &[Token]) -> CompileResult<Clause> {
+    // "quarter" right after a deictic or recurrence marker names the
+    // calendar period ("next quarter", "every quarter"), never a clock
+    // offset — the clock sense only exists in "quarter past/to N".
+    // Relabel first so every downstream check sees the unit.
+    let relabeled: Vec<Token> = input
+        .iter()
+        .enumerate()
+        .map(|(index, token)| {
+            let mut token = token.clone();
+            if matches!(token.label, Role::ClockOffset | Role::DayGroup)
+                && token.raw.text.to_lowercase() == "quarter"
+                && input[..index]
+                    .iter()
+                    .rev()
+                    .find(|token| token.raw.kind != 3 && token.label != Role::O)
+                    .is_some_and(|token| matches!(token.label, Role::Deictic | Role::Recur))
+            {
+                token.label = Role::Unit;
+            }
+            // A unit-labeled word that names a holiday is that holiday
+            // ("दिवाली" drifts between UNIT and HOLIDAY); the word, not
+            // the fine label, carries the meaning.
+            if token.label == Role::Unit
+                && crate::lexicon::holiday_name(&token.raw.text.to_lowercase()).is_some()
+            {
+                token.label = Role::Holiday;
+            }
+            token
+        })
+        .collect();
+    let input: &[Token] = &relabeled;
     let last_meaningful = input.iter().rev().find(|token| token.label != Role::O);
     if let Some(last) = last_meaningful.filter(|token| token.label == Role::RangeEnd) {
         // Hindi/Hinglish postpose the range end ("20 tareekh se 24 tareekh

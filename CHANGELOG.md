@@ -2,6 +2,19 @@
 
 Short and honest. Scores per build live in [`SCORES.md`](SCORES.md).
 
+## 0.2.1
+
+- Quarter calendar periods: `next quarter`, `end of next quarter`, `every quarter`,
+  `quarterly` — resolved on exact quarter boundaries, exported as RRULE
+  `FREQ=MONTHLY;INTERVAL=3`.
+- दिवाली / Diwali resolves via a tabulated 2025–2030 holiday table (main day,
+  India observance); out-of-table years return a diagnostic, never a guessed date.
+- Both 0.2.0 known gaps closed by retraining: ordinal-anchored Hindi recurrences
+  (`हर महीने के दूसरे सोमवार को`) and verbs after fractional clocks
+  (`sava char baje utth ja`). Pinned corpora now 568/568 with zero known gaps.
+- Remaining vocabulary gaps (diagnostics, not wrong dates): English "Diwali",
+  तिमाही/timahi, होली/Holi.
+
 ## 0.2.0
 
 - Hindi/Hinglish postposed date and clock ranges: `15 tareekh se 20 tareekh tak`,

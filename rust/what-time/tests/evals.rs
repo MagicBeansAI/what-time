@@ -73,8 +73,8 @@ struct ScheduleCase {
 /// case SHOULD produce, but the model is not there yet. The suite fails
 /// if a gap starts passing (remove it from this list) and still fails if
 /// it regresses further. Gaps close through training, never by editing
-/// the expectation.
-const KNOWN_GAPS: [&str; 2] = ["user-ordinal-hindi", "user-sava-utth"];
+/// the expectation. Currently empty.
+const KNOWN_GAPS: [&str; 0] = [];
 
 #[test]
 fn schedule_corpora_match() {

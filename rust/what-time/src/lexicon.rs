@@ -255,6 +255,7 @@ pub fn unit(text: &str) -> Option<Unit> {
         }
         "महीने" | "महीना" | "mahine" | "mahina" => return Some(Unit::month),
         "साल" | "वर्ष" | "saal" => return Some(Unit::year),
+        "तिमाही" => return Some(Unit::quarter),
         "मिनट" => return Some(Unit::minute),
         "घंटे" | "घंटा" | "ghante" | "ghanta" => return Some(Unit::hour),
         _ => {}
@@ -266,6 +267,7 @@ pub fn unit(text: &str) -> Option<Unit> {
         "day" => Some(Unit::day),
         "week" => Some(Unit::week),
         "month" => Some(Unit::month),
+        "quarter" => Some(Unit::quarter),
         "year" => Some(Unit::year),
         _ => None,
     }
@@ -281,6 +283,7 @@ pub fn holiday_name(key: &str) -> Option<HolidayName> {
         "valentinesday" | "valentines" => Some(HolidayName::valentines),
         "क्रिसमस" => Some(HolidayName::christmas),
         "नयासाल" => Some(HolidayName::NewYear),
+        "दिवाली" | "दीपावली" | "diwali" | "deepavali" => Some(HolidayName::diwali),
         _ => None,
     }
 }

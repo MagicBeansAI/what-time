@@ -168,9 +168,15 @@ pub fn recurrence_rule(
         );
     }
 
+    // RFC 5545 has no QUARTERLY frequency; a quarter is three months.
+    let rrule_interval = if rule.freq == Frequency::quarterly {
+        rule.interval * 3
+    } else {
+        rule.interval
+    };
     let mut parts = vec![
         format!("FREQ={}", frequency_text(rule.freq)),
-        format!("INTERVAL={}", rule.interval),
+        format!("INTERVAL={}", rrule_interval),
     ];
     if context.options.week_start == Some(crate::types::WeekStart::SU) {
         parts.push("WKST=SU".into());
@@ -293,6 +299,7 @@ fn frequency_text(freq: Frequency) -> &'static str {
         Frequency::daily => "DAILY",
         Frequency::weekly => "WEEKLY",
         Frequency::monthly => "MONTHLY",
+        Frequency::quarterly => "MONTHLY",
         Frequency::yearly => "YEARLY",
     }
 }

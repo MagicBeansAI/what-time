@@ -72,11 +72,10 @@ Per-build history lives in [`SCORES.md`](SCORES.md).
   daily roz/roj/rozz, Devanagari numerals, mins durations, postposed
   से…तक date and clock ranges, and common shorthand. Unseen contexts and
   vocabulary can still mislabel.
-- `next quarter` needs a quarter calendar unit; movable holidays (दिवाली)
-  need a holiday-date table. Both return diagnostics today.
-- Ordinal-anchored recurrences compile ("हर महीने के दूसरे सोमवार को" is
-  pinned as a known gap: the compiler accepts the labels, the tagger drops
-  the ordinal). Ambiguous "mn" was omitted from training.
+- Quarter periods and tabulated दिवाली (2025–2030) are covered; English
+  "Diwali", तिमाही/timahi and होली/Holi return diagnostics until corpus
+  rows exist for them.
+- Ambiguous "mn" was omitted from training.
 - EOD/COB/EOW/EOM select the end of a calendar period; they do not imply a
   configured business closing hour.
 - A day-part before an o'clock-style marker ("शाम को आठ बजे") biases the

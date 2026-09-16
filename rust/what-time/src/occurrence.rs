@@ -66,16 +66,20 @@ pub fn add_duration(epoch: f64, duration: &Duration, time_zone: &str) -> Result<
         crate::types::Unit::hour => Ok(epoch + amount * 3_600_000.0),
         _ => {
             let local = civil(epoch, time_zone)?;
-            let is_month_unit =
-                *unit == crate::types::Unit::month || *unit == crate::types::Unit::year;
+            let is_month_unit = matches!(
+                *unit,
+                crate::types::Unit::month
+                    | crate::types::Unit::quarter
+                    | crate::types::Unit::year
+            );
             let shifted = if is_month_unit {
                 add_months(
                     &local,
                     amount
-                        * if *unit == crate::types::Unit::year {
-                            12.0
-                        } else {
-                            1.0
+                        * match *unit {
+                            crate::types::Unit::year => 12.0,
+                            crate::types::Unit::quarter => 3.0,
+                            _ => 1.0,
                         },
                 )
             } else {

@@ -176,13 +176,13 @@ shape the npm package returns. Pipe phrases on stdin when quoting gets hairy
 ## ⚠️ Honest limitations
 
 - **Trained phrasing, not all phrasing.** Rare vocabulary can mislabel
-  (current known gaps: `next quarter`, movable holidays like दिवाली). Known
+  (current known gaps: English "Diwali", तिमाही, होली). Known
   gaps return diagnostics rather than wrong dates, and each is queued for the
   next corpus batch.
 - **कल / kal** (yesterday or tomorrow) resolves to **tomorrow** unless a
   past-tense cue appears — a documented default, not a guess.
 - **Real-user accuracy is unmeasured.** In-distribution scores are excellent
-  (568 pinned corpus cases, LLM held-out 0.995) but generated corpora share
+  (568 pinned corpus cases, zero known gaps, LLM held-out 0.995) but generated corpora share
   training families.
 - **GPU mode pays only in bulk.** Single phrases are fastest on CPU (~1 ms);
   the GPU path activates at ≥64 phrases per call.

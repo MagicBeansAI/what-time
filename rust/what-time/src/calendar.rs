@@ -14,15 +14,33 @@ pub struct LocalPeriod {
     pub end: Option<Civil>,
 }
 
-fn holiday_date(name: HolidayName) -> (i32, i32) {
+fn holiday_date(name: HolidayName, year: i32) -> Option<(i32, i32)> {
     match name {
-        HolidayName::christmas => (12, 25),
-        HolidayName::ChristmasEve => (12, 24),
-        HolidayName::NewYear => (1, 1),
-        HolidayName::NewYearsEve => (12, 31),
-        HolidayName::halloween => (10, 31),
-        HolidayName::valentines => (2, 14),
+        HolidayName::christmas => Some((12, 25)),
+        HolidayName::ChristmasEve => Some((12, 24)),
+        HolidayName::NewYear => Some((1, 1)),
+        HolidayName::NewYearsEve => Some((12, 31)),
+        HolidayName::halloween => Some((10, 31)),
+        HolidayName::valentines => Some((2, 14)),
+        // Diwali is Kartik Amavasya on the Hindu lunar calendar, so it
+        // moves against the Gregorian year. Tabulated per year (main day,
+        // India observance) rather than approximated; out-of-table years
+        // are an honest error, never a guessed date.
+        HolidayName::diwali => diwali_date(year),
     }
+}
+
+fn diwali_date(year: i32) -> Option<(i32, i32)> {
+    let (month, day) = match year {
+        2025 => (10, 20),
+        2026 => (11, 8),
+        2027 => (10, 29),
+        2028 => (10, 17),
+        2029 => (11, 5),
+        2030 => (10, 26),
+        _ => return None,
+    };
+    Some((month, day))
 }
 
 fn su_week(options: &ResolveOptions) -> bool {
@@ -108,6 +126,7 @@ pub fn add_civil(date: &Civil, amount: f64, unit: Unit) -> Civil {
         Unit::day => add_days(date, amount),
         Unit::week => add_days(date, amount * 7.0),
         Unit::month => add_months(date, amount),
+        Unit::quarter => add_months(date, amount * 3.0),
         Unit::year => add_months(date, amount * 12.0),
     }
 }
@@ -124,6 +143,10 @@ fn relative_period(
         beginning = week_beginning(reference, options.week_start.unwrap_or(WeekStart::MO));
     }
     if unit == Unit::month {
+        beginning.day = 1;
+    }
+    if unit == Unit::quarter {
+        beginning.month = (beginning.month - 1) / 3 * 3 + 1;
         beginning.day = 1;
     }
     if unit == Unit::year {
@@ -368,7 +391,9 @@ pub fn resolve_dates(
         }
 
         DateSpec::Holiday { name } => {
-            let (month, day) = holiday_date(*name);
+            let Some((month, day)) = holiday_date(*name, reference.year) else {
+                return Err("Diwali dates are tabulated for 2025 through 2030.".into());
+            };
             let mut date = calendar_date(
                 &CalendarDate {
                     year: None,
@@ -378,6 +403,10 @@ pub fn resolve_dates(
                 reference,
             )?;
             if utc(&date) < utc(&today) {
+                if let Some((month, day)) = holiday_date(*name, reference.year + 1) {
+                    date.month = month;
+                    date.day = day;
+                }
                 date.year += 1;
             }
             Ok(vec![LocalPeriod {
