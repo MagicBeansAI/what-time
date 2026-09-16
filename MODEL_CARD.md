@@ -52,13 +52,13 @@ repeated. Reserved carrier phrases remain excluded from training.
 See [`packages/training/V2_RUN.md`](packages/training/V2_RUN.md) for the
 commands, measured comparison, training proportions and remaining gaps.
 
-## Metrics (current checkpoint — `llm-ext-r5`, shipped as v0.2.0)
+## Metrics (current checkpoint — `quarter-gaps-r2`, shipped as v0.2.1)
 
 Per-build history lives in [`SCORES.md`](SCORES.md).
 
-- Pinned corpora: 566/568 schedule cases (2 documented known gaps expected
-  to fail), 15/15 multilingual fixtures, 18/18 end-to-end occurrence cases.
-- LLM held-out: 0.9945 exact token-label/boundary sequences on a 2,000-row
+- Pinned corpora: 568/568 schedule cases (zero known gaps), 15/15
+  multilingual fixtures, 22/22 end-to-end occurrence cases.
+- LLM held-out: 0.9955 exact token-label/boundary sequences on a 2,000-row
   union slice (1,000 of them from a never-trained external-model corpus).
 - Generator held-out: 0.9606 on 5,000 rows; extra families: 0.9950 on
   4,983 rows. These are synthetic, generator-related evaluations, not
