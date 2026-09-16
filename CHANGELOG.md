@@ -16,8 +16,10 @@ Short and honest. Scores per build live in [`SCORES.md`](SCORES.md).
 - Both 0.2.0 known gaps closed by retraining: ordinal-anchored Hindi recurrences
   (`हर महीने के दूसरे सोमवार को`) and verbs after fractional clocks
   (`sava char baje utth ja`). Pinned corpora now 568/568 with zero known gaps.
-- Remaining vocabulary gaps (diagnostics, not wrong dates): English "Diwali",
-  तिमाही/timahi, होली/Holi.
+- Holiday vocabulary and sentence-initial EOD trained directly (no longer
+  dependent on compiler rescue rules); all 20 playground examples are pinned
+  regression cases. Remaining vocabulary gaps (diagnostics, not wrong
+  dates): तिमाही/timahi, होली/Holi.
 
 ## 0.2.0
 
