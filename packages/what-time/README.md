@@ -202,9 +202,9 @@ Synchronous parse — only valid after `await init()`.
 
 ## 🧪 Try it without installing
 
-The repository ships a self-contained playground
-([`rust/site/what-time.html`](https://github.com/MagicBeansAI/what-time/blob/main/rust/site/what-time.html) — single HTML file, wasm
-inlined) where you can type phrases in all three languages.
+Try it live, no install: **[magicbeansai.github.io/what-time](https://magicbeansai.github.io/what-time/)**
+(wasm inlined, runs offline after first load; the same page ships as a single
+[`what-time.html`](https://github.com/MagicBeansAI/what-time/blob/main/rust/site/what-time.html) file).
 
 ---
 

@@ -12,7 +12,7 @@
   <p>
     <a href="packages/what-time">npm package</a>
     &nbsp;&middot;&nbsp;
-    <a href="rust/site/what-time.html">Live playground (single file)</a>
+    <a href="https://magicbeansai.github.io/what-time/">Live playground</a>
     &nbsp;&middot;&nbsp;
     <a href="MODEL_CARD.md">Model card</a>
   </p>
@@ -72,8 +72,9 @@ echo "कल शाम को आठ बजे" | what-time -j -r 2026-09-13T10:
 # exit 0, full JSON on stdout — 1 parsed / 1 nothing found / 2 bad invocation
 ```
 
-**Zero-install playground:** open
-[`rust/site/what-time.html`](rust/site/what-time.html) — one self-contained
+**Zero-install playground:** try it live at
+[magicbeansai.github.io/what-time](https://magicbeansai.github.io/what-time/) —
+or grab [`rust/site/what-time.html`](rust/site/what-time.html), one self-contained
 file (wasm inlined) that runs the full trilingual model offline, straight from
 disk.
 
