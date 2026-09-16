@@ -121,7 +121,8 @@ pub fn read_duration(tokens: &[Token], index: usize) -> Option<(Duration, usize)
                 tail += 1;
             }
             if tokens.get(tail).is_some_and(|token| {
-                matches!(token.label, Role::Num | Role::Dur) && token.raw.text.to_lowercase() == "half"
+                matches!(token.label, Role::Num | Role::Dur)
+                    && token.raw.text.to_lowercase() == "half"
             }) {
                 amount += 0.5;
                 next = tail + 1;

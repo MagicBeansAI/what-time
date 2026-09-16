@@ -6,8 +6,8 @@
 //! are byte offsets into the Rust string (the Rust-natural equivalent of the
 //! JS UTF-16 indices).
 
-use crate::types::RawToken;
 use crate::lexicon::{decimal_digit, normalize_digits};
+use crate::types::RawToken;
 
 const PUNCTUATION_CHARACTERS: &str = ":-/.,(');&+@!?_=<>[]{}\\\"%#*~`";
 const PUNCTUATION_CLASSES: [&str; 11] = [":", "-", "/", ".", ",", "(", "'", ";", "&", "+", "@"];
@@ -187,8 +187,13 @@ fn scan_tokens(text: &str) -> Vec<&str> {
     while index < text.len() {
         let start = index;
         let first = text[index..].chars().next().unwrap();
-        if text[index..].get(..4).is_some_and(|word| word.eq_ignore_ascii_case("2mrw"))
-            && text[index + 4..].chars().next().is_none_or(|c| !c.is_alphanumeric() && c != '_')
+        if text[index..]
+            .get(..4)
+            .is_some_and(|word| word.eq_ignore_ascii_case("2mrw"))
+            && text[index + 4..]
+                .chars()
+                .next()
+                .is_none_or(|c| !c.is_alphanumeric() && c != '_')
         {
             index += 4;
         } else if first.is_alphabetic() || first == '_' {
@@ -229,7 +234,11 @@ fn scan_tokens(text: &str) -> Vec<&str> {
             index = end;
         } else if decimal_digit(first).is_some() {
             index += first.len_utf8();
-            while let Some(c) = text[index..].chars().next().filter(|c| decimal_digit(*c).is_some()) {
+            while let Some(c) = text[index..]
+                .chars()
+                .next()
+                .filter(|c| decimal_digit(*c).is_some())
+            {
                 index += c.len_utf8();
             }
         } else if first.is_whitespace() {

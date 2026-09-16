@@ -68,9 +68,7 @@ pub fn add_duration(epoch: f64, duration: &Duration, time_zone: &str) -> Result<
             let local = civil(epoch, time_zone)?;
             let is_month_unit = matches!(
                 *unit,
-                crate::types::Unit::month
-                    | crate::types::Unit::quarter
-                    | crate::types::Unit::year
+                crate::types::Unit::month | crate::types::Unit::quarter | crate::types::Unit::year
             );
             let shifted = if is_month_unit {
                 add_months(

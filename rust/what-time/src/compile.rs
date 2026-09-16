@@ -1,7 +1,9 @@
 //! Compiles predicted roles into typed schedules.
 
 use crate::labels::Role;
-use crate::lexicon::{compound_ordinal, decimal_digit, holiday_name, month, normalize_digits, number, unit, weekday};
+use crate::lexicon::{
+    compound_ordinal, decimal_digit, holiday_name, month, normalize_digits, number, unit, weekday,
+};
 use crate::quantity::{read_duration, read_number};
 use crate::types::{
     CalendarDate, Clause, ClockTime, DateSpec, DayGroup, DayPart, Diagnostic, Direction, Duration,
@@ -78,16 +80,29 @@ fn hindi_relative_offset(pair: (i64, i64), tokens: &[Token], start: usize) -> i6
     let Some(index) = tokens.iter().position(|token| token.raw.start == start) else {
         return pair.0;
     };
-    let boundary = |token: &&Token| token.label == Role::RelDay
-        || matches!(token.raw.text.as_str(), "." | "!" | "?" | ";" | "।");
+    let boundary = |token: &&Token| {
+        token.label == Role::RelDay
+            || matches!(token.raw.text.as_str(), "." | "!" | "?" | ";" | "।")
+    };
     let cue = |token: &Token| match token.raw.text.to_lowercase().as_str() {
-        "था" | "थी" | "थे" | "थीं" | "tha" | "thi" | "बीता" | "beeta" => Some(pair.1),
-        "आएगा" | "आएगी" | "आएंगे" | "आएँगे" | "जाएँगे" | "है"
-        | "aayega" | "aayegi" | "aayenge" | "jayenge" | "jaayenge" | "hai" => Some(pair.0),
+        "था" | "थी" | "थे" | "थीं" | "tha" | "thi" | "बीता" | "beeta" => {
+            Some(pair.1)
+        }
+        "आएगा" | "आएगी" | "आएंगे" | "आएँगे" | "जाएँगे" | "है" | "aayega" | "aayegi" | "aayenge"
+        | "jayenge" | "jaayenge" | "hai" => Some(pair.0),
         _ => None,
     };
-    tokens[index + 1..].iter().take_while(|token| !boundary(token)).find_map(cue)
-        .or_else(|| tokens[..index].iter().rev().take_while(|token| !boundary(token)).find_map(cue))
+    tokens[index + 1..]
+        .iter()
+        .take_while(|token| !boundary(token))
+        .find_map(cue)
+        .or_else(|| {
+            tokens[..index]
+                .iter()
+                .rev()
+                .take_while(|token| !boundary(token))
+                .find_map(cue)
+        })
         .unwrap_or(pair.0)
 }
 
@@ -558,7 +573,8 @@ fn compile_date_and_time(
                     phrase.push_str(&tokens[index].raw.text.to_lowercase());
                 }
                 let offset = relative_day(&phrase).or_else(|| {
-                    hindi_relative(&phrase).map(|pair| hindi_relative_offset(pair, context, token.raw.start))
+                    hindi_relative(&phrase)
+                        .map(|pair| hindi_relative_offset(pair, context, token.raw.start))
                 });
                 let Some(offset) = offset else {
                     return fail(token, "unsupported", "Unknown relative day.");
@@ -1448,7 +1464,11 @@ fn empty_recurrence(freq: Frequency) -> Recurrence {
     }
 }
 
-fn compile_clause(input: &[Token], diagnostics: &mut Vec<Diagnostic>, context: &[Token]) -> CompileResult<Clause> {
+fn compile_clause(
+    input: &[Token],
+    diagnostics: &mut Vec<Diagnostic>,
+    context: &[Token],
+) -> CompileResult<Clause> {
     // "quarter" right after a deictic or recurrence marker names the
     // calendar period ("next quarter", "every quarter"), never a clock
     // offset — the clock sense only exists in "quarter past/to N".
@@ -1488,9 +1508,7 @@ fn compile_clause(input: &[Token], diagnostics: &mut Vec<Diagnostic>, context: &
         // still present earlier, so the range is complete, not unfinished.
         let word = last.raw.text.to_lowercase();
         let postposed = matches!(word.as_str(), "तक" | "tak")
-            && input
-                .iter()
-                .any(|token| token.label == Role::RangeStart)
+            && input.iter().any(|token| token.label == Role::RangeStart)
             && input.iter().any(|token| {
                 matches!(
                     token.label,
@@ -1578,11 +1596,17 @@ fn compile_clause(input: &[Token], diagnostics: &mut Vec<Diagnostic>, context: &
         {
             // तारीख names a DOM selector, not a recurrence frequency or a
             // standalone calendar period. The model must also supply its day.
-            let adjacent_day = index.checked_sub(1).and_then(|i| tokens.get(i))
+            let adjacent_day = index
+                .checked_sub(1)
+                .and_then(|i| tokens.get(i))
                 .is_some_and(|t| t.label == Role::Dom)
                 || tokens.get(index + 1).is_some_and(|t| t.label == Role::Dom);
             if !adjacent_day {
-                return fail(token, "invalid-date", "A date selector needs a day of month.");
+                return fail(
+                    token,
+                    "invalid-date",
+                    "A date selector needs a day of month.",
+                );
             }
             index += 1;
             continue;
@@ -2278,7 +2302,8 @@ fn numeric_date_order(tokens: &[Token], order: crate::types::DateOrder) -> Vec<T
             || (index >= 2
                 && separator(tokens.get(index - 1))
                 && tokens.get(index - 2).map(|token| token.label) == Some(Role::Year));
-        let digits = |text: &str| !text.is_empty() && text.chars().all(|c| decimal_digit(c).is_some());
+        let digits =
+            |text: &str| !text.is_empty() && text.chars().all(|c| decimal_digit(c).is_some());
         if !digits(&first.raw.text) || !digits(&second.raw.text) {
             continue;
         }

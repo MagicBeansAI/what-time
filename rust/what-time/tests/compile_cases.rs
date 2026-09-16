@@ -83,71 +83,145 @@ fn composes_a_quantity_and_unit_as_a_duration_without_an_introducer() {
 fn compiles_v2_date_selectors_and_quantity_labeled_durations() {
     for marker in ["तारीख", "tareek", "tareekh", "taareekh"] {
         let text = format!("15 {marker} ko");
-        assert_schedule(&text, oracle(&text, &["DOM", "UNIT", "GLUE"], &[]),
-            json!({"clauses": [{"date": {"kind": "calendar", "day": 15}}]}));
+        assert_schedule(
+            &text,
+            oracle(&text, &["DOM", "UNIT", "GLUE"], &[]),
+            json!({"clauses": [{"date": {"kind": "calendar", "day": 15}}]}),
+        );
         let text = format!("har mahine ki 5 {marker}");
-        assert_schedule(&text, oracle(&text, &["RECUR", "UNIT", "GLUE", "DOM", "UNIT"], &[]),
-            json!({"clauses": [{"recurrence": {"freq": "monthly", "interval": 1, "byMonthDay": [5]}}]}));
+        assert_schedule(
+            &text,
+            oracle(&text, &["RECUR", "UNIT", "GLUE", "DOM", "UNIT"], &[]),
+            json!({"clauses": [{"recurrence": {"freq": "monthly", "interval": 1, "byMonthDay": [5]}}]}),
+        );
     }
     for (text, labels, amount) in [
         ("for 10 mins", vec!["GLUE", "DUR", "UNIT"], 10),
         ("पूरे ३० मिनट", vec!["GLUE", "DUR", "UNIT"], 30),
-        ("bas 5 mins ka kaam", vec!["O", "DUR", "UNIT", "GLUE", "O"], 5),
+        (
+            "bas 5 mins ka kaam",
+            vec!["O", "DUR", "UNIT", "GLUE", "O"],
+            5,
+        ),
     ] {
-        assert_schedule(text, oracle(text, &labels, &[]),
-            json!({"clauses": [{"duration": {"amount": amount, "unit": "minute"}}]}));
+        assert_schedule(
+            text,
+            oracle(text, &labels, &[]),
+            json!({"clauses": [{"duration": {"amount": amount, "unit": "minute"}}]}),
+        );
     }
     let invalid = "for 0 mins";
-    assert!(compile(invalid, oracle(invalid, &["GLUE", "DUR", "UNIT"], &[]))[0].schedule.is_none());
+    assert!(
+        compile(invalid, oracle(invalid, &["GLUE", "DUR", "UNIT"], &[]))[0]
+            .schedule
+            .is_none()
+    );
     let marker = "tareekh";
-    assert!(compile(marker, oracle(marker, &["UNIT"], &[]))[0].schedule.is_none());
+    assert!(
+        compile(marker, oracle(marker, &["UNIT"], &[]))[0]
+            .schedule
+            .is_none()
+    );
 }
 
 #[test]
 fn compiles_v2_numerals_and_preserves_fractional_clock_precedence() {
     for (text, labels, hour, minute) in [
-        ("शाम को ८ बजे", vec!["DAYPART", "GLUE", "HOUR", "MERIDIEM"], 20, 0),
-        ("शाम को सवा ८ बजे", vec!["DAYPART", "GLUE", "CLOCK_OFFSET", "HOUR", "MERIDIEM"], 8, 15),
-        ("raat ko dedh baje", vec!["DAYPART", "GLUE", "CLOCK_OFFSET", "MERIDIEM"], 1, 30),
-        ("शाम को ८ : ३० am", vec!["DAYPART", "GLUE", "HOUR", "GLUE", "MINUTE", "MERIDIEM"], 8, 30),
+        (
+            "शाम को ८ बजे",
+            vec!["DAYPART", "GLUE", "HOUR", "MERIDIEM"],
+            20,
+            0,
+        ),
+        (
+            "शाम को सवा ८ बजे",
+            vec!["DAYPART", "GLUE", "CLOCK_OFFSET", "HOUR", "MERIDIEM"],
+            8,
+            15,
+        ),
+        (
+            "raat ko dedh baje",
+            vec!["DAYPART", "GLUE", "CLOCK_OFFSET", "MERIDIEM"],
+            1,
+            30,
+        ),
+        (
+            "शाम को ८ : ३० am",
+            vec!["DAYPART", "GLUE", "HOUR", "GLUE", "MINUTE", "MERIDIEM"],
+            8,
+            30,
+        ),
         ("सवा ४ बजे", vec!["CLOCK_OFFSET", "HOUR", "MERIDIEM"], 4, 15),
     ] {
-        assert_schedule(text, oracle(text, &labels, &[]),
-            json!({"clauses": [{"time": {"start": {"hour": hour, "minute": minute}}}]}));
+        assert_schedule(
+            text,
+            oracle(text, &labels, &[]),
+            json!({"clauses": [{"time": {"start": {"hour": hour, "minute": minute}}}]}),
+        );
     }
     for word in ["roz", "roj", "rozz", "रोज़"] {
-        assert_schedule(word, oracle(word, &["RECUR"], &[]),
-            json!({"clauses": [{"recurrence": {"freq": "daily", "interval": 1}}]}));
+        assert_schedule(
+            word,
+            oracle(word, &["RECUR"], &[]),
+            json!({"clauses": [{"recurrence": {"freq": "daily", "interval": 1}}]}),
+        );
     }
 }
 
 #[test]
 fn compiles_corporate_units_and_casual_shorthand() {
-    for (word, unit) in [("EOD", "day"), ("COB", "day"), ("EOW", "week"), ("EOM", "month")] {
-        assert_schedule(word, oracle(word, &["UNIT"], &[]),
-            json!({"clauses": [{"date": {"kind": "relativeUnit", "unit": unit, "modifier": "this", "edge": "end"}}]}));
+    for (word, unit) in [
+        ("EOD", "day"),
+        ("COB", "day"),
+        ("EOW", "week"),
+        ("EOM", "month"),
+    ] {
+        assert_schedule(
+            word,
+            oracle(word, &["UNIT"], &[]),
+            json!({"clauses": [{"date": {"kind": "relativeUnit", "unit": unit, "modifier": "this", "edge": "end"}}]}),
+        );
     }
-    assert_schedule("2MRW", oracle("2MRW", &["REL_DAY"], &[]),
-        json!({"clauses": [{"date": {"kind": "relativeDay", "offset": 1}}]}));
-    assert_schedule("evng", oracle("evng", &["DAYPART"], &[]),
-        json!({"clauses": [{"time": {"start": {"part": "evening"}}}]}));
+    assert_schedule(
+        "2MRW",
+        oracle("2MRW", &["REL_DAY"], &[]),
+        json!({"clauses": [{"date": {"kind": "relativeDay", "offset": 1}}]}),
+    );
+    assert_schedule(
+        "evng",
+        oracle("evng", &["DAYPART"], &[]),
+        json!({"clauses": [{"time": {"start": {"part": "evening"}}}]}),
+    );
 }
 
 #[test]
 fn hindi_relative_days_keep_background_tense_context() {
-    for (text, offset) in [("कल आया था", -1), ("कल आना है", 1),
-                           ("parso gaya tha", -2), ("parso aana hai", 2),
-                           ("kl aaya tha", -1), ("kal Nathan aayega", 1),
-                           ("kal aana tha", -1)] {
-        assert_schedule(text, oracle(text, &["REL_DAY", "O", "O"], &[]),
-            json!({"clauses": [{"date": {"kind": "relativeDay", "offset": offset}}]}));
+    for (text, offset) in [
+        ("कल आया था", -1),
+        ("कल आना है", 1),
+        ("parso gaya tha", -2),
+        ("parso aana hai", 2),
+        ("kl aaya tha", -1),
+        ("kal Nathan aayega", 1),
+        ("kal aana tha", -1),
+    ] {
+        assert_schedule(
+            text,
+            oracle(text, &["REL_DAY", "O", "O"], &[]),
+            json!({"clauses": [{"date": {"kind": "relativeDay", "offset": offset}}]}),
+        );
     }
     let text = "कल आया था और परसों आएगा";
-    let results = compile(text, oracle(text, &["REL_DAY", "O", "O", "O", "REL_DAY", "O"], &[]));
+    let results = compile(
+        text,
+        oracle(text, &["REL_DAY", "O", "O", "O", "REL_DAY", "O"], &[]),
+    );
     assert_eq!(results.len(), 2);
     for (expression, offset) in results.iter().zip([-1, 2]) {
-        assert_eq!(serde_json::to_value(&expression.schedule).unwrap(),
-            json!({"clauses": [{"date": {"kind": "relativeDay", "offset": offset}}]}));
+        assert_eq!(
+            serde_json::to_value(&expression.schedule).unwrap(),
+            json!({"clauses": [{"date": {"kind": "relativeDay", "offset": offset}}]})
+        );
     }
 }
 
@@ -161,13 +235,27 @@ fn devanagari_numbers_share_features_without_changing_source_spans() {
         assert_eq!(&"१५ तारीख ८:3० pm 2MRW"[left.start..left.end], left.text);
     }
     assert_eq!(native.last().unwrap().text, "2MRW");
-    assert_eq!(tokenize("24th").iter().map(|t| t.text.as_str()).collect::<Vec<_>>(), ["24", "th"]);
-    assert_eq!(tokenize("2mrwx").iter().map(|t| t.text.as_str()).collect::<Vec<_>>(), ["2", "mrwx"]);
+    assert_eq!(
+        tokenize("24th")
+            .iter()
+            .map(|t| t.text.as_str())
+            .collect::<Vec<_>>(),
+        ["24", "th"]
+    );
+    assert_eq!(
+        tokenize("2mrwx")
+            .iter()
+            .map(|t| t.text.as_str())
+            .collect::<Vec<_>>(),
+        ["2", "mrwx"]
+    );
     let text = "०४ / ०५ / २०२६";
     let tokens = oracle(text, &["MONTH", "GLUE", "DOM", "GLUE", "YEAR"], &[]);
     let result = compile_ordered(text, tokens, DateOrder::DMY);
-    assert_eq!(serde_json::to_value(&result[0].schedule).unwrap(),
-        json!({"clauses": [{"date": {"kind": "calendar", "month": 5, "day": 4, "year": 2026}}]}));
+    assert_eq!(
+        serde_json::to_value(&result[0].schedule).unwrap(),
+        json!({"clauses": [{"date": {"kind": "calendar", "month": 5, "day": 4, "year": 2026}}]})
+    );
 }
 
 #[test]
@@ -918,8 +1006,17 @@ fn compiles_a_postposed_hindi_date_range() {
         oracle(
             text,
             &[
-                "O", "DOM", "UNIT", "RANGE_START", "DOM", "UNIT", "RANGE_END", "DAYPART", "GLUE",
-                "HOUR", "MERIDIEM",
+                "O",
+                "DOM",
+                "UNIT",
+                "RANGE_START",
+                "DOM",
+                "UNIT",
+                "RANGE_END",
+                "DAYPART",
+                "GLUE",
+                "HOUR",
+                "MERIDIEM",
             ],
             &[],
         ),
@@ -935,7 +1032,15 @@ fn compiles_a_postposed_hindi_date_range() {
         hinglish,
         oracle(
             hinglish,
-            &["O", "DOM", "UNIT", "RANGE_START", "DOM", "UNIT", "RANGE_END"],
+            &[
+                "O",
+                "DOM",
+                "UNIT",
+                "RANGE_START",
+                "DOM",
+                "UNIT",
+                "RANGE_END",
+            ],
             &[],
         ),
         json!({"clauses": [{
@@ -947,7 +1052,11 @@ fn compiles_a_postposed_hindi_date_range() {
     let unfinished = "Monday 5pm tak";
     let expressions = compile(
         unfinished,
-        oracle(unfinished, &["WEEKDAY", "HOUR", "MERIDIEM", "RANGE_END"], &[]),
+        oracle(
+            unfinished,
+            &["WEEKDAY", "HOUR", "MERIDIEM", "RANGE_END"],
+            &[],
+        ),
     );
     assert_eq!(expressions[0].diagnostics[0].code, "incomplete-range");
 }
@@ -967,7 +1076,11 @@ fn compiles_tarikh_date_selectors_and_postposed_clock_ranges() {
     let bare = "22 tarikh sava char baje";
     assert_schedule(
         bare,
-        oracle(bare, &["DOM", "UNIT", "CLOCK_OFFSET", "HOUR", "MERIDIEM"], &[]),
+        oracle(
+            bare,
+            &["DOM", "UNIT", "CLOCK_OFFSET", "HOUR", "MERIDIEM"],
+            &[],
+        ),
         json!({"clauses": [{
             "date": {"kind": "calendar", "day": 22},
             "time": {"start": {"hour": 4, "minute": 15}},
@@ -980,7 +1093,14 @@ fn compiles_tarikh_date_selectors_and_postposed_clock_ranges() {
         hinglish,
         oracle(
             hinglish,
-            &["CLOCK_OFFSET", "HOUR", "RANGE_START", "CLOCK_OFFSET", "HOUR", "RANGE_END"],
+            &[
+                "CLOCK_OFFSET",
+                "HOUR",
+                "RANGE_START",
+                "CLOCK_OFFSET",
+                "HOUR",
+                "RANGE_END",
+            ],
             &[],
         ),
         json!({"clauses": [{
@@ -992,7 +1112,11 @@ fn compiles_tarikh_date_selectors_and_postposed_clock_ranges() {
     let unlinked = "3 baje 5 baje tak";
     let expressions = compile(
         unlinked,
-        oracle(unlinked, &["HOUR", "MERIDIEM", "HOUR", "MERIDIEM", "RANGE_END"], &[]),
+        oracle(
+            unlinked,
+            &["HOUR", "MERIDIEM", "HOUR", "MERIDIEM", "RANGE_END"],
+            &[],
+        ),
     );
     assert_eq!(expressions[0].diagnostics[0].code, "incomplete-range");
 }
@@ -1002,7 +1126,11 @@ fn compiles_inflected_hindi_ordinals_as_recurrence_positions() {
     let text = "हर महीने के दूसरे सोमवार को";
     assert_schedule(
         text,
-        oracle(text, &["RECUR", "UNIT", "GLUE", "ORD", "WEEKDAY", "GLUE"], &[]),
+        oracle(
+            text,
+            &["RECUR", "UNIT", "GLUE", "ORD", "WEEKDAY", "GLUE"],
+            &[],
+        ),
         json!({"clauses": [{
             "recurrence": {"freq": "monthly", "interval": 1, "byDay": ["MO"], "bySetPos": [2]},
         }]}),

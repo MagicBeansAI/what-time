@@ -76,10 +76,7 @@ fn main() {
         let mut expects_time = false;
         let mut tokens = Vec::new();
         for token in &result {
-            let label = LABELS
-                .get(token.label as usize)
-                .copied()
-                .unwrap_or("?");
+            let label = LABELS.get(token.label as usize).copied().unwrap_or("?");
             tokens.push((token.raw.text.clone(), label, token.score));
             if token.raw.kind == 3 {
                 continue;

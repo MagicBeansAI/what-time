@@ -93,11 +93,14 @@ pub fn spoken_quantity(word: &str) -> Option<f64> {
         // "तीसरी बैठक"); the model's ORD label picks them out, so every
         // inflected form of first–fifth maps to its number.
         "पहले" | "पहली" | "pehle" | "pehli" => 1.0,
-        "दूसरे" | "दूसरी" | "doosra" | "doosre" | "doosri" | "dusre" | "dusri" => 2.0,
-        "तीसरा" | "तीसरे" | "तीसरी" | "teesra" | "teesre" | "teesri" => 3.0,
+        "दूसरे" | "दूसरी" | "doosra" | "doosre" | "doosri" | "dusre" | "dusri" => {
+            2.0
+        }
+        "तीसरा" | "तीसरे" | "तीसरी" | "teesra" | "teesre" | "teesri" => {
+            3.0
+        }
         "चौथा" | "चौथे" | "चौथी" | "chautha" | "chauthe" | "chauthi" => 4.0,
-        "पाँचवा" | "पाँचवे" | "पाँचवी" | "पांचवा" | "पांचवे" | "पांचवी" | "paanchwa"
-        | "paanchwe"
+        "पाँचवा" | "पाँचवे" | "पाँचवी" | "पांचवा" | "पांचवे" | "पांचवी" | "paanchwa" | "paanchwe"
         | "paanchvi" => 5.0,
         "आखिरी" | "आख़िरी" | "aakhri" | "aakhiri" => -1.0,
         "तीन" | "teen" => 3.0,
@@ -173,7 +176,11 @@ pub(crate) fn decimal_digit(character: char) -> Option<u32> {
 
 pub(crate) fn normalize_digits(text: &str) -> String {
     text.chars()
-        .map(|c| decimal_digit(c).and_then(|d| char::from_digit(d, 10)).unwrap_or(c))
+        .map(|c| {
+            decimal_digit(c)
+                .and_then(|d| char::from_digit(d, 10))
+                .unwrap_or(c)
+        })
         .collect()
 }
 

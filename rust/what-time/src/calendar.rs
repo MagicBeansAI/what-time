@@ -1,8 +1,8 @@
 //! Resolves date specifications to local calendar periods.
 
 use crate::types::{
-    CalendarDate, DateSpec, DayGroup, Edge, Modifier, ResolveOptions, Unit, WEEKDAYS, Weekday,
-    WeekStart, weekday_index,
+    CalendarDate, DateSpec, DayGroup, Edge, Modifier, ResolveOptions, Unit, WEEKDAYS, WeekStart,
+    Weekday, weekday_index,
 };
 use crate::zoned::{
     Civil, add_days, add_months, day_of_week, days_in_month, from_utc, is_valid, utc,
@@ -17,16 +17,18 @@ pub struct LocalPeriod {
 fn holiday_date(key: &str, year: i32) -> Option<(i32, i32)> {
     match holiday_entry(key) {
         Some(HolidayEntry::Fixed { month, day }) => Some((month, day)),
-        Some(HolidayEntry::NthWeekday { month, ordinal, weekday }) => {
-            nth_weekday_of_month(year, month, ordinal, weekday)
-        }
+        Some(HolidayEntry::NthWeekday {
+            month,
+            ordinal,
+            weekday,
+        }) => nth_weekday_of_month(year, month, ordinal, weekday),
         Some(HolidayEntry::EasterOffset { offset }) => {
             let (month, day) = western_easter(year);
             add_ordinal_days(month, day, offset)
         }
-        Some(HolidayEntry::Tabulated { dates }) => dates
-            .get(&year.to_string())
-            .map(|pair| (pair[0], pair[1])),
+        Some(HolidayEntry::Tabulated { dates }) => {
+            dates.get(&year.to_string()).map(|pair| (pair[0], pair[1]))
+        }
         None => None,
     }
 }
@@ -34,10 +36,21 @@ fn holiday_date(key: &str, year: i32) -> Option<(i32, i32)> {
 #[derive(Clone, serde::Deserialize)]
 #[serde(tag = "kind", rename_all = "camelCase")]
 enum HolidayEntry {
-    Fixed { month: i32, day: i32 },
-    NthWeekday { month: i32, ordinal: i32, weekday: Weekday },
-    EasterOffset { offset: i32 },
-    Tabulated { dates: std::collections::BTreeMap<String, [i32; 2]> },
+    Fixed {
+        month: i32,
+        day: i32,
+    },
+    NthWeekday {
+        month: i32,
+        ordinal: i32,
+        weekday: Weekday,
+    },
+    EasterOffset {
+        offset: i32,
+    },
+    Tabulated {
+        dates: std::collections::BTreeMap<String, [i32; 2]>,
+    },
 }
 
 #[derive(serde::Deserialize)]
@@ -118,23 +131,46 @@ fn month_length(_year: i32, month: i32) -> i32 {
     }
 }
 
-fn nth_weekday_of_month(year: i32, month: i32, ordinal: i32, weekday: Weekday) -> Option<(i32, i32)> {
-    let first = Civil { year, month, day: 1, hour: 0, minute: 0, second: 0 };
+fn nth_weekday_of_month(
+    year: i32,
+    month: i32,
+    ordinal: i32,
+    weekday: Weekday,
+) -> Option<(i32, i32)> {
+    let first = Civil {
+        year,
+        month,
+        day: 1,
+        hour: 0,
+        minute: 0,
+        second: 0,
+    };
     let first_dow = weekday_index(weekday) as i32;
     let actual_dow = day_of_week(&first) as i32;
     let offset = (first_dow - actual_dow + 7) % 7;
     let length = month_length(year, month);
     if ordinal > 0 {
         let day = 1 + offset + (ordinal - 1) * 7;
-        if day > length { return None; }
+        if day > length {
+            return None;
+        }
         Some((month, day))
     } else {
         // Negative ordinal counts from the end (Memorial Day: -1 MO of May).
-        let last = Civil { year, month, day: length, hour: 0, minute: 0, second: 0 };
+        let last = Civil {
+            year,
+            month,
+            day: length,
+            hour: 0,
+            minute: 0,
+            second: 0,
+        };
         let last_dow = day_of_week(&last) as i32;
         let back = (last_dow - first_dow + 7) % 7;
         let day = length - back - ((-ordinal - 1) * 7);
-        if day < 1 { return None; }
+        if day < 1 {
+            return None;
+        }
         Some((month, day))
     }
 }

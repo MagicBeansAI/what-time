@@ -189,8 +189,8 @@ Synchronous parse — only valid after `await init()`.
 ## ⚠️ Honest limitations
 
 - **Trained phrasing, not all phrasing.** Unusual vocabulary can mislabel
-  (e.g. `next quarter`; movable holidays like दिवाली). Rejections come
-  back as diagnostics, never silent wrong dates.
+  (e.g. English "Diwali", multi-word holidays like "Good Friday"). Rejections
+  come back as diagnostics, never silent wrong dates.
 - **Three languages by design.** Other languages produce diagnostics, not
   guesses.
 - **Not for high-stakes scheduling.** Legal, medical, or billing dates need
