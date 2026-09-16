@@ -312,7 +312,9 @@ pub fn holiday_name(key: &str) -> Option<String> {
         "rakshabandhan" | "रक्षाबंधन" => "raksha-bandhan",
         "rakhi" | "राखी" | "राखड़ी" => "raksha-bandhan",
         "ganeshchaturthi" | "गणेशचतुर्थी" => "ganesh-chaturthi",
-        "dussehra" | "dasara" | "दशहरा" | "विजयादशमी" => "dussehra",
+        "dussehra" | "dasara" | "दशहरा" | "दशहरे" | "विजयादशमी" => {
+            "dussehra"
+        }
         "karwachauth" | "karvachauth" | "करवाचौथ" => "karwa-chauth",
         "eid" | "ईद" | "eidulfitr" | "meethieid" | "ramzaneid" => "eid-ul-fitr",
         "bakrid" | "बकरीद" | "eiduladha" | "eidaladha" => "eid-ul-adha",

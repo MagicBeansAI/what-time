@@ -27,3 +27,9 @@
 {"id": "playground-quarter", "family": "playground-example", "text": "review next quarter at 9am", "schedule": {"clauses": [{"date": {"kind": "relativeUnit", "unit": "quarter", "modifier": "next"}, "time": {"start": {"hour": 9, "minute": 0}}}]}}
 {"id": "playground-thanksgiving", "family": "playground-example", "text": "family dinner on Thanksgiving", "schedule": {"clauses": [{"date": {"kind": "holiday", "name": "thanksgiving"}}]}}
 {"id": "playground-diwali", "family": "playground-example", "text": "दिवाली को मिलते हैं", "schedule": {"clauses": [{"date": {"kind": "holiday", "name": "diwali"}}]}}
+{"id": "user-eid-en", "family": "festival-vocabulary", "text": "school closed on Eid", "schedule": {"clauses": [{"date": {"kind": "holiday", "name": "eid-ul-fitr"}}]}}
+{"id": "user-holi-en", "family": "festival-vocabulary", "text": "meeting on Holi", "schedule": {"clauses": [{"date": {"kind": "holiday", "name": "holi"}}]}}
+{"id": "user-holi-hi", "family": "festival-vocabulary", "text": "होली पर मिलते हैं", "schedule": {"clauses": [{"date": {"kind": "holiday", "name": "holi"}}]}}
+{"id": "user-bakrid-hi", "family": "festival-vocabulary", "text": "बकरीद पर छुट्टी है", "schedule": {"clauses": [{"date": {"kind": "holiday", "name": "eid-ul-adha"}}]}}
+{"id": "user-karwa-chauth", "family": "festival-vocabulary", "text": "karwa chauth pe fast", "schedule": {"clauses": [{"date": {"kind": "holiday", "name": "karwa-chauth"}}]}}
+{"id": "user-dussehra-hi", "family": "festival-vocabulary", "text": "दशहरे को मिलते हैं", "schedule": {"clauses": [{"date": {"kind": "holiday", "name": "dussehra"}}]}}
