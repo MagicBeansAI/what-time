@@ -161,6 +161,12 @@
   .example .use { color: var(--faint); font-size: 12px; margin-right: 7px; }
   .example .phrase { border-bottom: 1px dotted #c8c2b6; }
   .example:hover .phrase { border-bottom-style: solid; border-bottom-color: var(--ink); }
+  .bench-row { display: flex; align-items: center; gap: 8px; margin: 8px 0; flex-wrap: wrap; }
+  .bench-row .example { border: 1px dotted #c8c2b6; border-radius: 6px; padding: 3px 10px; background: none; cursor: pointer; }
+  .bench-table { border-collapse: collapse; margin: 6px 0 10px; width: 100%; }
+  .bench-table th, .bench-table td { text-align: left; padding: 3px 10px 3px 0; font: 12px var(--mono); border-bottom: 1px dotted #ddd6c8; }
+  .bench-table th { color: var(--faint); font-weight: 500; }
+  progress { width: 140px; height: 10px; }
 
   /* ---------- disclosures ---------- */
   details.panel { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 12px; }
@@ -284,6 +290,28 @@
   </details>
 
   <div id="extras"></div>
+
+  <details class="panel" id="bench-panel">
+    <summary>Benchmarks <span class="note">in-page wasm · CPU backend · nothing leaves the page</span></summary>
+    <div class="panel-body">
+      <div class="bench-row">
+        <button type="button" class="example" id="bench-single">Benchmark the examples</button>
+        <span class="hint">each example phrase × 200 timed parses</span>
+      </div>
+      <table class="bench-table" id="bench-table" hidden></table>
+      <div class="bench-row">
+        <button type="button" class="example" id="bench-10k">Bulk 10k</button>
+        <button type="button" class="example" id="bench-50k">Bulk 50k</button>
+        <button type="button" class="example" id="bench-stop" hidden>Stop</button>
+        <progress id="bench-progress" max="1000" value="0" hidden></progress>
+      </div>
+      <div id="bench-bulk-out" class="hint"></div>
+      <p class="hint">Bulk iterates the example phrases through the same in-page WebAssembly CPU
+        pipeline. The native build adds a wgpu/Metal GPU backend that batches the same workload at
+        ~56 µs/phrase at 50k (≈12× CPU) with identical results — see the repository's
+        <code>bench-bulk</code> example.</p>
+    </div>
+  </details>
 </main>
 
 <script type="module">
@@ -598,6 +626,94 @@ async function init() {
   $("text").value = DEFAULT_PHRASE;
   renderHighlight(DEFAULT_PHRASE);
   run();
+
+  wireBenchmarks();
+}
+
+function wireBenchmarks() {
+  const reference = $("reference").value || new Date().toISOString();
+  const zone = $("timezone").value || "UTC";
+  const oneParse = (text) => wasmParse(text, reference, zone, 3n, $("dateOrder").value);
+
+  const yieldToUi = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+  async function benchSingle() {
+    const table = $("bench-table");
+    table.hidden = false;
+    table.innerHTML = "<tr><th>example</th><th>mean</th><th>p50</th><th>p95</th></tr>";
+    const button = $("bench-single");
+    button.disabled = true;
+    try {
+      await globalThis.wasmReady;
+      for (const example of EXAMPLES) {
+        for (let i = 0; i < 20; i++) oneParse(example.text);
+        const samples = [];
+        for (let i = 0; i < 200; i++) {
+          const started = performance.now();
+          oneParse(example.text);
+          samples.push(performance.now() - started);
+        }
+        samples.sort((a, b) => a - b);
+        const mean = samples.reduce((a, b) => a + b, 0) / samples.length;
+        const row = table.insertRow();
+        row.innerHTML = `<td>${escapeHtml(example.text)}</td><td>${mean.toFixed(3)} ms</td>` +
+          `<td>${samples[100].toFixed(3)} ms</td><td>${samples[189].toFixed(3)} ms</td>`;
+        await yieldToUi();
+      }
+    } finally {
+      button.disabled = false;
+    }
+  }
+
+  let bulkCancelled = false;
+
+  async function benchBulk(count) {
+    const out = $("bench-bulk-out");
+    const progress = $("bench-progress");
+    const stop = $("bench-stop");
+    bulkCancelled = false;
+    stop.hidden = false;
+    progress.hidden = false;
+    progress.max = count;
+    progress.value = 0;
+    out.textContent = `running ${count.toLocaleString()} parses…`;
+    let successes = 0;
+    let elapsed = 0;
+    const chunk = 500;
+    try {
+      await globalThis.wasmReady;
+      const startedAll = performance.now();
+      for (let done = 0; done < count && !bulkCancelled; done += chunk) {
+        const size = Math.min(chunk, count - done);
+        const started = performance.now();
+        for (let i = 0; i < size; i++) {
+          const text = EXAMPLES[(done + i) % EXAMPLES.length].text;
+          const result = JSON.parse(oneParse(text));
+          if (!result.error) successes += 1;
+        }
+        elapsed += performance.now() - started;
+        progress.value = done + size;
+        await yieldToUi();
+      }
+      const wall = performance.now() - startedAll;
+      if (bulkCancelled) {
+        out.textContent = `stopped: ${successes.toLocaleString()} succeeded in ${(elapsed / 1000).toFixed(2)} s of parse time`;
+      } else {
+        out.textContent =
+          `${count.toLocaleString()} phrases · ${successes.toLocaleString()} succeeded · ` +
+          `${(elapsed / 1000).toFixed(2)} s parse time (${(elapsed * 1000 / count).toFixed(1)} µs/phrase)` +
+          ` · ${(wall / 1000).toFixed(2)} s wall incl. UI`;
+      }
+    } finally {
+      stop.hidden = true;
+      progress.hidden = true;
+    }
+  }
+
+  $("bench-single").addEventListener("click", () => { benchSingle(); });
+  $("bench-10k").addEventListener("click", () => { benchBulk(10000); });
+  $("bench-50k").addEventListener("click", () => { benchBulk(50000); });
+  $("bench-stop").addEventListener("click", () => { bulkCancelled = true; });
 }
 
 // The wasm loader above is a deferred module script: its globals
