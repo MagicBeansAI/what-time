@@ -107,7 +107,9 @@
   .mark[data-kind="duration"] { background: var(--t-duration); }
 
   /* ---------- results ---------- */
-  .latency { margin: 6px 4px 0; color: var(--faint); font: 11.5px var(--mono); min-height: 15px; }
+  .latency { margin: 6px 4px 0; color: var(--faint); font: 11.5px var(--mono); }
+  .latency-note { display: block; margin-top: 3px; line-height: 1.5; font-family: var(--sans); font-size: 11.5px; }
+  .latency-note a { color: inherit; text-underline-offset: 2px; }
   .results { margin-top: 26px; }
   .result-head {
     display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline;
@@ -235,7 +237,13 @@
     </div>
     <button class="run" id="parse" type="submit">Parse</button>
   </form>
-  <div class="latency" id="latency" aria-live="polite">timings appear here after the first parse — page-inclusive; for per-operation time use the Benchmarks panel below</div>
+  <div class="latency" aria-live="polite">
+    <span id="latency-time">timings appear here after the first parse</span>
+    <span class="latency-note">Page-inclusive: this measures the whole round-trip on this page — input
+      handling, the wasm call, JSON transfer, and rendering — so it reads higher than the parser's real
+      cost, especially on a busy machine. For measured per-operation timings, run the
+      <a href="#bench-panel" id="latency-bench-link">actual true benchmarks below</a>.</span>
+  </div>
 
   <section class="results" aria-live="polite" aria-atomic="true">
     <div class="result-head">
@@ -763,10 +771,9 @@ async function run() {
     const inner = [t.tokenizeMs, t.inferMs, t.resolveMs].every((v) => v > 0)
       ? ` · tokenize ${t.tokenizeMs.toFixed(2)} · infer ${t.inferMs.toFixed(2)} · resolve ${t.resolveMs.toFixed(2)}`
       : "";
-    const note = "page-inclusive — per-operation time: Benchmarks below";
-    $("latency").textContent = result.error
-      ? `responded in ${wall.toFixed(2)} ms (error) · ${note}`
-      : `responded in ${wall.toFixed(2)} ms${inner} · ${result.backend || "cpu"} · ${note}`;
+    $("latency-time").textContent = result.error
+      ? `responded in ${wall.toFixed(2)} ms (error)`
+      : `responded in ${wall.toFixed(2)} ms${inner} · ${result.backend || "cpu"}`;
     if (result.error) {
       showError(result.error);
       return;
@@ -991,6 +998,7 @@ function wireBenchmarks() {
   $("bench-10k").addEventListener("click", () => { benchBulk(10000); });
   $("bench-50k").addEventListener("click", () => { benchBulk(50000); });
   $("bench-stop").addEventListener("click", () => { bulkCancelled = true; });
+  $("latency-bench-link").addEventListener("click", () => { $("bench-panel").open = true; });
 }
 
 // The wasm loader above is a deferred module script: its globals
