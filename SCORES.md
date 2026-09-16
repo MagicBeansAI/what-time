@@ -18,3 +18,19 @@ Known open gaps for the next round: English "Diwali" and multi-word
 holidays ("Good Friday", "Boxing Day") are asset-ready but need model
 training; तिमाही/timahi and होली/Holi need corpus rows and (for Holi)
 tabulated dates; `cargo fmt --all` before pushing — CI gates on it.
+
+## Performance (v0.2.2 checkpoint, Apple Silicon, release build)
+
+Measured with the repo benchmarks (`bench-single`, `bench-bulk`); the
+in-page numbers come from the playground's benchmark panel. Re-measure
+when the weights or grammar change materially.
+
+| Workload | Result | Notes |
+|---|---|---|
+| Single query, native CPU | mean 0.67 ms · p50 0.61 · p95 1.0 | full pipeline incl. tz resolve |
+| Single query, in-page wasm | ~0.57 ms | playground, foreground tab |
+| Bulk 10k, native CPU | 669 µs/phrase | |
+| Bulk 10k, GPU (wgpu/Metal) | 56.6 µs/phrase · 11.8× | 10,000/10,000 CPU agreement |
+| Bulk 50k, GPU (wgpu/Metal) | 56.1 µs/phrase · 12.0× | 50,000/50,000 CPU agreement |
+| Bulk 10k, in-page wasm | ~743 µs/phrase | browser benchmark panel |
+| Bulk 50k, in-page wasm | ~864 µs/phrase | browser benchmark panel |

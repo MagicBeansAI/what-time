@@ -52,7 +52,7 @@ repeated. Reserved carrier phrases remain excluded from training.
 See [`packages/training/V2_RUN.md`](packages/training/V2_RUN.md) for the
 commands, measured comparison, training proportions and remaining gaps.
 
-## Metrics (current checkpoint — `quarter-gaps-r2`, shipped as v0.2.1)
+## Metrics (current checkpoint — `quarter-gaps-r2`, shipped as v0.2.2)
 
 Per-build history lives in [`SCORES.md`](SCORES.md).
 

@@ -8,6 +8,8 @@
     <a href="#license"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT" /></a>
     <img src="https://img.shields.io/badge/lang-English%20%7C%20हिन्दी%20%7C%20Hinglish-8B5CF6.svg" alt="English, Hindi, Hinglish" />
     <img src="https://img.shields.io/badge/runtime-WebAssembly%20%2B%20TypeScript-6DA55F.svg" alt="WebAssembly + TypeScript" />
+    <br/>
+    <a href="https://magicbeansai.github.io/what-time/"><b>▶ Try the live playground</b></a> — type any phrase, in English, हिन्दी, or Hinglish, and watch it parse in-page.
   </p>
 </div>
 
