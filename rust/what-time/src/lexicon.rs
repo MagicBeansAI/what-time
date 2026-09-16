@@ -1,6 +1,6 @@
 //! English lexicon: weekday/month names, spoken numbers, units, and holidays.
 
-use crate::types::{HolidayName, Unit, WEEKDAYS, Weekday};
+use crate::types::{Unit, WEEKDAYS, Weekday};
 
 pub const DAY_NAMES: [&str; 7] = [
     "monday",
@@ -273,17 +273,32 @@ pub fn unit(text: &str) -> Option<Unit> {
     }
 }
 
-pub fn holiday_name(key: &str) -> Option<HolidayName> {
-    match key {
-        "christmas" => Some(HolidayName::christmas),
-        "christmaseve" => Some(HolidayName::ChristmasEve),
-        "newyear" | "newyearsday" => Some(HolidayName::NewYear),
-        "newyearseve" => Some(HolidayName::NewYearsEve),
-        "halloween" => Some(HolidayName::halloween),
-        "valentinesday" | "valentines" => Some(HolidayName::valentines),
-        "क्रिसमस" => Some(HolidayName::christmas),
-        "नयासाल" => Some(HolidayName::NewYear),
-        "दिवाली" | "दीपावली" | "diwali" | "deepavali" => Some(HolidayName::diwali),
-        _ => None,
-    }
+/// Holiday vocabulary. Returns the key into the bundled holiday asset
+/// (`rust/what-time/assets/holidays.json`); dates live in that data file,
+/// never in code, so new holidays are data additions.
+pub fn holiday_name(key: &str) -> Option<String> {
+    let key = match key {
+        "christmas" | "क्रिसमस" => "christmas",
+        "christmaseve" => "christmas-eve",
+        "newyear" | "newyearsday" | "नयासाल" => "new-year",
+        "newyearseve" => "new-years-eve",
+        "halloween" => "halloween",
+        "valentinesday" | "valentines" => "valentines",
+        "thanksgiving" => "thanksgiving",
+        "independenceday" | "julyth" => "independence-day",
+        "juneteenth" => "juneteenth",
+        "memorialday" => "memorial-day",
+        "laborday" => "labor-day",
+        "mlkday" | "martinlutherkingjrday" => "mlk-day",
+        "presidentsday" => "presidents-day",
+        "mothersday" => "mothers-day",
+        "fathersday" => "fathers-day",
+        "boxingday" => "boxing-day",
+        "goodfriday" => "good-friday",
+        "easter" => "easter",
+        "eastermonday" => "easter-monday",
+        "दिवाली" | "दीपावली" | "diwali" | "deepavali" => "diwali",
+        _ => return None,
+    };
+    Some(key.to_string())
 }

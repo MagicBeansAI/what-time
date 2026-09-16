@@ -1,7 +1,7 @@
 //! Resolves date specifications to local calendar periods.
 
 use crate::types::{
-    CalendarDate, DateSpec, DayGroup, Edge, HolidayName, Modifier, ResolveOptions, Unit, WEEKDAYS,
+    CalendarDate, DateSpec, DayGroup, Edge, Modifier, ResolveOptions, Unit, WEEKDAYS, Weekday,
     WeekStart, weekday_index,
 };
 use crate::zoned::{
@@ -14,33 +14,129 @@ pub struct LocalPeriod {
     pub end: Option<Civil>,
 }
 
-fn holiday_date(name: HolidayName, year: i32) -> Option<(i32, i32)> {
-    match name {
-        HolidayName::christmas => Some((12, 25)),
-        HolidayName::ChristmasEve => Some((12, 24)),
-        HolidayName::NewYear => Some((1, 1)),
-        HolidayName::NewYearsEve => Some((12, 31)),
-        HolidayName::halloween => Some((10, 31)),
-        HolidayName::valentines => Some((2, 14)),
-        // Diwali is Kartik Amavasya on the Hindu lunar calendar, so it
-        // moves against the Gregorian year. Tabulated per year (main day,
-        // India observance) rather than approximated; out-of-table years
-        // are an honest error, never a guessed date.
-        HolidayName::diwali => diwali_date(year),
+fn holiday_date(key: &str, year: i32) -> Option<(i32, i32)> {
+    match holiday_entry(key) {
+        Some(HolidayEntry::Fixed { month, day }) => Some((month, day)),
+        Some(HolidayEntry::NthWeekday { month, ordinal, weekday }) => {
+            nth_weekday_of_month(year, month, ordinal, weekday)
+        }
+        Some(HolidayEntry::EasterOffset { offset }) => {
+            let (month, day) = western_easter(year);
+            add_ordinal_days(month, day, offset)
+        }
+        Some(HolidayEntry::Tabulated { dates }) => dates
+            .get(&year.to_string())
+            .map(|pair| (pair[0], pair[1])),
+        None => None,
     }
 }
 
-fn diwali_date(year: i32) -> Option<(i32, i32)> {
-    let (month, day) = match year {
-        2025 => (10, 20),
-        2026 => (11, 8),
-        2027 => (10, 29),
-        2028 => (10, 17),
-        2029 => (11, 5),
-        2030 => (10, 26),
-        _ => return None,
-    };
-    Some((month, day))
+#[derive(Clone, serde::Deserialize)]
+#[serde(tag = "kind", rename_all = "camelCase")]
+enum HolidayEntry {
+    Fixed { month: i32, day: i32 },
+    NthWeekday { month: i32, ordinal: i32, weekday: Weekday },
+    EasterOffset { offset: i32 },
+    Tabulated { dates: std::collections::BTreeMap<String, [i32; 2]> },
+}
+
+#[derive(serde::Deserialize)]
+struct HolidayAsset {
+    entries: Vec<HolidayHoliday>,
+}
+
+#[derive(serde::Deserialize)]
+struct HolidayHoliday {
+    key: String,
+    #[serde(flatten)]
+    entry: HolidayEntry,
+}
+
+fn holiday_entry(key: &str) -> Option<HolidayEntry> {
+    use std::sync::OnceLock;
+    static ASSET: OnceLock<Vec<HolidayHoliday>> = OnceLock::new();
+    let entries = ASSET.get_or_init(|| {
+        serde_json::from_str::<HolidayAsset>(include_str!("../assets/holidays.json"))
+            .expect("holidays asset must parse")
+            .entries
+    });
+    entries
+        .iter()
+        .find(|entry| entry.key == key)
+        .map(|entry| entry.entry.clone())
+}
+
+/// Western (Gregorian) Easter, the anonymous algorithm; exact for the
+/// proleptic Gregorian calendar.
+fn western_easter(year: i32) -> (i32, i32) {
+    let a = year % 19;
+    let b = year / 100;
+    let c = year % 100;
+    let d = b / 4;
+    let e = b % 4;
+    let f = (b + 8) / 25;
+    let g = (b - f + 1) / 3;
+    let h = (19 * a + b - d - g + 15) % 30;
+    let i = c / 4;
+    let k = c % 4;
+    let l = (32 + 2 * e + 2 * i - h - k) % 7;
+    let m = (a + 11 * h + 22 * l) / 451;
+    let month = (h + l - 7 * m + 114) / 31;
+    let day = (h + l - 7 * m + 114) % 31 + 1;
+    (month, day)
+}
+
+fn add_ordinal_days(month: i32, day: i32, offset: i32) -> Option<(i32, i32)> {
+    // Offsets from Easter stay inside the same year and near the anchor;
+    // step through month lengths without inventing a date library.
+    let mut result = (month, day);
+    let mut remaining = offset;
+    while remaining != 0 {
+        let step = remaining.signum();
+        let (mut m, mut d) = result;
+        d += step;
+        let length = month_length(2026, m); // lengths are year-independent here
+        if d < 1 {
+            m -= 1;
+            d = month_length(2026, m.max(1));
+        } else if d > length {
+            m += 1;
+            d = 1;
+        }
+        result = (m, d);
+        remaining -= step;
+    }
+    Some(result)
+}
+
+fn month_length(_year: i32, month: i32) -> i32 {
+    match month {
+        1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
+        4 | 6 | 9 | 11 => 30,
+        2 => 28,
+        _ => 30,
+    }
+}
+
+fn nth_weekday_of_month(year: i32, month: i32, ordinal: i32, weekday: Weekday) -> Option<(i32, i32)> {
+    let first = Civil { year, month, day: 1, hour: 0, minute: 0, second: 0 };
+    let first_dow = weekday_index(weekday) as i32;
+    let actual_dow = day_of_week(&first) as i32;
+    let offset = (first_dow - actual_dow + 7) % 7;
+    let length = month_length(year, month);
+    if ordinal > 0 {
+        let day = 1 + offset + (ordinal - 1) * 7;
+        if day > length { return None; }
+        Some((month, day))
+    } else {
+        // Negative ordinal counts from the end (Memorial Day: -1 MO of May).
+        let last = Civil { year, month, day: length, hour: 0, minute: 0, second: 0 };
+        let last_dow = day_of_week(&last) as i32;
+        let back = (last_dow - first_dow + 7) % 7;
+        let day = length - back - ((-ordinal - 1) * 7);
+        if day < 1 { return None; }
+        Some((month, day))
+    }
 }
 
 fn su_week(options: &ResolveOptions) -> bool {
@@ -391,7 +487,7 @@ pub fn resolve_dates(
         }
 
         DateSpec::Holiday { name } => {
-            let Some((month, day)) = holiday_date(*name, reference.year) else {
+            let Some((month, day)) = holiday_date(name, reference.year) else {
                 return Err("Diwali dates are tabulated for 2025 through 2030.".into());
             };
             let mut date = calendar_date(
@@ -403,7 +499,7 @@ pub fn resolve_dates(
                 reference,
             )?;
             if utc(&date) < utc(&today) {
-                if let Some((month, day)) = holiday_date(*name, reference.year + 1) {
+                if let Some((month, day)) = holiday_date(name, reference.year + 1) {
                     date.month = month;
                     date.day = day;
                 }
@@ -497,5 +593,38 @@ pub fn resolve_dates(
                 end: Some(add_days(&end, 1.0)),
             }])
         }
+    }
+}
+
+#[cfg(test)]
+mod holiday_tests {
+    use super::*;
+
+    #[test]
+    fn western_easter_anchors() {
+        assert_eq!(western_easter(2026), (4, 5));
+        assert_eq!(western_easter(2027), (3, 28));
+        assert_eq!(western_easter(2028), (4, 16));
+        assert_eq!(western_easter(2024), (3, 31));
+    }
+
+    #[test]
+    fn holiday_asset_resolves_each_kind() {
+        // fixed
+        assert_eq!(holiday_date("christmas", 2026), Some((12, 25)));
+        assert_eq!(holiday_date("boxing-day", 2026), Some((12, 26)));
+        // nth weekday: Thanksgiving is the 4th Thursday of November
+        assert_eq!(holiday_date("thanksgiving", 2026), Some((11, 26)));
+        assert_eq!(holiday_date("thanksgiving", 2027), Some((11, 25)));
+        // negative ordinal: Memorial Day is the last Monday of May
+        assert_eq!(holiday_date("memorial-day", 2026), Some((5, 25)));
+        // Easter offsets
+        assert_eq!(holiday_date("good-friday", 2026), Some((4, 3)));
+        assert_eq!(holiday_date("easter-monday", 2027), Some((3, 29)));
+        // tabulated lunar calendar
+        assert_eq!(holiday_date("diwali", 2026), Some((11, 8)));
+        assert_eq!(holiday_date("diwali", 2031), None);
+        // unknown key
+        assert_eq!(holiday_date("nobody", 2026), None);
     }
 }

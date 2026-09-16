@@ -1,0 +1,172 @@
+{
+  "entries": [
+    {
+      "key": "christmas",
+      "region": "global",
+      "kind": "fixed",
+      "month": 12,
+      "day": 25
+    },
+    {
+      "key": "christmas-eve",
+      "region": "global",
+      "kind": "fixed",
+      "month": 12,
+      "day": 24
+    },
+    {
+      "key": "new-year",
+      "region": "global",
+      "kind": "fixed",
+      "month": 1,
+      "day": 1
+    },
+    {
+      "key": "new-years-eve",
+      "region": "global",
+      "kind": "fixed",
+      "month": 12,
+      "day": 31
+    },
+    {
+      "key": "halloween",
+      "region": "global",
+      "kind": "fixed",
+      "month": 10,
+      "day": 31
+    },
+    {
+      "key": "valentines",
+      "region": "global",
+      "kind": "fixed",
+      "month": 2,
+      "day": 14
+    },
+    {
+      "key": "thanksgiving",
+      "region": "US",
+      "kind": "nthWeekday",
+      "month": 11,
+      "ordinal": 4,
+      "weekday": "TH"
+    },
+    {
+      "key": "independence-day",
+      "region": "US",
+      "kind": "fixed",
+      "month": 7,
+      "day": 4
+    },
+    {
+      "key": "juneteenth",
+      "region": "US",
+      "kind": "fixed",
+      "month": 6,
+      "day": 19
+    },
+    {
+      "key": "memorial-day",
+      "region": "US",
+      "kind": "nthWeekday",
+      "month": 5,
+      "ordinal": -1,
+      "weekday": "MO"
+    },
+    {
+      "key": "labor-day",
+      "region": "US",
+      "kind": "nthWeekday",
+      "month": 9,
+      "ordinal": 1,
+      "weekday": "MO"
+    },
+    {
+      "key": "mlk-day",
+      "region": "US",
+      "kind": "nthWeekday",
+      "month": 1,
+      "ordinal": 3,
+      "weekday": "MO"
+    },
+    {
+      "key": "presidents-day",
+      "region": "US",
+      "kind": "nthWeekday",
+      "month": 2,
+      "ordinal": 3,
+      "weekday": "MO"
+    },
+    {
+      "key": "mothers-day",
+      "region": "US",
+      "kind": "nthWeekday",
+      "month": 5,
+      "ordinal": 2,
+      "weekday": "SU"
+    },
+    {
+      "key": "fathers-day",
+      "region": "US",
+      "kind": "nthWeekday",
+      "month": 6,
+      "ordinal": 3,
+      "weekday": "SU"
+    },
+    {
+      "key": "boxing-day",
+      "region": "UK",
+      "kind": "fixed",
+      "month": 12,
+      "day": 26
+    },
+    {
+      "key": "good-friday",
+      "region": "UK",
+      "kind": "easterOffset",
+      "offset": -2
+    },
+    {
+      "key": "easter",
+      "region": "UK",
+      "kind": "easterOffset",
+      "offset": 0
+    },
+    {
+      "key": "easter-monday",
+      "region": "UK",
+      "kind": "easterOffset",
+      "offset": 1
+    },
+    {
+      "key": "diwali",
+      "region": "IN",
+      "kind": "tabulated",
+      "dates": {
+        "2025": [
+          10,
+          20
+        ],
+        "2026": [
+          11,
+          8
+        ],
+        "2027": [
+          10,
+          29
+        ],
+        "2028": [
+          10,
+          17
+        ],
+        "2029": [
+          11,
+          5
+        ],
+        "2030": [
+          10,
+          26
+        ]
+      }
+    }
+  ]
+}

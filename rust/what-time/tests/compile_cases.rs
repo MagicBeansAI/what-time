@@ -1046,3 +1046,19 @@ fn compiles_quarter_periods_and_recurrences() {
         }]}),
     );
 }
+
+#[test]
+fn compiles_data_asset_holidays() {
+    let text = "family dinner on Thanksgiving";
+    assert_schedule(
+        text,
+        oracle(text, &["O", "O", "GLUE", "HOLIDAY"], &[]),
+        json!({"clauses": [{"date": {"kind": "holiday", "name": "thanksgiving"}}]}),
+    );
+    let uk = "closed Good Friday";
+    assert_schedule(
+        uk,
+        oracle(uk, &["O", "HOLIDAY", "HOLIDAY"], &[]),
+        json!({"clauses": [{"date": {"kind": "holiday", "name": "good-friday"}}]}),
+    );
+}

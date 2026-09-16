@@ -7,8 +7,12 @@ Short and honest. Scores per build live in [`SCORES.md`](SCORES.md).
 - Quarter calendar periods: `next quarter`, `end of next quarter`, `every quarter`,
   `quarterly` — resolved on exact quarter boundaries, exported as RRULE
   `FREQ=MONTHLY;INTERVAL=3`.
-- दिवाली / Diwali resolves via a tabulated 2025–2030 holiday table (main day,
-  India observance); out-of-table years return a diagnostic, never a guessed date.
+- Holidays moved to a bundled data asset (`assets/holidays.json`): fixed dates,
+  nth-weekday rules (Thanksgiving, Memorial Day, Labor Day…), exact Easter
+  offsets (Good Friday, Easter Monday), and tabulated lunar dates (दिवाली
+  2025–2030). Adding a holiday is a data row, not a code change. US and UK
+  holiday vocabulary added alongside the existing global and Indian set;
+  out-of-table years return a diagnostic, never a guessed date.
 - Both 0.2.0 known gaps closed by retraining: ordinal-anchored Hindi recurrences
   (`हर महीने के दूसरे सोमवार को`) and verbs after fractional clocks
   (`sava char baje utth ja`). Pinned corpora now 568/568 with zero known gaps.

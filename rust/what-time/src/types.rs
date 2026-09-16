@@ -85,21 +85,6 @@ pub enum Edge {
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug, Serialize, Deserialize)]
 #[allow(non_camel_case_types)]
-pub enum HolidayName {
-    christmas,
-    #[serde(rename = "christmas-eve")]
-    ChristmasEve,
-    #[serde(rename = "new-year")]
-    NewYear,
-    #[serde(rename = "new-years-eve")]
-    NewYearsEve,
-    halloween,
-    valentines,
-    diwali,
-}
-
-#[derive(Clone, Copy, PartialEq, Eq, Debug, Serialize, Deserialize)]
-#[allow(non_camel_case_types)]
 pub enum NamedClock {
     noon,
     midnight,
@@ -219,7 +204,7 @@ pub enum DateSpec {
         recurring: Option<bool>,
     },
     Holiday {
-        name: HolidayName,
+        name: String,
     },
 }
 
