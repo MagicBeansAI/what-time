@@ -50,7 +50,6 @@
   .sub q { font-style: normal; quotes: "“" "”"; }
 
   /* ---------- parse card ---------- */
-  .latency { grid-column: 1 / -1; margin-top: 2px; color: var(--faint); font: 11.5px var(--mono); min-height: 14px; }
   .parse-card {
     background: var(--card);
     border: 1.5px solid var(--ink);
@@ -108,6 +107,7 @@
   .mark[data-kind="duration"] { background: var(--t-duration); }
 
   /* ---------- results ---------- */
+  .latency { margin: 6px 4px 0; color: var(--faint); font: 11.5px var(--mono); min-height: 15px; }
   .results { margin-top: 26px; }
   .result-head {
     display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline;
@@ -234,8 +234,8 @@
       <input id="text" type="text" maxlength="500" spellcheck="false" autocomplete="off" aria-label="Schedule expression">
     </div>
     <button class="run" id="parse" type="submit">Parse</button>
-    <div class="latency" id="latency" aria-live="polite"></div>
   </form>
+  <div class="latency" id="latency" aria-live="polite">timings appear here after the first parse — page-inclusive; for per-operation time use the Benchmarks panel below</div>
 
   <section class="results" aria-live="polite" aria-atomic="true">
     <div class="result-head">
@@ -500,9 +500,10 @@ async function run() {
     const inner = [t.tokenizeMs, t.inferMs, t.resolveMs].every((v) => v > 0)
       ? ` · tokenize ${t.tokenizeMs.toFixed(2)} · infer ${t.inferMs.toFixed(2)} · resolve ${t.resolveMs.toFixed(2)}`
       : "";
+    const note = "page-inclusive — per-operation time: Benchmarks below";
     $("latency").textContent = result.error
-      ? `responded in ${wall.toFixed(2)} ms (error)`
-      : `responded in ${wall.toFixed(2)} ms${inner} · ${result.backend || "cpu"}`;
+      ? `responded in ${wall.toFixed(2)} ms (error) · ${note}`
+      : `responded in ${wall.toFixed(2)} ms${inner} · ${result.backend || "cpu"} · ${note}`;
     if (result.error) {
       showError(result.error);
       return;
