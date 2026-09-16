@@ -50,6 +50,7 @@
   .sub q { font-style: normal; quotes: "“" "”"; }
 
   /* ---------- parse card ---------- */
+  .latency { grid-column: 1 / -1; margin-top: 2px; color: var(--faint); font: 11.5px var(--mono); min-height: 14px; }
   .parse-card {
     background: var(--card);
     border: 1.5px solid var(--ink);
@@ -233,6 +234,7 @@
       <input id="text" type="text" maxlength="500" spellcheck="false" autocomplete="off" aria-label="Schedule expression">
     </div>
     <button class="run" id="parse" type="submit">Parse</button>
+    <div class="latency" id="latency" aria-live="polite"></div>
   </form>
 
   <section class="results" aria-live="polite" aria-atomic="true">
@@ -481,6 +483,7 @@ async function run() {
   $("parse").disabled = true;
   try {
     await wasmReady;
+    const started = performance.now();
     const resultText = wasmParse(
       value,
       $("reference").value,
@@ -488,8 +491,18 @@ async function run() {
       BigInt(Number($("limit").value) || 3),
       $("dateOrder").value,
     );
+    const wall = performance.now() - started;
     if (ticket !== seq) return;
     const result = JSON.parse(resultText);
+    // The wasm build has no clock inside, so its internal breakdown
+    // reports zeros; the wall time around the call is the real latency.
+    const t = result.timings || {};
+    const inner = [t.tokenizeMs, t.inferMs, t.resolveMs].every((v) => v > 0)
+      ? ` · tokenize ${t.tokenizeMs.toFixed(2)} · infer ${t.inferMs.toFixed(2)} · resolve ${t.resolveMs.toFixed(2)}`
+      : "";
+    $("latency").textContent = result.error
+      ? `responded in ${wall.toFixed(2)} ms (error)`
+      : `responded in ${wall.toFixed(2)} ms${inner} · ${result.backend || "cpu"}`;
     if (result.error) {
       showError(result.error);
       return;
