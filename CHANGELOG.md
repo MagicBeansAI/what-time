@@ -2,6 +2,16 @@
 
 Short and honest. Scores per build live in [`SCORES.md`](SCORES.md).
 
+## 0.2.3
+
+- Festival vocabulary works end-to-end: Holi (both scripts), Bakrid/ईद-ul-Adha,
+  Dussehra, Karwa Chauth, Gandhi Jayanti, plus the 0.2.2 set — trained via one
+  balanced batch with drift-protection (weekdays, month abbreviations, har,
+  Hindi tense cues, day-parts) after narrow supplements proved unstable.
+- Pinned corpora at 593 + 2 playground cases, zero known gaps, zero regressions.
+- "परसों सुबह" now resolves with a morning time-part, consistent with the
+  English "tomorrow morning" behavior (frozen fixture updated after review).
+
 ## 0.2.2
 
 - Holiday asset expanded to 40 entries via a curated, source-verified generator

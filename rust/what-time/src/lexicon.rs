@@ -330,6 +330,7 @@ pub fn holiday_name(key: &str) -> Option<String> {
         "anzacday" => "anzac-day",
         "motheringsunday" => "mothering-sunday",
         "guyfawkes" | "bonfirenight" | "fireworksnight" => "guy-fawkes",
+        "gandhijayanti" | "गांधीजयंती" | "गांधी" => "gandhi-jayanti",
         _ => return None,
     };
     Some(key.to_string())

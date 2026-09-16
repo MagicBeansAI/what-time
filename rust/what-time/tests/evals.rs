@@ -73,15 +73,8 @@ struct ScheduleCase {
 /// case SHOULD produce, but the model is not there yet. The suite fails
 /// if a gap starts passing (remove it from this list) and still fails if
 /// it regresses further. Gaps close through training, never by editing
-/// the expectation. Festival vocabulary is data-ready but untrained; these close
-// with the next wide external corpus pass.
-const KNOWN_GAPS: [&str; 5] = [
-    "user-holi-en",
-    "user-holi-hi",
-    "user-bakrid-hi",
-    "user-karwa-chauth",
-    "user-dussehra-hi",
-];
+/// the expectation. Currently empty.
+const KNOWN_GAPS: [&str; 0] = [];
 
 #[test]
 fn schedule_corpora_match() {

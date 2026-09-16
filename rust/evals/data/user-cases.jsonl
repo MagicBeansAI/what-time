@@ -33,3 +33,5 @@
 {"id": "user-bakrid-hi", "family": "festival-vocabulary", "text": "बकरीद पर छुट्टी है", "schedule": {"clauses": [{"date": {"kind": "holiday", "name": "eid-ul-adha"}}]}}
 {"id": "user-karwa-chauth", "family": "festival-vocabulary", "text": "karwa chauth pe fast", "schedule": {"clauses": [{"date": {"kind": "holiday", "name": "karwa-chauth"}}]}}
 {"id": "user-dussehra-hi", "family": "festival-vocabulary", "text": "दशहरे को मिलते हैं", "schedule": {"clauses": [{"date": {"kind": "holiday", "name": "dussehra"}}]}}
+{"id": "playground-holi-clock", "family": "playground-example", "text": "party on Holi at 6pm", "schedule": {"clauses": [{"date": {"kind": "holiday", "name": "holi"}, "time": {"start": {"hour": 18, "minute": 0}}}]}}
+{"id": "playground-karwa-chauth", "family": "playground-example", "text": "karwa chauth pe fast", "schedule": {"clauses": [{"date": {"kind": "holiday", "name": "karwa-chauth"}}]}}

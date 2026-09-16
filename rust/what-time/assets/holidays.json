@@ -197,6 +197,13 @@
       "day": 5
     },
     {
+      "key": "gandhi-jayanti",
+      "region": "IN",
+      "kind": "fixed",
+      "month": 10,
+      "day": 2
+    },
+    {
       "key": "canada-day",
       "region": "CA",
       "kind": "fixed",

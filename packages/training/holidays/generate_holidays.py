@@ -51,6 +51,7 @@ RULED = [
     {"key": "st-patricks", "region": "IE", "kind": "fixed", "month": 3, "day": 17},
     {"key": "guy-fawkes", "region": "UK", "kind": "fixed", "month": 11, "day": 5},
 
+    {"key": "gandhi-jayanti", "region": "IN", "kind": "fixed", "month": 10, "day": 2},
     {"key": "canada-day", "region": "CA", "kind": "fixed", "month": 7, "day": 1},
     {"key": "canadian-thanksgiving", "region": "CA", "kind": "nthWeekday", "month": 10, "ordinal": 2, "weekday": "MO"},
     {"key": "australia-day", "region": "AU", "kind": "fixed", "month": 1, "day": 26},
