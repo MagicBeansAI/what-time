@@ -1,6 +1,6 @@
 {
   "name": "@magicbeansai/what-time",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Neural parser for English, Hindi, and Hinglish time expressions \u2014 dates, ranges, and RFC 5545 rules, in-process via WebAssembly.",
   "type": "module",
   "main": "./dist/index.js",

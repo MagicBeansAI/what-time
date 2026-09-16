@@ -54,6 +54,14 @@ them into seeds for the next external-LLM corpus batch.
 - `spurious` rows are the model hallucinating schedules into background
   text — feed them to the external model as negatives.
 
+## Lessons
+
+- Narrow template supplements stack badly: each one nudges neighbouring
+  vocabulary loose (quarter→CLOCK_OFFSET→DAYGROUP, Friday→HOLIDAY,
+  dec→UNIT across successive retrains). Prefer one wide external batch
+  over several narrow patches; the corpus gate catches the damage, but
+  the retrain lottery is real.
+
 ## Pin what you find
 
 Every edge case — mined, user-reported, or spotted by hand — becomes a

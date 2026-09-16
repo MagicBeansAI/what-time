@@ -2,7 +2,19 @@
 
 Short and honest. Scores per build live in [`SCORES.md`](SCORES.md).
 
-## 0.2.1
+## 0.2.2
+
+- Holiday asset expanded to 40 entries via a curated, source-verified generator
+  (`packages/training/holidays/`): Indian festivals through 2028–2030 (Holi,
+  Raksha Bandhan, Ganesh Chaturthi, Dussehra, Karwa Chauth, Mahashivratri,
+  predicted Eid tables) and the English-speaking world (UK bank holidays,
+  Mothering Sunday, St Patrick's, Guy Fawkes; Columbus/Indigenous Peoples' and
+  Veterans Day; Canada Day, Canadian Thanksgiving; Australia Day, Anzac Day).
+  One command regenerates the asset; a CI-style --check keeps it from drifting.
+- Adding a festival is now a data row plus corpus rows — zero compiler changes
+  (policy codified in AGENTS.md).
+
+## 0.2.1 (folded into 0.2.2)
 
 - Quarter calendar periods: `next quarter`, `end of next quarter`, `every quarter`,
   `quarterly` — resolved on exact quarter boundaries, exported as RRULE

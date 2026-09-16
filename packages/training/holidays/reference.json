@@ -1,0 +1,35 @@
+{
+  "canonical": "Drik Panchang (New Delhi) for Hindu festivals; timeanddate.com India for Islamic festivals",
+  "notes": "Curated, source-verified observance dates. Extend by appending rows and re-running generate_holidays.py. Islamic dates are predictions subject to local moon-sighting confirmation and are flagged predicted=true.",
+  "tabulated": {
+    "diwali": {
+      "2025": [10, 20], "2026": [11, 8], "2027": [10, 29], "2028": [10, 17], "2029": [11, 5], "2030": [10, 26]
+    },
+    "holi": {
+      "2026": [3, 4], "2027": [3, 22], "2028": [3, 11], "2029": [3, 1], "2030": [3, 20]
+    },
+    "mahashivratri": {
+      "2026": [2, 15], "2027": [3, 6]
+    },
+    "raksha-bandhan": {
+      "2026": [8, 28], "2027": [8, 17], "2028": [8, 5]
+    },
+    "ganesh-chaturthi": {
+      "2026": [9, 14], "2027": [9, 4]
+    },
+    "dussehra": {
+      "2026": [10, 20], "2027": [10, 9], "2028": [9, 27]
+    },
+    "karwa-chauth": {
+      "2026": [10, 29], "2027": [10, 18], "2028": [10, 7]
+    },
+    "eid-ul-fitr": {
+      "predicted": true,
+      "2026": [3, 21], "2027": [3, 10], "2028": [2, 27]
+    },
+    "eid-ul-adha": {
+      "predicted": true,
+      "2026": [5, 27], "2027": [5, 17], "2028": [5, 5]
+    }
+  }
+}

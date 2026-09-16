@@ -660,6 +660,18 @@ mod holiday_tests {
         // tabulated lunar calendar
         assert_eq!(holiday_date("diwali", 2026), Some((11, 8)));
         assert_eq!(holiday_date("diwali", 2031), None);
+        // festival tables from the curated reference
+        assert_eq!(holiday_date("holi", 2026), Some((3, 4)));
+        assert_eq!(holiday_date("holi", 2030), Some((3, 20)));
+        assert_eq!(holiday_date("karwa-chauth", 2028), Some((10, 7)));
+        assert_eq!(holiday_date("dussehra", 2027), Some((10, 9)));
+        assert_eq!(holiday_date("eid-ul-fitr", 2026), Some((3, 21)));
+        // UK Mothering Sunday is the fourth Sunday of Lent
+        assert_eq!(holiday_date("mothering-sunday", 2026), Some((3, 15)));
+        // English-speaking additions
+        assert_eq!(holiday_date("columbus-day", 2026), Some((10, 12)));
+        assert_eq!(holiday_date("canadian-thanksgiving", 2026), Some((10, 12)));
+        assert_eq!(holiday_date("anzac-day", 2027), Some((4, 25)));
         // unknown key
         assert_eq!(holiday_date("nobody", 2026), None);
     }

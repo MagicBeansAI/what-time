@@ -113,6 +113,21 @@
       "weekday": "SU"
     },
     {
+      "key": "columbus-day",
+      "region": "US",
+      "kind": "nthWeekday",
+      "month": 10,
+      "ordinal": 2,
+      "weekday": "MO"
+    },
+    {
+      "key": "veterans-day",
+      "region": "US",
+      "kind": "fixed",
+      "month": 11,
+      "day": 11
+    },
+    {
       "key": "boxing-day",
       "region": "UK",
       "kind": "fixed",
@@ -136,6 +151,79 @@
       "region": "UK",
       "kind": "easterOffset",
       "offset": 1
+    },
+    {
+      "key": "mothering-sunday",
+      "region": "UK",
+      "kind": "easterOffset",
+      "offset": -21
+    },
+    {
+      "key": "early-may-bank",
+      "region": "UK",
+      "kind": "nthWeekday",
+      "month": 5,
+      "ordinal": 1,
+      "weekday": "MO"
+    },
+    {
+      "key": "spring-bank",
+      "region": "UK",
+      "kind": "nthWeekday",
+      "month": 5,
+      "ordinal": -1,
+      "weekday": "MO"
+    },
+    {
+      "key": "summer-bank",
+      "region": "UK",
+      "kind": "nthWeekday",
+      "month": 8,
+      "ordinal": -1,
+      "weekday": "MO"
+    },
+    {
+      "key": "st-patricks",
+      "region": "IE",
+      "kind": "fixed",
+      "month": 3,
+      "day": 17
+    },
+    {
+      "key": "guy-fawkes",
+      "region": "UK",
+      "kind": "fixed",
+      "month": 11,
+      "day": 5
+    },
+    {
+      "key": "canada-day",
+      "region": "CA",
+      "kind": "fixed",
+      "month": 7,
+      "day": 1
+    },
+    {
+      "key": "canadian-thanksgiving",
+      "region": "CA",
+      "kind": "nthWeekday",
+      "month": 10,
+      "ordinal": 2,
+      "weekday": "MO"
+    },
+    {
+      "key": "australia-day",
+      "region": "AU",
+      "kind": "fixed",
+      "month": 1,
+      "day": 26
+    },
+    {
+      "key": "anzac-day",
+      "region": "AU",
+      "kind": "fixed",
+      "month": 4,
+      "day": 25
     },
     {
       "key": "diwali",
@@ -167,6 +255,160 @@
           26
         ]
       }
+    },
+    {
+      "key": "holi",
+      "region": "IN",
+      "kind": "tabulated",
+      "dates": {
+        "2026": [
+          3,
+          4
+        ],
+        "2027": [
+          3,
+          22
+        ],
+        "2028": [
+          3,
+          11
+        ],
+        "2029": [
+          3,
+          1
+        ],
+        "2030": [
+          3,
+          20
+        ]
+      }
+    },
+    {
+      "key": "mahashivratri",
+      "region": "IN",
+      "kind": "tabulated",
+      "dates": {
+        "2026": [
+          2,
+          15
+        ],
+        "2027": [
+          3,
+          6
+        ]
+      }
+    },
+    {
+      "key": "raksha-bandhan",
+      "region": "IN",
+      "kind": "tabulated",
+      "dates": {
+        "2026": [
+          8,
+          28
+        ],
+        "2027": [
+          8,
+          17
+        ],
+        "2028": [
+          8,
+          5
+        ]
+      }
+    },
+    {
+      "key": "ganesh-chaturthi",
+      "region": "IN",
+      "kind": "tabulated",
+      "dates": {
+        "2026": [
+          9,
+          14
+        ],
+        "2027": [
+          9,
+          4
+        ]
+      }
+    },
+    {
+      "key": "dussehra",
+      "region": "IN",
+      "kind": "tabulated",
+      "dates": {
+        "2026": [
+          10,
+          20
+        ],
+        "2027": [
+          10,
+          9
+        ],
+        "2028": [
+          9,
+          27
+        ]
+      }
+    },
+    {
+      "key": "karwa-chauth",
+      "region": "IN",
+      "kind": "tabulated",
+      "dates": {
+        "2026": [
+          10,
+          29
+        ],
+        "2027": [
+          10,
+          18
+        ],
+        "2028": [
+          10,
+          7
+        ]
+      }
+    },
+    {
+      "key": "eid-ul-fitr",
+      "region": "IN",
+      "kind": "tabulated",
+      "dates": {
+        "2026": [
+          3,
+          21
+        ],
+        "2027": [
+          3,
+          10
+        ],
+        "2028": [
+          2,
+          27
+        ]
+      },
+      "predicted": true
+    },
+    {
+      "key": "eid-ul-adha",
+      "region": "IN",
+      "kind": "tabulated",
+      "dates": {
+        "2026": [
+          5,
+          27
+        ],
+        "2027": [
+          5,
+          17
+        ],
+        "2028": [
+          5,
+          5
+        ]
+      },
+      "predicted": true
     }
   ]
 }

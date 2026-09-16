@@ -12,8 +12,10 @@ import json
 import random
 
 SINGLE = [
-    "Thanksgiving", "thanksgiving", "Easter", "Eastermonday"[:0] or "Easter",
+    "Thanksgiving", "thanksgiving", "Easter",
     "Halloween", "Diwali", "diwali", "दिवाली", "दीपावली", "Juneteenth",
+    "Holi", "holi", "होली", "Rakhi", "राखी", "राखड़ी", "Dussehra", "दशहरा",
+    "Eid", "ईद", "Bakrid", "बकरीद", "Mahashivratri", "महाशिवरात्रि",
 ]
 MULTI = [
     ["Good", "Friday"], ["good", "friday"], ["Boxing", "Day"], ["boxing", "day"],
@@ -21,6 +23,14 @@ MULTI = [
     ["Independence", "Day"], ["independence", "day"], ["Easter", "Monday"],
     ["Christmas", "Eve"], ["christmas", "eve"], ["New", "Year's", "Day"],
     ["new", "year's", "day"],
+    ["Karwa", "Chauth"], ["karwa", "chauth"], ["करवा", "चौथ"],
+    ["Raksha", "Bandhan"], ["रक्षा", "बंधन"], ["Ganesh", "Chaturthi"],
+    ["गणेश", "चतुर्थी"], ["Columbus", "Day"], ["columbus", "day"],
+    ["Veterans", "Day"], ["veterans", "day"], ["St", "Patrick's", "Day"],
+    ["st", "patrick's", "day"], ["Canada", "Day"], ["canada", "day"],
+    ["Canadian", "Thanksgiving"], ["australia", "day"], ["Australia", "Day"],
+    ["Anzac", "Day"], ["anzac", "day"], ["Mothering", "Sunday"],
+    ["Guy", "Fawkes", "Night"], ["guy", "fawkes"], ["bank", "holiday"],
 ]
 CARRIERS = [
     ["family", "dinner"], ["team", "sync"], ["shipping", "cutoff"], ["office", "party"],

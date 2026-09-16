@@ -305,6 +305,29 @@ pub fn holiday_name(key: &str) -> Option<String> {
         "easter" => "easter",
         "eastermonday" => "easter-monday",
         "दिवाली" | "दीपावली" | "diwali" | "deepavali" => "diwali",
+        "holi" | "होली" => "holi",
+        "mahashivratri" | "shivratri" | "महाशिवरात्रि" | "शिवरात्रि" => {
+            "mahashivratri"
+        }
+        "rakshabandhan" | "रक्षाबंधन" => "raksha-bandhan",
+        "rakhi" | "राखी" | "राखड़ी" => "raksha-bandhan",
+        "ganeshchaturthi" | "गणेशचतुर्थी" => "ganesh-chaturthi",
+        "dussehra" | "dasara" | "दशहरा" | "विजयादशमी" => "dussehra",
+        "karwachauth" | "karvachauth" | "करवाचौथ" => "karwa-chauth",
+        "eid" | "ईद" | "eidulfitr" | "meethieid" | "ramzaneid" => "eid-ul-fitr",
+        "bakrid" | "बकरीद" | "eiduladha" | "eidaladha" => "eid-ul-adha",
+        "columbusday" | "indigenouspeoplesday" => "columbus-day",
+        "veteransday" => "veterans-day",
+        "stpatricksday" | "stpatricks" => "st-patricks",
+        "earlymaybank" | "maybankholiday" => "early-may-bank",
+        "springbankholiday" => "spring-bank",
+        "summerbankholiday" => "summer-bank",
+        "canadaday" => "canada-day",
+        "canadianthanksgiving" => "canadian-thanksgiving",
+        "australiaday" => "australia-day",
+        "anzacday" => "anzac-day",
+        "motheringsunday" => "mothering-sunday",
+        "guyfawkes" | "bonfirenight" | "fireworksnight" => "guy-fawkes",
         _ => return None,
     };
     Some(key.to_string())
