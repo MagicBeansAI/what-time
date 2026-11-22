@@ -18,6 +18,8 @@ OPTIONS:
     -l, --limit <COUNT>          Maximum previewed occurrences, 1..=1000 [default: 30]
     -j, --json                   Print the full parse result as JSON
     -c, --cron                   Print only the cron expressions, one per line
+    -x, --from-cron              Read TEXT as a cron line: describe it in English and
+                                 print when it fires (with -j, the full result as JSON)
     -h, --help                   Print this help
 
 Text may also be piped: what-time -j -r <INSTANT> < phrase.txt
@@ -31,6 +33,7 @@ struct Args {
     limit: i64,
     json: bool,
     cron: bool,
+    from_cron: bool,
 }
 
 fn now_reference() -> String {
@@ -77,6 +80,7 @@ fn parse_args() -> Result<Args, String> {
         limit: 30,
         json: false,
         cron: false,
+        from_cron: false,
     };
     let mut values = std::env::args().skip(1);
     let mut reference_set = false;
@@ -92,6 +96,7 @@ fn parse_args() -> Result<Args, String> {
             }
             "-j" | "--json" => args.json = true,
             "-c" | "--cron" => args.cron = true,
+            "-x" | "--from-cron" => args.from_cron = true,
             "-r" | "--reference" => {
                 args.reference = values.next().ok_or("--reference needs a value")?;
                 reference_set = true;
@@ -149,6 +154,10 @@ fn main() -> ExitCode {
         limit: Some(args.limit),
         ..Default::default()
     };
+
+    if args.from_cron {
+        return from_cron(&text, &context, args.json);
+    }
 
     let parser = what_time::Parser::new(Default::default());
     match parser.parse(&text, &context) {
@@ -224,6 +233,46 @@ fn main() -> ExitCode {
                 return ExitCode::FAILURE;
             }
             ExitCode::SUCCESS
+        }
+        Err(error) => {
+            eprintln!("error: {error}");
+            ExitCode::FAILURE
+        }
+    }
+}
+
+/// `-x`: a cron line read back as English plus its next fires.
+fn from_cron(text: &str, context: &ParseContext, json: bool) -> ExitCode {
+    match what_time::parse_cron(text, context) {
+        Ok(result) => {
+            if json {
+                match serde_json::to_string_pretty(&result) {
+                    Ok(json) => println!("{json}"),
+                    Err(error) => {
+                        eprintln!("error: {error}");
+                        return ExitCode::FAILURE;
+                    }
+                }
+            } else {
+                println!("{}", result.description);
+                for occurrence in &result.occurrences {
+                    println!("{}", occurrence.start);
+                }
+                for rule in &result.rrules {
+                    println!("{rule}");
+                }
+                for cron in &result.crons {
+                    println!("CRON:{cron}");
+                }
+                for diagnostic in &result.diagnostics {
+                    eprintln!("[{}] {}", diagnostic.code, diagnostic.message);
+                }
+            }
+            if result.occurrences.is_empty() {
+                ExitCode::FAILURE
+            } else {
+                ExitCode::SUCCESS
+            }
         }
         Err(error) => {
             eprintln!("error: {error}");

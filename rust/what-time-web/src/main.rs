@@ -175,6 +175,7 @@ fn main() {
                 serde_json::json!({"reference": default_reference()}).to_string(),
             ),
             (Method::Post, "/api/parse") => handle_parse(request),
+            (Method::Post, "/api/cron") => handle_cron(request),
             (Method::Get, "/health") => json_response(request, 200, "{\"ok\":true}".into()),
             _ => respond(
                 request,
@@ -183,5 +184,68 @@ fn main() {
                 b"not found".to_vec(),
             ),
         }
+    }
+}
+
+/// `POST /api/cron` `{"cron": "...", "context": {reference, timeZone, limit}}`
+/// → `{"result": CronResult}` (description, schedule, occurrences, rrules,
+/// normalized crons), or 400 with `{"error": ...}` for an invalid line.
+fn handle_cron(mut request: tiny_http::Request) {
+    let mut body = String::new();
+    if request.as_reader().read_to_string(&mut body).is_err() {
+        json_response(
+            request,
+            400,
+            r#"{"error":"unreadable request body"}"#.into(),
+        );
+        return;
+    }
+    let payload: serde_json::Value = match serde_json::from_str(&body) {
+        Ok(payload) => payload,
+        Err(error) => {
+            json_response(
+                request,
+                400,
+                serde_json::json!({"error": format!("invalid JSON: {error}")}).to_string(),
+            );
+            return;
+        }
+    };
+    let cron = payload
+        .get("cron")
+        .and_then(|value| value.as_str())
+        .unwrap_or("");
+    let default_reference = default_reference();
+    let context = what_time::ParseContext {
+        reference: payload
+            .pointer("/context/reference")
+            .and_then(|value| value.as_str())
+            .unwrap_or(default_reference.as_str())
+            .to_string(),
+        time_zone: payload
+            .pointer("/context/timeZone")
+            .and_then(|value| value.as_str())
+            .unwrap_or("UTC")
+            .to_string(),
+        limit: Some(
+            payload
+                .pointer("/context/limit")
+                .and_then(|value| value.as_i64())
+                .unwrap_or(30)
+                .clamp(1, 1000),
+        ),
+        ..Default::default()
+    };
+    match what_time::parse_cron(cron, &context) {
+        Ok(result) => json_response(
+            request,
+            200,
+            serde_json::json!({"result": serde_json::to_value(&result).unwrap()}).to_string(),
+        ),
+        Err(error) => json_response(
+            request,
+            400,
+            serde_json::json!({"error": error.to_string()}).to_string(),
+        ),
     }
 }

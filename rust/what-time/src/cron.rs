@@ -157,8 +157,13 @@ pub fn cron_specs(plan: &ExportPlan) -> Result<Vec<CronSpec>, String> {
         time_groups(&times)
     } else if let Some(step) = sub_daily {
         if step < 1 || 1440 % step != 0 {
+            let every = if step % 60 == 0 {
+                format!("{} hours", step / 60)
+            } else {
+                format!("{step} minutes")
+            };
             return Err(format!(
-                "Every {step} minutes does not divide a day evenly, so cron cannot keep the rhythm past midnight; use the RRULE."
+                "Every {every} does not divide a day evenly, so cron cannot keep the rhythm past midnight; use the RRULE."
             ));
         }
         // A step the phrase did not anchor to a clock sits on clock

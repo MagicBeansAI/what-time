@@ -136,10 +136,17 @@ fn exports_sub_hourly_steps_on_clock_boundaries() {
     let quarter = resolved("every 15 minutes", &["RECUR", "NUM", "UNIT"]);
     assert_eq!(quarter.crons, ["*/15 * * * *"]);
     assert!(quarter.rrules[0].ends_with("RRULE:FREQ=MINUTELY;INTERVAL=15"));
-    // The preview counts from the reference instant.
+    // The preview is on the same wall-clock grid cron fires on.
     assert_eq!(
         starts(&quarter, 3),
         ["2026-11-22T15:30", "2026-11-22T15:45", "2026-11-22T16:00"]
+    );
+    let six = resolved("every 6 hours", &["RECUR", "NUM", "UNIT"]);
+    assert_eq!(six.crons, ["0 */6 * * *"]);
+    assert!(six.rrules[0].ends_with("RRULE:FREQ=HOURLY;INTERVAL=6"));
+    assert_eq!(
+        starts(&six, 3),
+        ["2026-11-22T18:00", "2026-11-23T00:00", "2026-11-23T06:00"]
     );
     assert_eq!(crons("every minute", &["RECUR", "UNIT"]), ["* * * * *"]);
     assert_eq!(
@@ -490,4 +497,86 @@ fn recurs_weekly_for_bare_plural_weekdays() {
     let once = resolved("monday at 7pm", &["WEEKDAY", "GLUE", "HOUR", "MERIDIEM"]);
     assert!(once.crons.is_empty() && once.rrules.is_empty());
     assert_eq!(once.occurrences.len(), 1);
+}
+
+// ---------------------------------------------------------------- cron in
+
+fn read_cron(expression: &str) -> what_time::CronResult {
+    what_time::parse_cron(expression, &context())
+        .unwrap_or_else(|error| panic!("{expression}: {error}"))
+}
+
+#[test]
+fn reads_cron_back_into_a_described_schedule() {
+    let window = read_cron("*/15 9-17 * * 1-5");
+    assert_eq!(
+        window.description,
+        "Every 15 minutes from 9:00 AM to 5:45 PM on weekdays"
+    );
+    // Normalized by the exporter: numbers become names.
+    assert_eq!(window.crons, ["*/15 9-17 * * MON-FRI"]);
+    // Sunday 15:30: the next weekday window opens Monday 09:00.
+    assert_eq!(window.occurrences[0].start, "2026-11-23T09:00:00+05:30");
+    assert!(window.rrules[0].contains("BYDAY=MO,TU,WE,TH,FR"));
+
+    let macro_line = read_cron("@weekly");
+    assert_eq!(macro_line.description, "At midnight every Sunday");
+    assert_eq!(macro_line.crons, ["0 0 * * SUN"]);
+}
+
+#[test]
+fn applies_the_either_day_rule_without_duplicates() {
+    // The 1st of the month OR any Monday; Mon 2027-02-01 matches both.
+    let either = what_time::parse_cron(
+        "0 9 1 * MON",
+        &ParseContext {
+            reference: "2027-01-24T00:00:00Z".into(),
+            time_zone: "Asia/Kolkata".into(),
+            limit: Some(4),
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    let starts: Vec<&str> = either.occurrences.iter().map(|o| &o.start[..10]).collect();
+    assert_eq!(
+        starts,
+        ["2027-01-25", "2027-02-01", "2027-02-08", "2027-02-15"]
+    );
+    assert_eq!(either.schedule.clauses.len(), 2);
+}
+
+#[test]
+fn reports_a_line_that_never_fires() {
+    let never = read_cron("0 0 30 2 *");
+    assert!(never.occurrences.is_empty());
+    assert_eq!(never.description, "At midnight on the 30th of February");
+    assert!(never.diagnostics.iter().any(|d| d.code == "never-fires"));
+}
+
+#[test]
+fn rejects_invalid_cron_with_a_reason() {
+    let error = what_time::parse_cron("0 0 9 * * *", &context()).unwrap_err();
+    assert!(error.to_string().contains("five fields"), "{error}");
+    assert_eq!(
+        what_time::describe_cron("*/15 * * * *").unwrap(),
+        "Every 15 minutes"
+    );
+}
+
+#[test]
+fn round_trips_what_the_exporter_writes() {
+    for line in [
+        "0 9 * * MON-FRI",
+        "*/15 9-17 * * MON-FRI",
+        "0 18 * * MON,WED,FRI",
+        "0 0 1,15 * *",
+        "30 2 * * *",
+        "0 */6 * * *",
+        "0 8,13,20 * * *",
+        "0 0 25 12 *",
+        "0 9-17/2 * * *",
+        "0 0 1 2-11/3 *",
+    ] {
+        assert_eq!(read_cron(line).crons, [line], "{line}");
+    }
 }

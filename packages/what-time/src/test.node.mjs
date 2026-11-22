@@ -5,7 +5,7 @@
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
-const { parse, parseExpressions } = await import("../dist/index.js");
+const { parse, parseExpressions, parseCron, describeCron } = await import("../dist/index.js");
 
 const context = {
   reference: "2026-09-13T10:00:00Z",
@@ -29,6 +29,15 @@ test("recurring phrases export cron, or say why not", async () => {
   assert.deepEqual(nth.crons, []);
   assert.ok(nth.diagnostics.some((value) => value.code === "unsupported-cron"));
   assert.ok(nth.rrules[0].includes("BYSETPOS=1"));
+});
+
+test("cron lines read back as English and fires", async () => {
+  const result = await parseCron("*/15 9-17 * * 1-5", context);
+  assert.equal(result.description, "Every 15 minutes from 9:00 AM to 5:45 PM on weekdays");
+  assert.deepEqual(result.crons, ["*/15 9-17 * * MON-FRI"]);
+  assert.equal(result.occurrences[0].start, "2026-09-14T09:00:00+05:30");
+  assert.equal(await describeCron("@weekly"), "At midnight every Sunday");
+  await assert.rejects(() => describeCron("0 0 9 * * *"), /five fields/);
 });
 
 test("hindi day-part biases the hour to pm", async () => {

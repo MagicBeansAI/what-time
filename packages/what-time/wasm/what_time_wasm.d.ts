@@ -2,9 +2,22 @@
 /* eslint-disable */
 
 /**
+ * An English description of a cron line: `{"description": ...}`, or
+ * `{"error": ...}` for an invalid line.
+ */
+export function describe_cron(expression: string): string;
+
+/**
  * Full parse: occurrences, diagnostics, rrules, crons, timings.
  */
 export function parse(text: string, reference: string, time_zone: string, limit: bigint, date_order: string): string;
+
+/**
+ * A cron line read back: English description, schedule, fires from the
+ * reference, RRULE and normalized cron (the `CronResult` JSON shape), or
+ * `{"error": ...}` for an invalid line.
+ */
+export function parse_cron(expression: string, reference: string, time_zone: string, limit: bigint): string;
 
 /**
  * Model-level schedules: expression spans, confidence, schedule JSON.
@@ -20,7 +33,9 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 
 export interface InitOutput {
     readonly memory: WebAssembly.Memory;
+    readonly describe_cron: (a: number, b: number) => [number, number];
     readonly parse: (a: number, b: number, c: number, d: number, e: number, f: number, g: bigint, h: number, i: number) => [number, number];
+    readonly parse_cron: (a: number, b: number, c: number, d: number, e: number, f: number, g: bigint) => [number, number];
     readonly parse_expressions: (a: number, b: number) => [number, number];
     readonly version: () => [number, number];
     readonly __wbindgen_externrefs: WebAssembly.Table;

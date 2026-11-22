@@ -792,6 +792,9 @@ fn uses_month_day_fields_for_yearly_rules_and_skips_non_leap_years() {
     assert_eq!(start_dates(&leap), ["2028-02-29", "2032-02-29"]);
 }
 
+/// An hourly rule with no clock sits on the wall-clock grid (as cron runs
+/// it), not on the reference instant's minute; the hour the spring-forward
+/// gap removes is skipped, not shifted.
 #[test]
 fn expands_hourly_recurrence_as_timed_events_across_a_dst_gap() {
     let result = resolve(
@@ -808,10 +811,10 @@ fn expands_hourly_recurrence_as_timed_events_across_a_dst_gap() {
     assert_eq!(
         starts(&result),
         [
-            "2026-03-08T00:30:00-05:00",
-            "2026-03-08T01:30:00-05:00",
-            "2026-03-08T03:30:00-04:00",
-            "2026-03-08T04:30:00-04:00",
+            "2026-03-08T01:00:00-05:00",
+            "2026-03-08T03:00:00-04:00",
+            "2026-03-08T04:00:00-04:00",
+            "2026-03-08T05:00:00-04:00",
         ]
     );
     assert!(result.occurrences.iter().all(|value| !value.all_day));

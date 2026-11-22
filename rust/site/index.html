@@ -202,6 +202,7 @@
   .tiny:hover { color: var(--ink); border-color: var(--ink); }
 
   .rrules { display: flex; flex-direction: column; gap: 8px; }
+  .cron-description { margin: 0; font-size: 17px; }
   pre {
     background: var(--card); border: 1px solid var(--line); border-radius: 10px;
     padding: 10px 12px; overflow-x: auto; font-size: 12px; margin: 0; color: #44403c;
@@ -228,7 +229,9 @@
 
   <p class="lede">Say it in <span class="lede-lang" id="lede-lang">English</span>.</p>
   <p class="sub">Type a phrase like <q>yoga every Tuesday and Thursday at 7am</q> and the model returns
-    real occurrences, recurrences, and an RFC&nbsp;5545 rule — resolved in your time zone.</p>
+    real occurrences, recurrences, an RFC&nbsp;5545 rule and cron — resolved in your time zone.
+    Or paste a cron line like <a href="#" class="cron-try" data-cron="*/15 9-17 * * 1-5"><code>*/15 9-17 * * 1-5</code></a>
+    to read it back in English.</p>
 
   <form class="parse-card" id="form">
     <div class="field">
@@ -325,9 +328,10 @@
 </main>
 
 <script type="module">
-import init, { parse, parse_expressions, version } from "./wasm/what_time_wasm.js";
+import init, { parse, parse_cron, parse_expressions, version } from "./wasm/what_time_wasm.js";
 const wasmReady = init();
 globalThis.wasmParse = parse;
+globalThis.wasmParseCron = parse_cron;
 globalThis.wasmExpressions = parse_expressions;
 globalThis.wasmVersion = version;
 globalThis.wasmReady = wasmReady;
@@ -358,7 +362,10 @@ const EXAMPLES = [
   { use: "holidays · भारत", text: "दिवाली को मिलते हैं" },
   { use: "holidays · Holi", text: "party on Holi at 6pm" },
   { use: "holidays · करवा चौथ", text: "karwa chauth pe fast" },
+  { use: "cron · to English", text: "*/15 9-17 * * 1-5", cron: true },
+  { use: "cron · to English", text: "0 9 1 * MON", cron: true },
 ];
+const TEXT_EXAMPLES = EXAMPLES.filter((example) => !example.cron);
 
 const $ = (id) => document.getElementById(id);
 
@@ -481,6 +488,33 @@ function format(result, reference, timeZone) {
   };
 }
 
+/* ---------- cron lines: read back as English ---------- */
+
+// A cron line, not a sentence: the first two fields are cron syntax
+// (digits, * ? / , -) and every field is cron-shaped, or an @ macro. Six-
+// and seven-field lines (with seconds or a year) route here too, so the
+// reader can say that cron has five fields.
+function looksLikeCron(value) {
+  if (/^@\w+$/.test(value)) return true;
+  const fields = value.split(/\s+/);
+  if (fields.length < 5 || fields.length > 7) return false;
+  const numeric = /^[0-9*?,\/\-]+$/;
+  const named = /^[0-9*?,\/\-#LW]+$|^[A-Za-z]{3}([,\-][A-Za-z]{3})*(\/\d+)?$|^[0-9A-Za-z]+#[1-5]$/;
+  return numeric.test(fields[0]) && numeric.test(fields[1]) && fields.slice(2).every((f) => named.test(f));
+}
+
+function renderCron(result) {
+  render({
+    result: { ...result, timings: { tokenizeMs: 0, inferMs: 0, resolveMs: 0 }, backend: "cron" },
+    expressions: [],
+  });
+  $("extras").insertAdjacentHTML(
+    "afterbegin",
+    `<details class="panel" open><summary>Cron → English <span class="note">read in ${escapeHtml($("timezone").value)}</span></summary>` +
+      `<div class="panel-body"><p class="cron-description">${escapeHtml(result.description)}</p></div></details>`,
+  );
+}
+
 /* ---------- playground plumbing ---------- */
 
 let seq = 0;
@@ -493,6 +527,18 @@ async function run() {
   $("parse").disabled = true;
   try {
     await wasmReady;
+    if (looksLikeCron(value)) {
+      const started = performance.now();
+      const cron = JSON.parse(wasmParseCron(value, $("reference").value, $("timezone").value, BigInt(Number($("limit").value) || 3)));
+      if (ticket !== seq) return;
+      $("latency-time").textContent = `read as cron in ${(performance.now() - started).toFixed(2)} ms`;
+      if (cron.error) {
+        showError("Not a cron line I can read: " + cron.error);
+        return;
+      }
+      renderCron(cron);
+      return;
+    }
     const started = performance.now();
     const resultText = wasmParse(
       value,
@@ -613,6 +659,14 @@ async function init() {
     li.appendChild(button);
     list.appendChild(li);
   }
+  for (const link of document.querySelectorAll(".cron-try")) {
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      $("text").value = link.dataset.cron;
+      renderHighlight(link.dataset.cron);
+      run();
+    });
+  }
 
   $("form").addEventListener("submit", (event) => { event.preventDefault(); run(); });
   $("text").addEventListener("input", () => {
@@ -673,7 +727,7 @@ function wireBenchmarks() {
     button.disabled = true;
     try {
       await globalThis.wasmReady;
-      for (const example of EXAMPLES) {
+      for (const example of TEXT_EXAMPLES) {
         for (let i = 0; i < 20; i++) oneParse(example.text);
         const samples = [];
         for (let i = 0; i < 200; i++) {
@@ -715,7 +769,7 @@ function wireBenchmarks() {
         const size = Math.min(chunk, count - done);
         const started = performance.now();
         for (let i = 0; i < size; i++) {
-          const text = EXAMPLES[(done + i) % EXAMPLES.length].text;
+          const text = TEXT_EXAMPLES[(done + i) % TEXT_EXAMPLES.length].text;
           const result = JSON.parse(oneParse(text));
           if (!result.error) successes += 1;
         }

@@ -4,7 +4,7 @@
     <b>Turn "har hafte Tuesday ko gym" into real dates — on-device, in three languages.</b>
   </p>
   <p>
-    <a href="#-install"><img src="https://img.shields.io/badge/what--time-v0.3.0-2563EB.svg" alt="@magicbeansai/what-time v0.3.0" /></a>
+    <a href="#-install"><img src="https://img.shields.io/badge/what--time-v0.4.0-2563EB.svg" alt="@magicbeansai/what-time v0.4.0" /></a>
     <a href="#license"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT" /></a>
     <img src="https://img.shields.io/badge/lang-English%20%7C%20हिन्दी%20%7C%20Hinglish-8B5CF6.svg" alt="English, Hindi, Hinglish" />
     <img src="https://img.shields.io/badge/runtime-WebAssembly%20%2B%20TypeScript-6DA55F.svg" alt="WebAssembly + TypeScript" />
@@ -167,6 +167,29 @@ Returns `ParseResult`:
 | `diagnostics` | `Diagnostic[]` | `{ code, message, severity, start?, end? }`. |
 | `truncated` | `boolean` | Whether `limit` cut the preview. |
 | `timings` | `object` | `tokenizeMs` / `inferMs` / `resolveMs` (0 in wasm builds). |
+
+### `parseCron(expression, context): Promise<CronResult>`
+
+A five-field cron line (or `@daily`-style macro) read back, in
+`context.timeZone` from `context.reference`:
+
+```ts
+const result = await parseCron("*/15 9-17 * * 1-5", { reference, timeZone: "Asia/Kolkata", limit: 3 });
+result.description; // "Every 15 minutes from 9:00 AM to 5:45 PM on weekdays"
+result.occurrences; // the next fires
+result.crons;       // ["*/15 9-17 * * MON-FRI"] — the normalized line
+result.rrules;      // the RFC 5545 rule
+```
+
+POSIX either-day rule when day-of-month and day-of-week are both
+restricted; `L` and `5#2` / `5L` extensions; a valid line no date matches
+(30 February) returns no occurrences and a `never-fires` diagnostic. An
+invalid line throws a `TypeError` naming the problem. English descriptions
+only for now.
+
+### `describeCron(expression): Promise<string>`
+
+Just the English description; throws a `TypeError` for an invalid line.
 
 ### `parseExpressions(text): Promise<Expression[]>`
 

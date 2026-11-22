@@ -8,6 +8,7 @@
 | `grammar.jsonl`, `grammar-variations.jsonl`, `adversarial.jsonl`, `negatives.jsonl`, `prose.jsonl` | `{id, family, text, schedule}` | `evals.rs` — model output must assemble the recorded schedule (`schedule: null` expects no expression) |
 | `labels.jsonl` | `{id, text, tokens, schedule}` | `oracle_cases.rs` — compiler-only oracle with hand labels |
 | `user-cases.jsonl` | `{id, text, context, occurrences}` | `runtime_cases.rs` tokenizer losslessness |
+| `cron-parse.jsonl` | `{id, cron, valid, first, meaning}` | `evals.rs` — cron lines read back by `parse_cron`: the first four fires (Kolkata, from Sun 2026-11-22 15:30) or a rejection. Written independently of the parser from POSIX semantics, then pinned |
 | `cron.jsonl` | `{id, text, crons, rrules?}` | `evals.rs` — recurring phrases end to end against authored cron expressions; `crons: []` pins a rule cron cannot state, with its `RRULE:` line and an `unsupported-cron` diagnostic |
 
 The corpora encode schedules in the same JSON shapes the library's serde

@@ -205,6 +205,16 @@ pub(crate) fn resolve_prepared(
                     }
                 }
             }
+            // A rule whose next occurrence lies past the default one-year
+            // preview ("annually on 29 Feb") still shows when it next fires.
+            let next_beyond_horizon = series.occurrences.is_empty()
+                && options.until.is_none()
+                && series.first.as_ref().is_some_and(|first| {
+                    first.start >= *reference && series.until.is_none_or(|end| first.start < end)
+                });
+            if next_beyond_horizon {
+                occurrences.extend(series.first.clone());
+            }
             occurrences.extend(series.occurrences);
             truncated = truncated || series.truncated;
             continue;

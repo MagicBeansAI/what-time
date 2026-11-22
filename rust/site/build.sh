@@ -25,6 +25,7 @@ const wasmBytes = Uint8Array.from(atob(WASM_B64), (c) => c.charCodeAt(0));
 initSync(new WebAssembly.Module(wasmBytes));
 const wasmReady = Promise.resolve();
 globalThis.wasmParse = parse;
+globalThis.wasmParseCron = parse_cron;
 globalThis.wasmExpressions = parse_expressions;
 globalThis.wasmVersion = version;
 globalThis.wasmReady = wasmReady;

@@ -4,7 +4,7 @@
     <b>Neural schedule parsing in English, हिन्दी, and Hinglish — on-device, exact, open.</b>
   </p>
   <p>
-    <img src="https://img.shields.io/badge/what--time-v0.3.0-2563EB.svg" alt="what-time v0.3.0" />
+    <img src="https://img.shields.io/badge/what--time-v0.4.0-2563EB.svg" alt="what-time v0.4.0" />
     <a href="#-license"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT" /></a>
     <img src="https://img.shields.io/badge/lang-English%20%7C%20हिन्दी%20%7C%20Hinglish-8B5CF6.svg" alt="Trilingual" />
     <a href="#-what-it-does"><img src="https://img.shields.io/badge/targets-Rust%20%7C%20WASM%20%7C%20npm%20%7C%20GPU-orange.svg" alt="Targets" /></a>
@@ -180,6 +180,24 @@ what-time -c "every 15 minutes between 9am and 6pm on weekdays" -t Asia/Kolkata
 # 0 18 * * MON-FRI
 ```
 
+`-x` goes the other way: a cron line read back in English, with its fires,
+RRULE and the normalized line. No model is involved — cron is a formal
+grammar, so reading it is exact.
+
+```bash
+what-time -x "*/15 9-17 * * 1-5" -t Asia/Kolkata -l 2
+# Every 15 minutes from 9:00 AM to 5:45 PM on weekdays
+# 2026-11-23T09:00:00+05:30
+# 2026-11-23T09:15:00+05:30
+# … RRULE, then CRON:*/15 9-17 * * MON-FRI
+```
+
+It reads numbers, ranges, lists, steps (`*/15`, `1-10/3`, `5/10`), month and
+weekday names, Sunday as 0 or 7, `@hourly`…`@yearly`, and the `L` (last day)
+and `5#2` / `5L` (nth / last weekday) extensions; when day-of-month and
+day-of-week are both restricted, a day matches when either does (POSIX).
+English only for now.
+
 Cron is the common five-field dialect with weekday names. A rule it cannot
 state exactly — every other week, the first Monday of a month, the last day
 of a month — prints nothing, exits 1, and says why on stderr; the RRULE in
@@ -199,8 +217,6 @@ cron either, so those print with a `cron-unbounded` warning.
 - **Real-user accuracy is unmeasured.** In-distribution scores are excellent
   (568 pinned corpus cases, zero known gaps, LLM held-out 0.995) but generated corpora share
   training families.
-- **Cron is an output, not an input.** Text becomes cron; a cron expression
-  is not parsed back into a schedule or described in words.
 - **GPU mode pays only in bulk.** Single phrases are fastest on CPU (~0.4 ms);
   the GPU path activates at ≥64 phrases per call.
 - **Not for high-stakes scheduling** — legal, medical, or billing dates need

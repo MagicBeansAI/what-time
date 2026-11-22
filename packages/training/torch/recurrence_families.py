@@ -343,6 +343,12 @@ def counted_step(s: Sentence) -> None:
         s.add(unit, "UNIT")
     else:
         s.add(rng.choice(["every", "every", "each"]), "RECUR")
+        if rng.random() < 0.15:
+            # "every quarter": the calendar period, not "quarter past"
+            s.add("quarter", "UNIT")
+            if rng.random() < 0.5:
+                at_clock(s)
+            return
         number(s, rng.choice(DAY_STEPS))
         s.add(unit + "s", "UNIT")
     tail = rng.random()

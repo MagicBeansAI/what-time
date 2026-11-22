@@ -2,7 +2,40 @@
 
 Short and honest. Scores per build live in [`SCORES.md`](SCORES.md).
 
-## Unreleased
+## 0.4.0
+
+- **Cron to English**: `parse_cron` / `describe_cron` (Rust), `-x` (CLI),
+  `parseCron` / `describeCron` (npm, wasm), `POST /api/cron` (local API),
+  and the playground reads a pasted cron line. Exact grammar parsing, no
+  model: numbers, ranges, lists, steps, names, Sunday 0/7, `@` macros, `L`,
+  `5#2`/`5L`, POSIX either-day rule; a line that never fires says so.
+  English descriptions only for now. The playground intro links a cron
+  example, and two cron examples sit with the phrase examples.
+- **Previews now match what a scheduler fires.** A sub-daily step that
+  divides the day and names no clock ("every 6 hours", "every hour", "har
+  do ghante mein") sits on the wall-clock grid from midnight, as cron runs
+  it, instead of counting from the reference instant (which cron cannot
+  express once the reference has seconds). Steps that don't divide the
+  day ("every 5 hours") still count from the reference and stay RRULE-only.
+  A new test runs every exported cron line through the `cron` crate the
+  way Magician schedules it and requires identical fires (Kolkata and New
+  York across DST).
+- A recurrence whose next occurrence lies past the one-year preview
+  ("annually on 29 Feb") now shows that next occurrence.
+- Grammar, found by an independent 271-phrase test set (now 261 match; the
+  rest are documented ambiguities and gaps):
+  - "the 1st / 10th of every month", "every year on the last day of
+    December", "monthly on day 25", "every 24 hours";
+  - two rules joined without a second "every" ("weekdays at 9am and
+    weekends at 11am", "subah 9 baje aur raat 9 baje");
+  - a trailing "every Saturday" narrows the timed rule before it, and
+    "weekly" in "send the weekly report every Friday" is not a second rule;
+  - "except on the 25th"; "until 8pm today" no longer becomes the rule's
+    clock; "tonight at 10" is 22:00;
+  - label repairs for numbers after a month name ("Nov 22"), minutes after
+    a colon ("7:30pm"), hours in comma lists, "everyday", and "every
+    quarter" (which the retrained model had stopped labeling).
+- Pinned corpora: 646 schedules, 60 cron, 86 cron-parse.
 
 - GitHub Pages builds the playground from source on every push to `main`
   (wasm with SIMD, then the single-file page), smoke-tests that the fresh

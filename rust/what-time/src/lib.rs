@@ -27,6 +27,7 @@ mod calendar;
 mod clock;
 mod compile;
 mod cron;
+mod cron_text;
 mod exclusions;
 mod labels;
 mod lexicon;
@@ -166,7 +167,7 @@ impl Parser {
         }
     }
 
-    fn validate(context: &ParseContext) -> Result<usize, Error> {
+    pub(crate) fn validate(context: &ParseContext) -> Result<usize, Error> {
         // Context belongs to calendar resolution and never enters the model.
         if context.time_zone.trim().is_empty() {
             return Err(Error::TypeError("timeZone is required.".into()));
@@ -320,6 +321,93 @@ pub fn parse(text: &str, context: &ParseContext) -> Result<ParseResult, Error> {
 /// Batches several inputs with the default parser instance.
 pub fn parse_many(texts: &[&str], context: &ParseContext) -> Result<Vec<ParseResult>, Error> {
     default_parser().parse_many(texts, context)
+}
+
+/// A cron line read back into a schedule: an English description, the typed
+/// schedule, previewed occurrences, RRULEs, and the line re-exported by the
+/// cron exporter (the normalized form: `1-5` becomes `MON-FRI`).
+#[derive(Clone, PartialEq, Debug, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CronResult {
+    pub expression: String,
+    pub description: String,
+    pub schedule: Schedule,
+    pub occurrences: Vec<TimeRange>,
+    pub rrules: Vec<String>,
+    pub crons: Vec<String>,
+    pub truncated: bool,
+    pub diagnostics: Vec<Diagnostic>,
+}
+
+/// Describes a five-field cron line (or `@daily`-style macro) in English:
+/// `"*/15 9-17 * * 1-5"` → "Every 15 minutes from 9:00 AM to 5:45 PM on
+/// weekdays". An invalid line returns a `TypeError` that says what is wrong.
+pub fn describe_cron(expression: &str) -> Result<String, Error> {
+    Ok(cron_text::parse(expression)
+        .map_err(Error::TypeError)?
+        .describe())
+}
+
+/// Reads a cron line in the context's time zone: its description, schedule,
+/// and the occurrences it fires at from the reference instant, plus RRULE
+/// and normalized cron exports. When day-of-month and day-of-week are both
+/// restricted, a day matches when either does (POSIX).
+pub fn parse_cron(expression: &str, context: &ParseContext) -> Result<CronResult, Error> {
+    let limit = Parser::validate(context)?;
+    let parsed = cron_text::parse(expression).map_err(Error::TypeError)?;
+    let schedule = parsed.schedule().map_err(Error::TypeError)?;
+    // The either-day rule can produce the same instant twice; ask for more
+    // so the preview still fills after removing them.
+    let mut wide = context.clone();
+    wide.limit = Some(((limit * 2).min(1000)) as i64);
+    let resolved = match resolve::resolve_with(&wide, &schedule) {
+        Ok(resolved) => resolved,
+        // A valid line whose days never occur ("0 0 30 2 *") describes
+        // itself and says so instead of failing.
+        Err(message) if message.starts_with("No eligible recurrence start") => {
+            return Ok(CronResult {
+                expression: expression.trim().to_string(),
+                description: parsed.describe(),
+                schedule,
+                occurrences: Vec::new(),
+                rrules: Vec::new(),
+                crons: Vec::new(),
+                truncated: false,
+                diagnostics: vec![Diagnostic {
+                    code: "never-fires".into(),
+                    message: "No date matches this line within eight years (for example the 30th of February).".into(),
+                    start: 0,
+                    end: expression.len(),
+                    severity: Severity::warning,
+                }],
+            });
+        }
+        Err(message) => return Err(Error::RangeError(message)),
+    };
+    let mut occurrences: Vec<TimeRange> = Vec::new();
+    for occurrence in resolved.occurrences {
+        let range = TimeRange {
+            start: occurrence.start,
+            end: occurrence.end,
+            open: occurrence.open,
+            all_day: occurrence.all_day,
+        };
+        if !occurrences.contains(&range) {
+            occurrences.push(range);
+        }
+    }
+    let truncated = resolved.truncated || occurrences.len() > limit;
+    occurrences.truncate(limit);
+    Ok(CronResult {
+        expression: expression.trim().to_string(),
+        description: parsed.describe(),
+        schedule,
+        occurrences,
+        rrules: resolved.rrules,
+        crons: resolved.crons,
+        truncated,
+        diagnostics: resolved.diagnostics,
+    })
 }
 
 /// Resolves an already-compiled schedule against a caller context.

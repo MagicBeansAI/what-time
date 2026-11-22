@@ -13,5 +13,12 @@ wgpu = { workspace = true, optional = true }
 pollster = { workspace = true, optional = true }
 bytemuck = { workspace = true, optional = true }
 
+[dev-dependencies]
+# Only for tests/cron_scheduler_compat.rs: runs exported cron lines through
+# the scheduler crate a consumer (Magician) uses, to prove identical fires.
+cron = "=0.12.1"
+chrono = "0.4"
+chrono-tz = "0.10"
+
 [features]
 gpu = ["dep:wgpu", "dep:pollster", "dep:bytemuck"]

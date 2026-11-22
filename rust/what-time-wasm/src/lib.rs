@@ -45,3 +45,24 @@ pub fn parse_expressions(text: &str) -> String {
         Err(error) => serde_json::json!({"error": error.to_string()}).to_string(),
     }
 }
+
+/// A cron line read back: English description, schedule, fires from the
+/// reference, RRULE and normalized cron (the `CronResult` JSON shape), or
+/// `{"error": ...}` for an invalid line.
+#[wasm_bindgen]
+pub fn parse_cron(expression: &str, reference: &str, time_zone: &str, limit: i64) -> String {
+    match what_time::parse_cron(expression, &context(reference, time_zone, limit)) {
+        Ok(result) => serde_json::to_string(&result).unwrap_or_else(|_| "{}".into()),
+        Err(error) => serde_json::json!({"error": error.to_string()}).to_string(),
+    }
+}
+
+/// An English description of a cron line: `{"description": ...}`, or
+/// `{"error": ...}` for an invalid line.
+#[wasm_bindgen]
+pub fn describe_cron(expression: &str) -> String {
+    match what_time::describe_cron(expression) {
+        Ok(description) => serde_json::json!({"description": description}).to_string(),
+        Err(error) => serde_json::json!({"error": error.to_string()}).to_string(),
+    }
+}

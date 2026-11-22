@@ -380,6 +380,79 @@ pub fn recurrence_rule(
 
 type SlotGroup = (Vec<i64>, Vec<(i64, i64)>);
 
+fn grid_rule(
+    rule: &crate::types::Recurrence,
+    by_day: Option<Vec<Weekday>>,
+    step: i64,
+    series: &RecurrenceExpansion,
+    context: &ResolutionContext,
+    clause: &Clause,
+    anchor: Civil,
+) -> Result<RecurrenceExport, RecurrenceExportError> {
+    let time_zone = &context.options.time_zone;
+    let first = series
+        .first
+        .as_ref()
+        .expect("recurrence export requires a first occurrence");
+    let formatted = iso(first.start, time_zone).map_err(RecurrenceExportError)?;
+    let mut lines = vec![format!(
+        "DTSTART;TZID={time_zone}:{}",
+        local_value(&formatted, false)
+    )];
+    if let Some(duration) = &clause.duration {
+        let end = crate::occurrence::add_duration(first.start, duration, time_zone)
+            .map_err(RecurrenceExportError)?;
+        let formatted = iso(end, time_zone).map_err(RecurrenceExportError)?;
+        lines.push(format!(
+            "DTEND;TZID={time_zone}:{}",
+            local_value(&formatted, false)
+        ));
+    }
+    let mut parts = if step % 60 == 0 {
+        vec!["FREQ=HOURLY".to_string(), format!("INTERVAL={}", step / 60)]
+    } else {
+        vec!["FREQ=MINUTELY".to_string(), format!("INTERVAL={step}")]
+    };
+    if context.options.week_start == Some(crate::types::WeekStart::SU) {
+        parts.push("WKST=SU".into());
+    }
+    if let Some(days) = &by_day {
+        let names: Vec<&str> = days.iter().copied().map(weekday_text).collect();
+        parts.push(format!("BYDAY={}", names.join(",")));
+    }
+    if let Some(months) = rule.by_month.as_ref().filter(|months| !months.is_empty()) {
+        parts.push(format!("BYMONTH={}", join(months)));
+    }
+    if let Some(days) = rule.by_month_day.as_ref().filter(|days| !days.is_empty()) {
+        parts.push(format!("BYMONTHDAY={}", join(days)));
+    }
+    if let Some(count) = rule.count {
+        parts.push(format!("COUNT={count}"));
+    }
+    if let Some(series_until) = series.until {
+        parts.push(format!("UNTIL={}", utc_iso_basic(series_until - 1.0)));
+    }
+    lines.push(format!("RRULE:{}", parts.join(";")));
+    Ok(RecurrenceExport {
+        rrules: vec![lines.join("\n")],
+        plan: ExportPlan {
+            freq: rule.freq,
+            interval: rule.interval,
+            by_day,
+            by_month: rule.by_month.clone().unwrap_or_default(),
+            by_month_day: rule.by_month_day.clone().unwrap_or_default(),
+            by_set_pos: Vec::new(),
+            hours: None,
+            anchor,
+            all_day: false,
+            clocked: true,
+            bounded: rule.count.is_some() || series.until.is_some() || rule.start.is_some(),
+            exdates: false,
+            slots: Some((0..1440 / step).map(|index| index * step * 60).collect()),
+        },
+    })
+}
+
 /// A sub-daily rule inside a daily clock window fires at fixed times of
 /// day, so it exports as FREQ=DAILY with BYHOUR/BYMINUTE. Hours that share
 /// a minute set form one rule: "every 15 minutes from 9am to 6pm" is the
@@ -413,6 +486,20 @@ fn windowed_rule(
             "Date exceptions on a windowed sub-daily rule are not exported; occurrence previews still apply them."
                 .into(),
         ));
+    }
+
+    // A whole-day grid from midnight ("every 15 minutes", "every 6 hours")
+    // is the plain MINUTELY / HOURLY rule from an on-grid DTSTART.
+    if let Some(step) = crate::recurrence::sub_daily_step(rule)
+        && step > 0
+        && 1440 % step == 0
+        && slots.len() as i64 == 1440 / step
+        && slots
+            .iter()
+            .enumerate()
+            .all(|(index, slot)| slot.0 == index as i64 * step * 60)
+    {
+        return grid_rule(rule, by_day, step, series, context, clause, anchor);
     }
 
     // (hour) -> sorted [(minute, second)], then hours grouped by that set.

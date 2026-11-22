@@ -18,7 +18,13 @@
  * ```
  */
 
-import initRaw, { initSync, parse as parseRaw, parse_expressions } from "../wasm/what_time_wasm.js";
+import initRaw, {
+  describe_cron,
+  initSync,
+  parse as parseRaw,
+  parse_cron,
+  parse_expressions,
+} from "../wasm/what_time_wasm.js";
 import { VERSION } from "./version.js";
 
 /** The npm package version (generated from package.json by pnpm build). */
@@ -67,6 +73,24 @@ export interface ParseResult {
     inferMs: number;
     resolveMs: number;
   };
+}
+
+/** A cron line read back into a schedule. */
+export interface CronResult {
+  /** The line as given, trimmed. */
+  expression: string;
+  /** English: "Every 15 minutes from 9:00 AM to 5:45 PM on weekdays". */
+  description: string;
+  /** The typed schedule, in the same shape `parseExpressions` returns. */
+  schedule: unknown;
+  /** When it fires from `reference`, in `timeZone`. */
+  occurrences: TimeRange[];
+  rrules: string[];
+  /** The line re-exported by the cron writer (`1-5` becomes `MON-FRI`). */
+  crons: string[];
+  truncated: boolean;
+  /** `never-fires` for a valid line no date matches (30 February). */
+  diagnostics: Diagnostic[];
 }
 
 export interface Expression {
@@ -151,6 +175,43 @@ export async function parse(text: string, context: ParseContext): Promise<ParseR
 export async function parseExpressions(text: string): Promise<Expression[]> {
   await init();
   return JSON.parse(parse_expressions(text)) as Expression[];
+}
+
+function cronJson<T>(json: string): T {
+  const parsed = JSON.parse(json) as T | { error: string };
+  if (parsed && typeof parsed === "object" && "error" in parsed) {
+    throw new TypeError((parsed as { error: string }).error);
+  }
+  return parsed as T;
+}
+
+/**
+ * Read a five-field cron line (or `@daily`-style macro): an English
+ * description plus when it fires from `context.reference` in
+ * `context.timeZone`, with RRULE and normalized cron exports. When
+ * day-of-month and day-of-week are both restricted, a day matches when
+ * either does (POSIX). Throws a TypeError naming what is wrong with an
+ * invalid line.
+ */
+export async function parseCron(
+  expression: string,
+  context: Omit<ParseContext, "dateOrder">,
+): Promise<CronResult> {
+  await init();
+  return cronJson<CronResult>(
+    parse_cron(
+      expression,
+      context.reference,
+      context.timeZone,
+      BigInt(Math.min(1000, Math.max(1, Math.trunc(context.limit ?? 30)))),
+    ),
+  );
+}
+
+/** English description of a cron line; throws a TypeError if it is invalid. */
+export async function describeCron(expression: string): Promise<string> {
+  await init();
+  return cronJson<{ description: string }>(describe_cron(expression)).description;
 }
 
 /** Synchronous parse for callers that already awaited {@link init}. */

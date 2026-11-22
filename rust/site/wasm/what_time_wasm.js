@@ -1,6 +1,27 @@
 /* @ts-self-types="./what_time_wasm.d.ts" */
 
 /**
+ * An English description of a cron line: `{"description": ...}`, or
+ * `{"error": ...}` for an invalid line.
+ * @param {string} expression
+ * @returns {string}
+ */
+export function describe_cron(expression) {
+    let deferred2_0;
+    let deferred2_1;
+    try {
+        const ptr0 = passStringToWasm0(expression, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.describe_cron(ptr0, len0);
+        deferred2_0 = ret[0];
+        deferred2_1 = ret[1];
+        return getStringFromWasm0(ret[0], ret[1]);
+    } finally {
+        wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
+    }
+}
+
+/**
  * Full parse: occurrences, diagnostics, rrules, crons, timings.
  * @param {string} text
  * @param {string} reference
@@ -27,6 +48,35 @@ export function parse(text, reference, time_zone, limit, date_order) {
         return getStringFromWasm0(ret[0], ret[1]);
     } finally {
         wasm.__wbindgen_free(deferred5_0, deferred5_1, 1);
+    }
+}
+
+/**
+ * A cron line read back: English description, schedule, fires from the
+ * reference, RRULE and normalized cron (the `CronResult` JSON shape), or
+ * `{"error": ...}` for an invalid line.
+ * @param {string} expression
+ * @param {string} reference
+ * @param {string} time_zone
+ * @param {bigint} limit
+ * @returns {string}
+ */
+export function parse_cron(expression, reference, time_zone, limit) {
+    let deferred4_0;
+    let deferred4_1;
+    try {
+        const ptr0 = passStringToWasm0(expression, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ptr1 = passStringToWasm0(reference, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len1 = WASM_VECTOR_LEN;
+        const ptr2 = passStringToWasm0(time_zone, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len2 = WASM_VECTOR_LEN;
+        const ret = wasm.parse_cron(ptr0, len0, ptr1, len1, ptr2, len2, limit);
+        deferred4_0 = ret[0];
+        deferred4_1 = ret[1];
+        return getStringFromWasm0(ret[0], ret[1]);
+    } finally {
+        wasm.__wbindgen_free(deferred4_0, deferred4_1, 1);
     }
 }
 

@@ -373,6 +373,23 @@ pub fn expand_recurrence(
     } else {
         Unit::hour
     };
+    // A step that divides the day and names no clock ("every 15 minutes",
+    // "every 6 hours") sits on the wall-clock grid from midnight, the way
+    // cron runs it, rather than counting from the reference instant: the
+    // preview then shows the instants a scheduler will actually fire at,
+    // and DST shifts move the step with the wall clock.
+    if let Some(step) = sub_daily_step(&rule)
+        && clause.time.is_none()
+        && step > 0
+        && 1440 % step == 0
+    {
+        let last = 1440 - step;
+        clause.time = Some(crate::types::TimeSpec {
+            start: crate::types::ClockTime::hm(0, 0),
+            end: Some(crate::types::ClockTime::hm(last / 60, last % 60)),
+            open: None,
+        });
+    }
     let window = window_times(&clause, &rule, options)?;
     if rule.freq == Frequency::daily && rule.times_per.is_some() && clause.time.is_some() {
         return Err(
@@ -679,7 +696,7 @@ fn expand_window(
     let mut finished = false;
     let end = horizon.min(until);
 
-    'days: for offset in 0..366 * 8 {
+    for offset in 0..366 * 8 {
         let day = add_days(&first_day, offset as f64);
         if !matches(&day, &day, &day_rule, 0) {
             continue;
@@ -701,11 +718,14 @@ fn expand_window(
                 }
                 continue;
             }
-            if occurrence.start >= until {
-                break 'days;
-            }
+            // Every slot is recorded, even past the rule's end, so exports
+            // describe the whole window rather than the days the bound left.
             if slots[index].is_none() {
                 slots[index] = Some(occurrence.clone());
+            }
+            if occurrence.start >= until {
+                finished = true;
+                continue;
             }
             if first.is_none() {
                 first = Some(occurrence.clone());

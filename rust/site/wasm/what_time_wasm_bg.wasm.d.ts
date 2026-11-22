@@ -1,7 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export const memory: WebAssembly.Memory;
+export const describe_cron: (a: number, b: number) => [number, number];
 export const parse: (a: number, b: number, c: number, d: number, e: number, f: number, g: bigint, h: number, i: number) => [number, number];
+export const parse_cron: (a: number, b: number, c: number, d: number, e: number, f: number, g: bigint) => [number, number];
 export const parse_expressions: (a: number, b: number) => [number, number];
 export const version: () => [number, number];
 export const __wbindgen_externrefs: WebAssembly.Table;

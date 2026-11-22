@@ -206,6 +206,84 @@ fn cron_corpus_matches() {
     );
 }
 
+#[derive(Deserialize)]
+struct CronParseCase {
+    id: String,
+    cron: String,
+    valid: bool,
+    /// The first fires as local `YYYY-MM-DDTHH:MM`, from the reference.
+    first: Vec<String>,
+}
+
+/// Cron lines read back into schedules: the first four fires in Kolkata
+/// from Sunday 2026-11-22 15:30, or a rejection for an invalid line. The
+/// expectations were written independently of the parser, from POSIX cron
+/// semantics (either-day rule included), then pinned. A preview that stops
+/// at the one-year horizon matches when what it shows is right.
+#[test]
+fn cron_parse_corpus_matches() {
+    let context = ParseContext {
+        reference: "2026-11-22T10:00:00Z".into(),
+        time_zone: "Asia/Kolkata".into(),
+        limit: Some(4),
+        ..Default::default()
+    };
+    let cases: Vec<CronParseCase> = read_lines("cron-parse")
+        .iter()
+        .map(|line| serde_json::from_str(line).unwrap())
+        .collect();
+    assert!(cases.len() >= 80, "expected the full cron-parse corpus");
+    let mut mismatches = Vec::new();
+    for case in &cases {
+        let parsed = what_time::parse_cron(&case.cron, &context);
+        let ok = match (&parsed, case.valid) {
+            (Err(_), false) => true,
+            (Ok(result), true) => {
+                let got: Vec<String> = result
+                    .occurrences
+                    .iter()
+                    .map(|value| value.start[..16].to_string())
+                    .collect();
+                got == case.first
+                    || (!got.is_empty()
+                        && case.first.starts_with(&got)
+                        && case.first[got.len()..]
+                            .iter()
+                            .all(|value| value.as_str() >= "2027-11-22"))
+            }
+            _ => false,
+        };
+        if !ok {
+            mismatches.push(format!(
+                "{} {:?}: expected {:?}, got {:?}",
+                case.id,
+                case.cron,
+                if case.valid {
+                    format!("{:?}", case.first)
+                } else {
+                    "rejection".into()
+                },
+                parsed.map(|value| value
+                    .occurrences
+                    .iter()
+                    .map(|o| o.start.clone())
+                    .collect::<Vec<_>>())
+            ));
+        }
+    }
+    assert!(
+        mismatches.is_empty(),
+        "{} mismatching cron-parse cases:\n{}",
+        mismatches.len(),
+        mismatches.join("\n")
+    );
+    eprintln!(
+        "cron-parse eval: {}/{} cases match",
+        cases.len(),
+        cases.len()
+    );
+}
+
 #[test]
 fn rejects_malformed_or_ambiguous_input() {
     let parser = ScheduleParser::new(Default::default());

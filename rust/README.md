@@ -40,6 +40,7 @@ what-time/src/
   recurrence.rs  bounded recurrence expansion
   rrule.rs       RFC 5545 export, plus the export plan cron reads
   cron.rs        five-field cron export (refuses what cron cannot state)
+  cron_text.rs   cron lines read back: English description + typed schedule
   resolve.rs     schedules → instants / previews / rules
   schedule.rs    parser facade
 
