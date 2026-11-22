@@ -2,7 +2,7 @@
 /* eslint-disable */
 
 /**
- * Full parse: occurrences, diagnostics, rrules, timings.
+ * Full parse: occurrences, diagnostics, rrules, crons, timings.
  */
 export function parse(text: string, reference: string, time_zone: string, limit: bigint, date_order: string): string;
 

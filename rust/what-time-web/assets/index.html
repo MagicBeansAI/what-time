@@ -502,6 +502,11 @@ function render(body) {
     extras.push(result.rrules.map((rule) => `<pre>${escapeHtml(rule)}</pre>`).join(""));
     extras.push(`</div></details>`);
   }
+  if (result.crons && result.crons.length) {
+    extras.push(`<details class="panel" open><summary>Cron <span class="note">minute hour day month weekday · ${escapeHtml(timeZone)}</span></summary><div class="panel-body rrules">`);
+    extras.push(result.crons.map((cron) => `<pre>${escapeHtml(cron)}</pre>`).join(""));
+    extras.push(`</div></details>`);
+  }
 
   const t = result.timings;
   const expressions = body.expressions || [];

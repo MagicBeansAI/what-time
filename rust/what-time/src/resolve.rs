@@ -127,6 +127,7 @@ pub(crate) fn resolve_prepared(
     } = prepared;
     let mut occurrences: Vec<NumericOccurrence> = Vec::new();
     let mut rrules: Vec<String> = Vec::new();
+    let mut cron_specs: Vec<crate::cron::CronSpec> = Vec::new();
     let mut diagnostics: Vec<Diagnostic> = Vec::new();
     let mut truncated = false;
 
@@ -154,7 +155,9 @@ pub(crate) fn resolve_prepared(
                     ),
                 });
             }
-            if rule.times_per.is_some() && (rule.freq == Frequency::daily || rule.by_day.is_none())
+            if rule.times_per.is_some_and(|times| times > 1)
+                && rule.freq != Frequency::hourly
+                && (rule.freq == Frequency::daily || rule.by_day.is_none())
             {
                 diagnostics.push(Diagnostic {
                     code: "times-per-approximated".into(),
@@ -162,23 +165,43 @@ pub(crate) fn resolve_prepared(
                     start: 0,
                     end: 0,
                     message: format!(
-                        "Clause {}: unspecified frequency times were spread across whole hours or weekdays.",
+                        "Clause {}: unspecified frequency times were spread evenly across the period.",
                         clause_index + 1
                     ),
                 });
             }
             let series = expand_recurrence(&clause, &context, *horizon, *limit)?;
             if series.first.is_some() {
+                let warning = |code: &str, message: String| Diagnostic {
+                    code: code.into(),
+                    severity: Severity::warning,
+                    start: 0,
+                    end: 0,
+                    message,
+                };
                 match recurrence_rule(&clause, &series, &context) {
-                    Ok(rrule) => rrules.push(rrule),
+                    Ok(export) => {
+                        rrules.extend(export.rrules);
+                        match crate::cron::cron_specs(&export.plan) {
+                            Ok(specs) => {
+                                if export.plan.bounded || export.plan.exdates {
+                                    diagnostics.push(warning(
+                                        "cron-unbounded",
+                                        format!(
+                                            "Clause {}: cron cannot carry a start date, an end date, a count or skipped dates; the expression fires from the moment it is installed until the job is removed.",
+                                            clause_index + 1
+                                        ),
+                                    ));
+                                }
+                                cron_specs.extend(specs);
+                            }
+                            Err(message) => {
+                                diagnostics.push(warning("unsupported-cron", message));
+                            }
+                        }
+                    }
                     Err(RecurrenceExportError(message)) => {
-                        diagnostics.push(Diagnostic {
-                            code: "unsupported-export".into(),
-                            severity: Severity::warning,
-                            start: 0,
-                            end: 0,
-                            message,
-                        });
+                        diagnostics.push(warning("unsupported-export", message));
                     }
                 }
             }
@@ -218,6 +241,10 @@ pub(crate) fn resolve_prepared(
     Ok(Resolved {
         occurrences: resolved,
         rrules,
+        crons: crate::cron::merge(cron_specs)
+            .iter()
+            .map(crate::cron::render)
+            .collect(),
         truncated: truncated || occurrences.len() > *limit,
         diagnostics,
     })

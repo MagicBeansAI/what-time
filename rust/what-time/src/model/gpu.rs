@@ -13,7 +13,10 @@ use crate::model::predictions::Predictions;
 use crate::model::transformer::{self, TransformerWeights};
 use crate::types::RawToken;
 
-const ROWS_PER_TOKEN: usize = 17;
+use crate::tokenizer::ROWS_PER_TOKEN;
+
+/// Width of the shared head's hidden layer.
+const HEAD: usize = 64;
 /// Above this many windows, `Backend::Auto` prefers the GPU path.
 pub const GPU_BATCH_THRESHOLD: usize = 64;
 /// Windows per dispatch, bounding buffer sizes.
@@ -37,8 +40,76 @@ struct GpuContext {
     head: wgpu::ComputePipeline,
 }
 
+/// The constants `kernels.wgsl` reads, derived from the loaded weights so
+/// the kernels follow the model's size. The offsets mirror `pack_params`.
+fn shader_source(model: &TransformerWeights) -> String {
+    let d = model.d_model;
+    let ffn = model.ffn;
+    let out = model.role_classes + 1;
+    let positions = model.position.len() / d;
+    // per-block order: ln1.w ln1.b qkv.w qkv.b ao.w ao.b ln2.w ln2.b ff1.w ff1.b ff2.w ff2.b
+    let sizes = [
+        2 * d,
+        3 * d * d,
+        3 * d,
+        d * d,
+        d,
+        2 * d,
+        ffn * d,
+        ffn,
+        d * ffn,
+        d,
+    ];
+    let names = [
+        "B_LN1", "B_QKV_W", "B_QKV_B", "B_AO_W", "B_AO_B", "B_LN2", "B_FF1_W", "B_FF1_B",
+        "B_FF2_W", "B_FF2_B",
+    ];
+    let mut header = format!(
+        "const D: u32 = {d}u;\nconst H: u32 = {heads}u;\nconst DH: u32 = {d_head}u;\n\
+         const FFN: u32 = {ffn}u;\nconst HEAD: u32 = {HEAD}u;\nconst OUT: u32 = {out}u;\n\
+         const ROWS: u32 = {ROWS_PER_TOKEN}u;\nconst PAD: u32 = {pad}u;\n\
+         const ATTN_SCALE: f32 = {scale:?};\n\
+         const OFF_EMB: u32 = 0u;\nconst OFF_POS: u32 = {off_pos}u;\n\
+         const OFF_BLOCKS: u32 = {off_blocks}u;\n",
+        heads = model.heads,
+        d_head = d / model.heads,
+        pad = model.feature_rows,
+        scale = 1.0 / ((d / model.heads) as f32).sqrt(),
+        off_pos = model.feature_rows * d,
+        off_blocks = (model.feature_rows + positions) * d,
+    );
+    let mut offset = 0usize;
+    for (name, size) in names.iter().zip(sizes) {
+        header.push_str(&format!("const {name}: u32 = {offset}u;\n"));
+        offset += size;
+    }
+    header.push_str(&format!("const BLOCK_STRIDE: u32 = {offset}u;\n"));
+    let mut tail = (model.feature_rows + positions) * d + model.layers * offset;
+    for (name, size) in [
+        ("OFF_LNF", 2 * d),
+        ("OFF_GW", d * d),
+        ("OFF_GB", d),
+        ("OFF_HW", 2 * d * HEAD),
+        ("OFF_HB", HEAD),
+        ("OFF_OW", HEAD * out),
+        ("OFF_OB", out),
+    ] {
+        header.push_str(&format!("const {name}: u32 = {tail}u;\n"));
+        tail += size;
+    }
+    header.push('\n');
+    header.push_str(include_str!("kernels.wgsl"));
+    header
+}
+
+/// Per-token scratch floats before the label and score slots: x, qkv,
+/// attended, feed-forward hidden, and the output logits.
+fn scratch_floats(model: &TransformerWeights) -> usize {
+    5 * model.d_model + model.ffn + model.role_classes + 1
+}
+
 fn pack_params(model: &TransformerWeights) -> Vec<f32> {
-    let mut out = Vec::with_capacity(144_105);
+    let mut out = Vec::new();
     out.extend_from_slice(&model.embedding);
     out.extend_from_slice(&model.position);
     for block in &model.blocks {
@@ -63,11 +134,6 @@ fn pack_params(model: &TransformerWeights) -> Vec<f32> {
     out.extend_from_slice(&model.head.1);
     out.extend_from_slice(&model.output.0);
     out.extend_from_slice(&model.output.1);
-    debug_assert_eq!(
-        out.len(),
-        144_105,
-        "params layout must match kernels.wgsl offsets"
-    );
     out
 }
 
@@ -90,7 +156,10 @@ fn context() -> Result<&'static GpuContext, crate::Error> {
             let (device, queue) =
                 pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor::default()))
                     .map_err(|error| format!("GPU device unavailable: {error}"))?;
-            let module = device.create_shader_module(wgpu::include_wgsl!("kernels.wgsl"));
+            let module = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+                label: Some("what-time-kernels"),
+                source: wgpu::ShaderSource::Wgsl(shader_source(model).into()),
+            });
 
             let uniform_layout =
                 device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
@@ -185,15 +254,13 @@ fn context() -> Result<&'static GpuContext, crate::Error> {
         .map_err(crate::Error::model_unavailable)
 }
 
-/// Mapped rows (17 per token, padding = 324) for one window's tokens.
-fn window_rows(tokens: &[RawToken], padded: usize) -> Vec<u32> {
-    let map = transformer::feature_map();
-    let mut rows = vec![324u32; padded * ROWS_PER_TOKEN];
+/// Mapped rows (`ROWS_PER_TOKEN` per token, padded with the model's
+/// padding row) for one window's tokens.
+fn window_rows(model: &TransformerWeights, tokens: &[RawToken], padded: usize) -> Vec<u32> {
+    let map = &model.row_map;
+    let mut rows = vec![model.feature_rows as u32; padded * ROWS_PER_TOKEN];
     for (index, token) in tokens.iter().enumerate() {
-        for (feature, row) in crate::tokenizer::feature_rows(token.features)
-            .iter()
-            .enumerate()
-        {
+        for (feature, row) in crate::tokenizer::feature_rows(token).iter().enumerate() {
             rows[index * ROWS_PER_TOKEN + feature] = u32::from(map[*row as usize]);
         }
     }
@@ -231,7 +298,7 @@ pub fn infer_windows(windows: &[Vec<RawToken>]) -> Result<Vec<Predictions>, crat
             let mut lens = Vec::with_capacity(chunk.len());
             for &index in chunk {
                 let tokens = &windows[index];
-                rows.extend(window_rows(tokens, padded));
+                rows.extend(window_rows(model, tokens, padded));
                 lens.push(tokens.len() as u32);
             }
             let dispatch = run_bucket(gpu, model, &rows, &lens, b, t, role_classes)?;
@@ -303,7 +370,7 @@ fn run_bucket(
         });
     let scratch = gpu.device.create_buffer(&wgpu::BufferDescriptor {
         label: Some("what-time-scratch"),
-        size: (tokens * (64 + 192 + 64 + 256 + 41 + 1 + 1) * 4) as u64,
+        size: (tokens * (scratch_floats(model) + 2) * 4) as u64,
         usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_SRC,
         mapped_at_creation: false,
     });
@@ -323,7 +390,7 @@ fn run_bucket(
         usage: wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::MAP_READ,
         mapped_at_creation: false,
     });
-    let off_lab_bytes = ((tokens * (64 + 192 + 64 + 256 + 41)) * 4) as u64;
+    let off_lab_bytes = ((tokens * scratch_floats(model)) * 4) as u64;
     let off_sc_bytes = off_lab_bytes + labels_size;
 
     let uniform_group = gpu.device.create_bind_group(&wgpu::BindGroupDescriptor {
@@ -403,7 +470,7 @@ fn run_bucket(
     run(&[(&gpu.embed, tokens as u32)], 0);
     for block in 0..model.layers as u32 {
         run(&[(&gpu.qkv, tokens as u32)], block);
-        run(&[(&gpu.attn, b * 4 * t)], block);
+        run(&[(&gpu.attn, b * model.heads as u32 * t)], block);
         run(&[(&gpu.attnout_res, tokens as u32)], block);
         run(&[(&gpu.ff, tokens as u32)], block);
     }

@@ -20,5 +20,7 @@ Rebuild after changing the library or model weights:
 ```
 
 Files: `index.html` (page) and `wasm/` (bindgen glue + module). The wasm
-embeds the int8-quantized weights (~144k parameters) and the bundled IANA
-timezone database, so timezone resolution is exact and offline.
+embeds the int8-quantized weights (~575k parameters) and the bundled IANA
+timezone database, so timezone resolution is exact and offline. It is built
+with WebAssembly SIMD (`.cargo/config.toml`, `build.sh`): Chrome/Edge 91+,
+Firefox 89+, Safari 16.4+.

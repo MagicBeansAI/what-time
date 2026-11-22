@@ -11,8 +11,9 @@ import numpy as np
 import torch
 from torch.nn import functional as F
 
+from features import PADDING_ROW, ROWS_PER_TOKEN
+
 ROLE_CLASSES = 40
-PADDING_ROW = 580  # the null feature row padding every token to 17
 
 TORCH = Path(__file__).resolve().parent
 ROOT = TORCH.parent
@@ -21,7 +22,9 @@ ROOT = TORCH.parent
 
 class Dataset:
     def __init__(self, prefix: Path):
-        self.rows = np.fromfile(f"{prefix}.rows.bin", dtype=np.uint16).reshape(-1, 17)
+        self.rows = np.fromfile(f"{prefix}.rows.bin", dtype=np.uint16).reshape(
+            -1, ROWS_PER_TOKEN
+        )
         self.labels = np.fromfile(f"{prefix}.labels.bin", dtype=np.uint8)
         self.boundaries = np.fromfile(f"{prefix}.boundaries.bin", dtype=np.uint8)
         self.kinds = np.fromfile(f"{prefix}.kinds.bin", dtype=np.uint8)
@@ -38,7 +41,9 @@ class Dataset:
     def batch(self, indices: np.ndarray, device: str):
         length = int(self.lengths[indices].max())
         length = 32 if length <= 32 else 64 if length <= 64 else 128
-        rows = np.full((len(indices), length, 17), PADDING_ROW, dtype=np.int64)
+        rows = np.full(
+            (len(indices), length, ROWS_PER_TOKEN), PADDING_ROW, dtype=np.int64
+        )
         labels = np.full((len(indices), length), -100, dtype=np.int64)
         boundaries = np.zeros((len(indices), length), dtype=np.float32)
         valid = np.zeros((len(indices), length), dtype=np.bool_)

@@ -4,7 +4,7 @@
     <b>Neural schedule parsing in English, हिन्दी, and Hinglish — on-device, exact, open.</b>
   </p>
   <p>
-    <img src="https://img.shields.io/badge/what--time-v0.1.0-2563EB.svg" alt="what-time v0.1.0" />
+    <img src="https://img.shields.io/badge/what--time-v0.3.0-2563EB.svg" alt="what-time v0.3.0" />
     <a href="#-license"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT" /></a>
     <img src="https://img.shields.io/badge/lang-English%20%7C%20हिन्दी%20%7C%20Hinglish-8B5CF6.svg" alt="Trilingual" />
     <a href="#-what-it-does"><img src="https://img.shields.io/badge/targets-Rust%20%7C%20WASM%20%7C%20npm%20%7C%20GPU-orange.svg" alt="Targets" /></a>
@@ -23,13 +23,13 @@
 <div align="center">
   <p>
   Turn <i>"call mom on sunday evening"</i>, <i>"कल शाम को आठ बजे"</i>, or
-  <i>"har din shaam ko 8 baje"</i> into real dates, time ranges, and RFC 5545
-  recurrence rules — with no server, no network call, and no data leaving the
-  device.
+  <i>"har din shaam ko 8 baje"</i> into real dates, time ranges, RFC 5545
+  recurrence rules, and cron expressions — with no server, no network call,
+  and no data leaving the device.
   </p>
 </div>
 
-> A ~144k-parameter transformer tags each token with a semantic role; a
+> A ~575k-parameter transformer tags each token with a semantic role; a
 > deterministic compiler builds a typed schedule; an exact calendar resolver
 > with a bundled IANA timezone database produces the dates. The fuzzy part is
 > learned, the arithmetic is code — wrong labels reject with a diagnostic,
@@ -85,8 +85,8 @@ disk.
 | Area | What you get |
 | :-- | :-- |
 | **Trilingual parsing** | English, Hindi (Devanagari), and Hinglish (romanized Hindi, code-switching included) through one model — `"book it for day after tomorrow"`, `"अगले महीने की 21st को"`, `"parso subah 10 baje"`. |
-| **Exact resolution** | Bundled IANA timezone database, DST-correct transitions, RFC 5545 (RRULE) export, exact recurrence expansion. The model never touches dates or timezones. |
-| **Every surface** | Rust library + CLI, WebAssembly module, npm package for TS/JS, a single-file static playground, and an optional local HTTP API. |
+| **Exact resolution** | Bundled IANA timezone database, DST-correct transitions, RFC 5545 (RRULE) and cron export, exact recurrence expansion down to the minute. The model never touches dates or timezones. |
+| **Every surface** | Rust library + CLI, WebAssembly module (SIMD: Chrome/Edge 91+, Firefox 89+, Safari 16.4+, Node 16.4+), npm package for TS/JS, a single-file static playground, and an optional local HTTP API. |
 | **GPU batch mode** | Optional wgpu backend (`--features gpu`) dispatches batches of ≥64 windows to Metal/Vulkan — **~6–10× faster** on 10k+ phrase sweeps, with output verified identical to CPU. |
 | **Honest failures** | Ambiguity and unknown vocabulary return typed diagnostics (`code`, `message`, `severity`), never silent wrong dates. |
 | **Verifiable training** | Corpus generators, a mechanical validation gate for LLM-authored data, int8 quantization with exported parity fixtures — `cargo test` fails closed if predictions shift. |
@@ -99,7 +99,7 @@ disk.
 "call mom on sunday evening"
    │  tokenizer (UTF-16 features; Devanagari conjuncts stay whole)
    ▼
- [neural tagger]  mom→O  sunday→WEEKDAY  evening→DAYPART      ~1 ms
+ [neural tagger]  mom→O  sunday→WEEKDAY  evening→DAYPART    <1 ms
    │  deterministic compiler
    ▼
  schedule: weekday[SU] + day-part evening (typed JSON, no dates yet)
@@ -110,8 +110,8 @@ disk.
 
 1. **Tokenization** — one scan emits sparse feature rows (character shape,
    hashes, digit buckets) over UTF-16 units.
-2. **The model** — a two-block, four-head transformer encoder (int8-quantized,
-   ~144k parameters) classifies each token into one of 35 semantic roles plus
+2. **The model** — a three-block, four-head transformer encoder (int8-quantized,
+   ~575k parameters) classifies each token into one of 35 semantic roles plus
    a clause-boundary score. Trained on generated structural supervision plus
    gate-checked LLM-authored English/Hindi/Hinglish corpora.
 3. **Compilation** — roles compile into a typed `Schedule`: date anchors,
@@ -167,9 +167,23 @@ what-time "<phrase>" -j -r <ISO instant> -t <IANA zone> -l <limit>
 ```
 
 Exit codes: **0** parsed · **1** no schedule found · **2** bad invocation.
-JSON mode prints occurrences, rrules, diagnostics, and timings — the same
-shape the npm package returns. Pipe phrases on stdin when quoting gets hairy
-(including Devanagari).
+JSON mode prints occurrences, rrules, crons, diagnostics, and timings — the
+same shape the npm package returns. Pipe phrases on stdin when quoting gets
+hairy (including Devanagari).
+
+`-c` prints only the cron expressions, one per line, in the `-t` zone:
+
+```bash
+what-time -c "every 15 minutes between 9am and 6pm on weekdays" -t Asia/Kolkata
+# */15 9-17 * * MON-FRI
+# 0 18 * * MON-FRI
+```
+
+Cron is the common five-field dialect with weekday names. A rule it cannot
+state exactly — every other week, the first Monday of a month, the last day
+of a month — prints nothing, exits 1, and says why on stderr; the RRULE in
+JSON mode still carries it. Start dates, end dates and counts do not fit in
+cron either, so those print with a `cron-unbounded` warning.
 
 ---
 
@@ -184,7 +198,9 @@ shape the npm package returns. Pipe phrases on stdin when quoting gets hairy
 - **Real-user accuracy is unmeasured.** In-distribution scores are excellent
   (568 pinned corpus cases, zero known gaps, LLM held-out 0.995) but generated corpora share
   training families.
-- **GPU mode pays only in bulk.** Single phrases are fastest on CPU (~1 ms);
+- **Cron is an output, not an input.** Text becomes cron; a cron expression
+  is not parsed back into a schedule or described in words.
+- **GPU mode pays only in bulk.** Single phrases are fastest on CPU (~0.4 ms);
   the GPU path activates at ≥64 phrases per call.
 - **Not for high-stakes scheduling** — legal, medical, or billing dates need
   verified input.

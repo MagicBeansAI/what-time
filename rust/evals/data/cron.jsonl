@@ -1,0 +1,60 @@
+{"id": "cron-daily-clock", "text": "every day at 9am", "crons": ["0 9 * * *"]}
+{"id": "cron-weekday-clock", "text": "every weekday at 8:30am", "crons": ["30 8 * * MON-FRI"]}
+{"id": "cron-weekday-list", "text": "every monday and wednesday at 6pm", "crons": ["0 18 * * MON,WED"]}
+{"id": "cron-minutes", "text": "every 15 minutes", "crons": ["*/15 * * * *"]}
+{"id": "cron-minutes-short", "text": "every 30 mins", "crons": ["*/30 * * * *"]}
+{"id": "cron-half-hour", "text": "every half hour", "crons": ["*/30 * * * *"]}
+{"id": "cron-hour", "text": "every hour", "crons": ["0 * * * *"]}
+{"id": "cron-hours", "text": "every 6 hours", "crons": ["0 */6 * * *"]}
+{"id": "cron-hour-window", "text": "every 2 hours from 9am to 5pm", "crons": ["0 9-17/2 * * *"]}
+{"id": "cron-minute-window-weekdays", "text": "every 5 minutes between 9am and 6pm on weekdays", "crons": ["*/5 9-17 * * MON-FRI", "0 18 * * MON-FRI"]}
+{"id": "cron-minute-window", "text": "every 10 minutes from 8am to 8pm", "crons": ["*/10 8-19 * * *", "0 20 * * *"]}
+{"id": "cron-hourly-weekdays", "text": "every hour on weekdays", "crons": ["0 * * * MON-FRI"]}
+{"id": "cron-ninety-minutes", "text": "every 90 minutes", "crons": ["0 */3 * * *", "30 1-22/3 * * *"]}
+{"id": "cron-month-day", "text": "on the 1st of every month", "crons": ["0 0 1 * *"]}
+{"id": "cron-month-days", "text": "1st and 15th of every month", "crons": ["0 0 1,15 * *"]}
+{"id": "cron-monthly-clock", "text": "monthly on the 1st at 9am", "crons": ["0 9 1 * *"]}
+{"id": "cron-rent", "text": "pay rent on the 5th of every month", "crons": ["0 0 5 * *"]}
+{"id": "cron-yearly", "text": "every year on march 3", "crons": ["0 0 3 3 *"]}
+{"id": "cron-three-months", "text": "every 3 months", "crons": ["0 0 22 2-11/3 *"]}
+{"id": "cron-clock-list", "text": "every day at 8am, 1pm and 8pm", "crons": ["0 8,13,20 * * *"]}
+{"id": "cron-two-rules", "text": "every tuesday at 3pm and every friday at 5pm", "crons": ["0 15 * * TUE", "0 17 * * FRI"]}
+{"id": "cron-count-with-clocks", "text": "twice a day at 9am and 9pm", "crons": ["0 9,21 * * *"]}
+{"id": "cron-count-spread", "text": "three times a day", "crons": ["0 */8 * * *"]}
+{"id": "cron-except-then-clock", "text": "weekdays except wednesday at 9am", "crons": ["0 9 * * MON,TUE,THU,FRI"]}
+{"id": "cron-except-day", "text": "every day except sunday", "crons": ["0 0 * * MON-SAT"]}
+{"id": "cron-nightly", "text": "backup runs nightly at 2am", "crons": ["0 2 * * *"]}
+{"id": "cron-night-clock", "text": "run at 2:30 every night", "crons": ["30 2 * * *"]}
+{"id": "cron-every-night", "text": "every night at 10", "crons": ["0 22 * * *"]}
+{"id": "cron-every-morning", "text": "every morning at 7", "crons": ["0 7 * * *"]}
+{"id": "cron-standup", "text": "standup every weekday at 10:15 am", "crons": ["15 10 * * MON-FRI"]}
+{"id": "cron-medicine", "text": "remind me to take medicine every 8 hours", "crons": ["0 */8 * * *"]}
+{"id": "cron-plural-days", "text": "mondays and thursdays at 7pm", "crons": ["0 19 * * MON,THU"]}
+{"id": "cron-weekend", "text": "every weekend at 10am", "crons": ["0 10 * * SAT,SUN"]}
+{"id": "cron-sunday-morning", "text": "every sunday morning", "crons": ["0 6 * * SUN"]}
+{"id": "cron-clock-then-days", "text": "at 5pm on weekdays", "crons": ["0 17 * * MON-FRI"]}
+{"id": "cron-clock-then-daily", "text": "9am daily", "crons": ["0 9 * * *"]}
+{"id": "cron-hinglish-daily", "text": "har din subah 7 baje", "crons": ["0 7 * * *"]}
+{"id": "cron-hinglish-roz", "text": "roz shaam ko 6 baje", "crons": ["0 18 * * *"]}
+{"id": "cron-hinglish-weekday", "text": "har somvar ko subah 9 baje", "crons": ["0 9 * * MON"]}
+{"id": "cron-hinglish-minutes", "text": "har 15 minute mein", "crons": ["*/15 * * * *"]}
+{"id": "cron-hinglish-hours", "text": "har do ghante mein", "crons": ["0 */2 * * *"]}
+{"id": "cron-hinglish-half-hour", "text": "har aadhe ghante", "crons": ["*/30 * * * *"]}
+{"id": "cron-hinglish-month-day", "text": "har mahine ki 5 tarikh ko", "crons": ["0 0 5 * *"]}
+{"id": "cron-hinglish-count", "text": "hafte mein teen baar", "crons": ["0 0 * * MON,WED,FRI"]}
+{"id": "cron-hinglish-day-count", "text": "din mein do baar", "crons": ["0 */12 * * *"]}
+{"id": "cron-hinglish-weekdays", "text": "har weekday subah 9 baje", "crons": ["0 9 * * MON-FRI"]}
+{"id": "cron-hindi-hours", "text": "हर दो घंटे में", "crons": ["0 */2 * * *"]}
+{"id": "cron-hindi-weekday", "text": "हर सोमवार को शाम 5 बजे", "crons": ["0 17 * * MON"]}
+{"id": "cron-hindi-month-day", "text": "हर महीने की 1 तारीख को", "crons": ["0 0 1 * *"]}
+{"id": "cron-hindi-daily", "text": "रोज़ रात 10 बजे", "crons": ["0 22 * * *"]}
+{"id": "cron-none-biweekly", "text": "every 2 weeks on friday", "crons": [], "rrules": ["RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=FR"]}
+{"id": "cron-none-other-day", "text": "every other day", "crons": [], "rrules": ["RRULE:FREQ=DAILY;INTERVAL=2"]}
+{"id": "cron-none-third-day", "text": "every third day", "crons": [], "rrules": ["RRULE:FREQ=DAILY;INTERVAL=3"]}
+{"id": "cron-none-alternate-saturdays", "text": "alternate saturdays", "crons": [], "rrules": ["RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=SA"]}
+{"id": "cron-none-first-monday", "text": "first monday of every month", "crons": [], "rrules": ["RRULE:FREQ=MONTHLY;INTERVAL=1;BYDAY=MO;BYSETPOS=1"]}
+{"id": "cron-none-second-fourth-saturday", "text": "second and fourth saturday of every month", "crons": [], "rrules": ["RRULE:FREQ=MONTHLY;INTERVAL=1;BYDAY=SA;BYSETPOS=2,4"]}
+{"id": "cron-none-second-saturday", "text": "every 2nd saturday", "crons": [], "rrules": ["RRULE:FREQ=MONTHLY;INTERVAL=1;BYDAY=SA;BYSETPOS=2"]}
+{"id": "cron-none-last-day", "text": "last day of every month", "crons": [], "rrules": ["RRULE:FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=-1"]}
+{"id": "cron-none-last-working-day", "text": "last working day of every month", "crons": [], "rrules": ["RRULE:FREQ=MONTHLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-1"]}
+{"id": "cron-none-hinglish-other-day", "text": "har doosre din", "crons": [], "rrules": ["RRULE:FREQ=DAILY;INTERVAL=2"]}

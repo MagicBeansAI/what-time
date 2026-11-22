@@ -13,12 +13,26 @@ structure with training; the LLM slices do not.
 | v0.1.0 | 2026-09-16 | `corpus-v2-complete` | 95.34% | 99.28% | 99.80% (V2 targeted, 1k) | 526 · 15 · 18 · parity | published to npm; tareekh/roz/Devanagari-numeral batch |
 | v0.2.0 | 2026-09-16 | `llm-ext-r5` | 96.06% | 99.50% | 99.45% (union heldout, 2k incl. 1k external) | 568 pinned (2 known gaps: `user-ordinal-hindi`, `user-sava-utth`) · 15 · 18 · parity | external LLM batch + tarikh/postposed-range/inflected-ordinal compiler fixes; corpus pool 40,250 accepted |
 | v0.2.3 | 2026-09-16 | `balanced-fest-final4` | 95.00% | 98.96% | 99.70% (union heldout, 2k) | 595 pinned (0 gaps) · 15 · 22 · parity | festival vocabulary live end-to-end; balanced drift-protected batch |
+| v0.3.0 | 2026-11-22 | `lex-on` | 98.68% | 99.46% | 100.00% (union heldout, 2k) | 632 pinned (0 gaps, +37 recurring) · 60 cron · 15 · 22 · parity (CPU + GPU) | 575k params (3×96, ffn 384) + word-form rows with 50% training dropout, trained from scratch with restored background prose; recurrence families 100.00%; without word-form rows: 98.58 / 99.38 / 99.85 recurrence |
+| (candidate, not shipped) | 2026-11-22 | `recurrence-r2` | 78.94% | 99.48% | 99.85% | 632 · 60 · 15 · 22 | missing prose + generator label conflicts (see model card) |
 | v0.2.2 | 2026-09-16 | `holiday-labels-r1` | 95.50% | 99.44% | 99.70% (union heldout, 2k) | 587 pinned (0 known gaps) · 15 multilingual · 22 occurrences · parity | quarter periods, holiday data asset (US/UK/global/IN), both 0.2.0 gaps closed, holiday vocabulary + sentence-initial EOD trained directly (shim-independent); all 20 playground examples pinned |
 
 Known open gaps for the next round: English "Diwali" and multi-word
 holidays ("Good Friday", "Boxing Day") are asset-ready but need model
 training; तिमाही/timahi and होली/Holi need corpus rows and (for Holi)
 tabulated dates; `cargo fmt --all` before pushing — CI gates on it.
+
+## Performance (`lex-on`, Apple M4 Pro, release build)
+
+Matrix products now accumulate in multi-lane f32 (max parity drift 9e-6),
+which is what pays for the larger model.
+
+| Workload | Result | Notes |
+|---|---|---|
+| Single query, native CPU | mean 0.41 ms · p50 0.38 · p95 0.61 | full pipeline incl. tz resolve; v0.2.3 is 0.67 ms |
+| Single query, wasm (Node, npm build, SIMD) | mean 0.70 ms · p50 0.60 · p95 1.16 | 800 runs, four mixed phrases; v0.2.3 wasm measures 0.80 ms the same way, this model without SIMD 1.15 ms |
+| Bulk 10k, native CPU | 411 µs/phrase | |
+| Bulk 10k, GPU (wgpu/Metal) | 181.9 µs/phrase warmed · 2.3× | 10,000/10,000 CPU agreement; the faster CPU path narrows the GPU's lead |
 
 ## Performance (v0.2.2 checkpoint, Apple Silicon, release build)
 

@@ -291,6 +291,7 @@ pub struct Duration {
 #[derive(Clone, Copy, PartialEq, Eq, Debug, Serialize, Deserialize)]
 #[allow(non_camel_case_types)]
 pub enum Frequency {
+    minutely,
     hourly,
     daily,
     weekly,
@@ -356,6 +357,10 @@ pub struct RawToken {
     pub text: String,
     pub kind: u8,
     pub features: (u32, u32),
+    /// Packed word-form hashes (whole word, three-letter prefix and
+    /// suffix) for the model's lexical feature rows; zero for tokens that
+    /// are not words.
+    pub lexical: u32,
 }
 
 #[derive(Clone, PartialEq, Debug)]
@@ -459,6 +464,12 @@ pub struct Occurrence {
 pub struct Resolved {
     pub occurrences: Vec<Occurrence>,
     pub rrules: Vec<String>,
+    /// Five-field cron expressions (`minute hour day-of-month month
+    /// day-of-week`) in the caller's time zone, for every recurring clause
+    /// cron can express exactly. A clause cron cannot express reports an
+    /// `unsupported-cron` diagnostic instead.
+    #[serde(default)]
+    pub crons: Vec<String>,
     pub truncated: bool,
     pub diagnostics: Vec<Diagnostic>,
 }
@@ -488,6 +499,10 @@ pub struct PublicTimings {
 pub struct ParseResult {
     pub occurrences: Vec<TimeRange>,
     pub rrules: Vec<String>,
+    /// Five-field cron expressions in the caller's time zone; see
+    /// [`Resolved::crons`].
+    #[serde(default)]
+    pub crons: Vec<String>,
     pub truncated: bool,
     pub diagnostics: Vec<Diagnostic>,
     pub backend: &'static str,

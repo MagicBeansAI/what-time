@@ -1,7 +1,8 @@
 //! # what-time
 //!
-//! A compact neural parser for English schedules. It converts natural-language text into dates, time ranges, and
-//! RFC 5545 recurrence rules, running entirely locally.
+//! A compact neural parser for English, Hindi and Hinglish schedules. It
+//! converts natural-language text into dates, time ranges, RFC 5545
+//! recurrence rules and cron expressions, running entirely locally.
 //!
 //! The caller provides the reference instant and timezone; context never
 //! enters the model. Timezones, daylight-saving transitions, the reference
@@ -25,6 +26,7 @@
 mod calendar;
 mod clock;
 mod compile;
+mod cron;
 mod exclusions;
 mod labels;
 mod lexicon;
@@ -71,7 +73,7 @@ pub mod testing {
     pub mod gpu {
         pub use crate::model::gpu::{debug_windows, infer_windows_debug};
     }
-    pub use crate::tokenizer::{feature_rows, tokenize};
+    pub use crate::tokenizer::{FEATURE_ROWS, ROWS_PER_TOKEN, feature_rows, tokenize};
     pub use crate::types::{Expression, RawToken, Token};
 
     /// Per-token `(text, label-name)` pairs from the real tagging pipeline,
@@ -189,6 +191,7 @@ impl Parser {
         let started = stopwatch::Stopwatch::start();
         let mut entries: Vec<(f64, TimeRange)> = Vec::new();
         let mut rrules: Vec<String> = Vec::new();
+        let mut crons: Vec<String> = Vec::new();
         let mut diagnostics: Vec<Diagnostic> = Vec::new();
         for expression in &parsed.expressions {
             diagnostics.extend(expression.diagnostics.iter().cloned());
@@ -231,6 +234,11 @@ impl Parser {
                         ));
                     }
                     rrules.extend(result.rrules);
+                    for cron in result.crons {
+                        if !crons.contains(&cron) {
+                            crons.push(cron);
+                        }
+                    }
                     diagnostics.extend(result.diagnostics.into_iter().map(|mut value| {
                         value.start = expression.start;
                         value.end = expression.end;
@@ -262,6 +270,7 @@ impl Parser {
             truncated: truncated || total > limit,
             occurrences,
             rrules,
+            crons,
             diagnostics,
             backend: parsed.backend,
             timings: types::PublicTimings {

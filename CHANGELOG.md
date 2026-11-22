@@ -2,6 +2,51 @@
 
 Short and honest. Scores per build live in [`SCORES.md`](SCORES.md).
 
+## 0.3.0
+
+- Cron export: every result carries `crons`, five-field expressions
+  (`minute hour day month weekday`, weekday names) in the caller's zone,
+  next to `rrules`; the CLI prints them alone with `-c`. A rule cron cannot
+  state exactly gets no expression and an `unsupported-cron` diagnostic
+  instead of an approximation; start/end dates and counts get
+  `cron-unbounded`. Lines that differ in one field merge (`0 8,13,20 * * *`).
+- Minute recurrences (`FREQ=MINUTELY`): every 15 minutes, every half (an)
+  hour, every 90 minutes, har 15 minute mein. Sub-daily steps inside a clock
+  window restart each day and include both ends ("every 2 hours from 9am to
+  5pm" fires at 9, 11, 1, 3, 5) and export as BYHOUR/BYMINUTE; a day part
+  is a window too ("every hour in the evening").
+- Recurring grammar: every third day, alternate Saturdays, every 2nd
+  Saturday, last (working) day of every month, every January, every 15th,
+  two rules in one sentence ("every Tuesday at 3pm and every Friday at
+  5pm"), "twice a day at 9am and 9pm", once/twice a month, twice a year,
+  twice daily, counts after the period (hafte mein teen baar), bare plurals
+  ("Mondays and Thursdays at 7"), a clock after an exception ("weekdays
+  except Wednesday at 9am"), nightly, night clocks past midnight ("2:30
+  every night" is 02:30), Hindi/Hinglish frequency words and romanized
+  weekday spellings.
+- Model: ~575k parameters (was 144k), three blocks of width 96, plus
+  word-form feature rows (word hash, prefix, suffix) trained with 50%
+  dropout; trained from scratch with a new recurrence generator
+  (`torch/recurrence_families.py`, English/Hindi/Hinglish). Structural
+  held-out 98.7% (was 96.1%), LLM held-out 100%. CPU and GPU inference read
+  the model's dimensions from the weights.
+- Faster CPU inference: multi-lane f32 matrix products make a phrase 0.41 ms
+  natively (was 0.67 ms with the smaller model) and 0.70 ms in wasm (was
+  0.80 ms).
+- **Minimum runtime raised:** the wasm module now uses WebAssembly SIMD, so
+  the npm package and playground need Chrome/Edge 91+, Firefox 89+, Safari
+  16.4+ or Node 16.4+ (the package declares `engines.node >=18`). Older
+  engines get an error naming the requirement instead of a bare
+  `CompileError`.
+- `torch/fetch_prose.py` rebuilds the background prose from the pin in
+  `data/corpus.json`; training without it lost ~18 points on unseen carriers.
+- "every other Friday" reads as a step of two whether "other" arrives as
+  NUM or GLUE (the corpus briefs and generators disagree on its label).
+- Pinned corpora: 632 schedules (+37 recurring), new `cron.jsonl` (60 cases),
+  zero known gaps.
+- Tooling: clippy clean under Rust 1.95 (`-D warnings`), and training writes
+  candidates to `runs/<run>/export` until `torch/promote.py` installs them.
+
 ## 0.2.3
 
 - Festival vocabulary works end-to-end: Holi (both scripts), Bakrid/ईद-ul-Adha,

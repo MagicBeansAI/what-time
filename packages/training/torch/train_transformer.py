@@ -1,12 +1,17 @@
-"""Train the proof-of-concept transformer tagger and export it for Rust.
+"""Train the transformer tagger and export it for Rust.
 
 Reuses the standard supervision pipeline (train.prepare) plus the extra
-families in transformer_families.py, trains on MPS when available, calibrates
-the boundary threshold, quantizes to symmetric per-tensor int8, and writes:
-  - packages/training/runs/transformer-poc/report.json
+families in transformer_families.py and recurrence_families.py, trains on
+MPS when available, calibrates the boundary threshold, quantizes to
+symmetric per-tensor int8, and writes:
+  - packages/training/runs/<run>/report.json
   - ../../../rust/what-time/assets/weights-transformer.json
   - ../../../rust/evals/active/transformer-parity.{rows,lengths,logits}.bin
 Parity fixtures are computed from the quantized weights so Rust mirrors them.
+
+With --candidate the weights and fixtures stay in runs/<run>/export, so a
+run can be compared before it replaces the shipped model; promote.py
+copies a candidate into the Rust tree.
 """
 from __future__ import annotations
 
@@ -24,9 +29,11 @@ import numpy as np
 import torch
 from torch.nn import functional as F
 
+from features import FEATURE_ROWS, LEXICAL_ROWS, PADDING_ROW
 from train import ROLE_CLASSES
 from train import Dataset, evaluate, prepare, prepare_llm
 from transformer import TimeTransformer
+import recurrence_families
 import transformer_families as families
 
 TORCH_DIR = Path(__file__).resolve().parent
@@ -34,18 +41,21 @@ ROOT = TORCH_DIR.parent
 RUST = ROOT.parent.parent / "rust"
 
 
-def extra_corpus(count: int, seed: int, split: str, directory: Path) -> Dataset:
-    """Render the extra families and featurize with the Rust tokenizer."""
+def extra_corpus(
+    count: int, seed: int, split: str, directory: Path, source=families
+) -> Dataset:
+    """Render one family module and featurize with the Rust tokenizer."""
     pyrng = torch.Generator().manual_seed(seed)
-    prefix = directory / f"extra-{split}"
+    name = "recurrence" if source is recurrence_families else "extra"
+    prefix = directory / f"{name}-{split}"
     path = prefix.with_suffix(".jsonl")
     with path.open("w") as output:
         for index in range(count):
             seed_value = int(torch.randint(0, 2**31 - 1, (1,), generator=pyrng).item())
-            sentence = families.render(random.Random(seed_value))
+            sentence = source.render(random.Random(seed_value))
             row = {
-                "id": f"extra-{split}-{seed_value}-{index}",
-                "template": "transformer-family",
+                "id": f"{name}-{split}-{seed_value}-{index}",
+                "template": f"{name}-family",
                 "text": sentence.text,
                 "spans": sentence.spans,
             }
@@ -69,6 +79,22 @@ def merge(first: Dataset, second: Dataset) -> Dataset:
     merged.lengths = np.diff(merged.offsets)
     merged.manifest = {"merged": True}
     return merged
+
+
+def without_lexical(rows: torch.Tensor) -> torch.Tensor:
+    lexical = (rows >= LEXICAL_ROWS.start) & (rows < LEXICAL_ROWS.stop)
+    return torch.where(lexical, PADDING_ROW, rows)
+
+
+class Unlexical(torch.nn.Module):
+    """Evaluation view of a model trained with --no-lexical."""
+
+    def __init__(self, inner):
+        super().__init__()
+        self.inner = inner
+
+    def forward(self, rows, valid, neighbors=None):
+        return self.inner(without_lexical(rows), valid)
 
 
 def calibrate_threshold(model, dataset: Dataset, device: str) -> float:
@@ -145,9 +171,17 @@ def dequantized_model(model: TimeTransformer, tensors) -> TimeTransformer:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--epochs", type=int, default=6)
+    parser.add_argument("--epochs", type=int, default=8)
     parser.add_argument("--samples", type=int, default=200000)
     parser.add_argument("--extra-samples", type=int, default=40000)
+    parser.add_argument("--recurrence-samples", type=int, default=60000,
+                        help="Rows per epoch from recurrence_families.py")
+    parser.add_argument("--lexical-dropout", type=float, default=0.5,
+                        help="Per-token chance of hiding the lexical rows while training")
+    parser.add_argument("--no-lexical", action="store_true",
+                        help="Ablation: hide the lexical rows in training and evaluation")
+    parser.add_argument("--candidate", action="store_true",
+                        help="Keep the export in runs/<run>/export instead of the Rust tree")
     parser.add_argument("--eval-samples", type=int, default=5000)
     parser.add_argument("--batch", type=int, default=256)
     parser.add_argument("--seed", type=int, default=20260912)
@@ -156,10 +190,10 @@ def main() -> None:
                         help="Warm-start from a saved checkpoint (short fine-tunes)")
     parser.add_argument("--warmup-steps", type=int, default=300)
     parser.add_argument("--run", default="transformer-poc")
-    parser.add_argument("--d-model", type=int, default=64)
-    parser.add_argument("--layers", type=int, default=2)
+    parser.add_argument("--d-model", type=int, default=96)
+    parser.add_argument("--layers", type=int, default=3)
     parser.add_argument("--heads", type=int, default=4)
-    parser.add_argument("--ffn", type=int, default=256)
+    parser.add_argument("--ffn", type=int, default=384)
     parser.add_argument("--quantization-bits", type=int, choices=[6, 8], default=8)
     parser.add_argument("--fresh-every", type=int, default=1,
                         help="Regenerate the training corpus every N epochs")
@@ -182,6 +216,9 @@ def main() -> None:
     print(json.dumps({"stage": "preparing-data", "device": device}), flush=True)
     heldout = prepare("heldout", args.eval_samples, args.seed + 2, directory)
     extra_eval = extra_corpus(args.eval_samples, args.seed + 3, "eval", directory)
+    recurrence_eval = extra_corpus(
+        args.eval_samples, args.seed + 5, "eval", directory, recurrence_families
+    )
     llm_heldout = None
     llm_source = ROOT / "data" / "llm" / "heldout.jsonl"
     if llm_source.exists():
@@ -199,6 +236,13 @@ def main() -> None:
     training = prepare("train", args.samples, args.seed, directory)
     extra_train = extra_corpus(args.extra_samples, args.seed + 1, "train", directory)
     training = merge(training, extra_train)
+    if args.recurrence_samples:
+        training = merge(
+            training,
+            extra_corpus(
+                args.recurrence_samples, args.seed + 7, "train", directory, recurrence_families
+            ),
+        )
     llm_count = int(args.samples * 0.25 / 0.75)
     llm = prepare_llm(llm_count, directory, rng)
     if llm is not None:
@@ -246,6 +290,17 @@ def main() -> None:
                 prepare("train", args.samples, args.seed + epoch * 101, directory),
                 extra_corpus(args.extra_samples, args.seed + epoch * 103, "train", directory),
             )
+            if args.recurrence_samples:
+                training = merge(
+                    training,
+                    extra_corpus(
+                        args.recurrence_samples,
+                        args.seed + epoch * 107,
+                        "train",
+                        directory,
+                        recurrence_families,
+                    ),
+                )
             llm = prepare_llm(llm_count, directory, rng)
             if llm is not None:
                 training = merge(training, llm)
@@ -265,6 +320,16 @@ def main() -> None:
             for group in optimizer.param_groups:
                 group["lr"] = learning_rate
             rows, labels, boundaries, valid, _ = training.batch(indices, device)
+            if args.no_lexical:
+                rows = without_lexical(rows)
+            elif args.lexical_dropout > 0:
+                # Hide a token's word-form rows at random, so the tagger also
+                # reads it from shape and context. An unseen word's hashed
+                # rows belong to whatever trained word shares the bucket;
+                # without this the model trusts them and mislabels the word.
+                lexical = (rows >= LEXICAL_ROWS.start) & (rows < LEXICAL_ROWS.stop)
+                hidden = torch.rand(rows.shape[:2], device=rows.device) < args.lexical_dropout
+                rows = torch.where(lexical & hidden.unsqueeze(-1), PADDING_ROW, rows)
             logits, boundary_logits = model(rows, valid)
             role_loss = F.cross_entropy(
                 logits.reshape(-1, ROLE_CLASSES),
@@ -290,15 +355,22 @@ def main() -> None:
                         scale = parameter.abs().max().clamp_min(1e-8) / level
                         parameter.copy_(torch.round(parameter / scale) * scale)
             losses.append(loss.item())
-        threshold = calibrate_threshold(model, heldout, device)
-        heldout_metrics = evaluate(model, heldout, 256, device, threshold)
-        extra_metrics = evaluate(model, extra_eval, 256, device, threshold)
+        viewed = Unlexical(model) if args.no_lexical else model
+        threshold = calibrate_threshold(viewed, heldout, device)
+        heldout_metrics = evaluate(viewed, heldout, 256, device, threshold)
+        extra_metrics = evaluate(viewed, extra_eval, 256, device, threshold)
+        recurrence_metrics = evaluate(viewed, recurrence_eval, 256, device, threshold)
         llm_metrics = (
-            evaluate(model, llm_heldout, 256, device, threshold)
+            evaluate(viewed, llm_heldout, 256, device, threshold)
             if llm_heldout is not None
             else None
         )
-        score = heldout_metrics["exactLabelAndBoundarySequence"]
+        # The kept checkpoint has to hold every slice, not only the
+        # structural one.
+        slices = [heldout_metrics, extra_metrics, recurrence_metrics]
+        if llm_metrics:
+            slices.append(llm_metrics)
+        score = sum(m["exactLabelAndBoundarySequence"] for m in slices) / len(slices)
         entry = {
             "epoch": epoch,
             "loss": sum(losses) / len(losses),
@@ -307,7 +379,9 @@ def main() -> None:
             "boundaryThreshold": threshold,
             "heldout": heldout_metrics,
             "extraFamilies": extra_metrics,
+            "recurrenceFamilies": recurrence_metrics,
             **({"llmHeldout": llm_metrics} if llm_metrics else {}),
+            "score": score,
         }
         history.append(entry)
         print(json.dumps(entry), flush=True)
@@ -330,13 +404,23 @@ def main() -> None:
     quantized = dequantized_model(model, tensors)
     quantized_metrics = evaluate(quantized, heldout, 256, "cpu", threshold)
     extra_quantized = evaluate(quantized, extra_eval, 256, "cpu", threshold)
+    recurrence_quantized = evaluate(quantized, recurrence_eval, 256, "cpu", threshold)
+    llm_quantized = (
+        evaluate(quantized, llm_heldout, 256, "cpu", threshold)
+        if llm_heldout is not None
+        else None
+    )
 
-    assets = RUST / "what-time" / "assets"
-    evals = RUST / "evals" / "active"
+    if args.candidate:
+        assets = evals = run / "export"
+        assets.mkdir(parents=True, exist_ok=True)
+    else:
+        assets = RUST / "what-time" / "assets"
+        evals = RUST / "evals" / "active"
     export = {
         "format": "what-time-transformer/1",
-        "featureRows": 324,
-        "paddingRow": 324,
+        "featureRows": FEATURE_ROWS,
+        "paddingRow": PADDING_ROW,
         "dModel": args.d_model,
         "layers": args.layers,
         "heads": args.heads,
@@ -387,6 +471,9 @@ def main() -> None:
         "boundaryThreshold": threshold,
         "quantizedHeldout": quantized_metrics,
         "quantizedExtraFamilies": extra_quantized,
+        "quantizedRecurrenceFamilies": recurrence_quantized,
+        **({"quantizedLlmHeldout": llm_quantized} if llm_quantized else {}),
+        "candidate": args.candidate,
         "trainedAt": time.strftime("%Y-%m-%dT%H:%M:%S"),
     }
     (run / "report.json").write_text(json.dumps(report, indent=2))
@@ -396,6 +483,12 @@ def main() -> None:
                 "stage": "done",
                 "heldoutExact": quantized_metrics["exactLabelAndBoundarySequence"],
                 "extraExact": extra_quantized["exactLabelAndBoundarySequence"],
+                "recurrenceExact": recurrence_quantized["exactLabelAndBoundarySequence"],
+                **(
+                    {"llmExact": llm_quantized["exactLabelAndBoundarySequence"]}
+                    if llm_quantized
+                    else {}
+                ),
                 "threshold": threshold,
             }
         ),

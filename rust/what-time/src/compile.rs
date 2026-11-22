@@ -132,12 +132,26 @@ fn frequency_word(word: &str) -> Option<(Frequency, bool)> {
     // (frequency, doubles the interval)
     match word {
         "hourly" => Some((Frequency::hourly, false)),
-        "daily" | "roz" | "roj" | "rozz" | "रोज़" => Some((Frequency::daily, false)),
-        "weekly" => Some((Frequency::weekly, false)),
+        "daily"
+        | "nightly"
+        | "everyday"
+        | "roz"
+        | "roj"
+        | "rozz"
+        | "rozana"
+        | "pratidin"
+        | "रोज़"
+        | "रोज"
+        | "रोज़ाना"
+        | "रोजाना"
+        | "प्रतिदिन" => Some((Frequency::daily, false)),
+        "weekly" | "saptahik" | "साप्ताहिक" => Some((Frequency::weekly, false)),
         "biweekly" | "fortnightly" => Some((Frequency::weekly, true)),
-        "monthly" => Some((Frequency::monthly, false)),
+        "monthly" | "masik" | "मासिक" => Some((Frequency::monthly, false)),
         "quarterly" => Some((Frequency::quarterly, false)),
-        "yearly" | "annually" => Some((Frequency::yearly, false)),
+        "yearly" | "annually" | "annual" | "salana" | "सालाना" | "varshik" | "वार्षिक" => {
+            Some((Frequency::yearly, false))
+        }
         _ => None,
     }
 }
@@ -150,7 +164,37 @@ fn unit_frequency(unit: Unit) -> Option<Frequency> {
         Unit::month => Some(Frequency::monthly),
         Unit::quarter => Some(Frequency::quarterly),
         Unit::year => Some(Frequency::yearly),
-        Unit::minute => None,
+        Unit::minute => Some(Frequency::minutely),
+    }
+}
+
+/// तारीख: the Hindi word that marks a number as a day of the month.
+fn date_selector_word(word: &str) -> bool {
+    matches!(
+        word,
+        "तारीख" | "तारीख़" | "tareek" | "tareekh" | "taareekh" | "taareek" | "tarikh"
+    )
+}
+
+/// Words that double a recurrence step: "alternate Saturdays", "every
+/// alternate day".
+fn alternating_word(word: &str) -> bool {
+    matches!(word, "alternate" | "alternating" | "alternative")
+}
+
+/// A weekday group named by its first word: "working days", "business day".
+fn working_day_word(word: &str) -> bool {
+    matches!(word, "working" | "business" | "work" | "office")
+}
+
+/// Applies a day part to a 12-hour clock reading. Night runs past
+/// midnight: "2:30 at night" is 02:30 and "12 at night" is midnight, while
+/// "10 at night" is 22:00.
+fn hour_in_day_part(hour: i64, part: DayPart) -> i64 {
+    match part {
+        DayPart::morning => hour % 12,
+        DayPart::night if hour == 12 || hour < 5 => hour % 12,
+        _ => (hour % 12) + 12,
     }
 }
 
@@ -727,8 +771,21 @@ fn compile_date_and_time(
                 } else if matches!(
                     word.as_str(),
                     "weekday" | "weekdays" | "workday" | "workdays" | "वीकडे"
-                ) {
+                ) || working_day_word(&word)
+                {
                     Some(DayGroup::weekday)
+                } else if matches!(word.as_str(), "day" | "days")
+                    && index
+                        .checked_sub(1)
+                        .and_then(|previous| tokens.get(previous))
+                        .is_some_and(|previous| {
+                            previous.label == Role::DayGroup
+                                && working_day_word(&previous.raw.text.to_lowercase())
+                        })
+                {
+                    // the second word of "working day"
+                    index += 1;
+                    continue;
                 } else {
                     None
                 };
@@ -912,8 +969,7 @@ fn compile_date_and_time(
                     // A trailing day part ("9:30 night") qualifies the clock
                     // it follows instead of opening a new one.
                     if let Some((hour, minute, second)) = clock.value.as_hm() {
-                        let pm = part != DayPart::morning;
-                        let hour = (hour % 12) + if pm { 12 } else { 0 };
+                        let hour = hour_in_day_part(hour, part);
                         clock.value = ClockTime::Hm {
                             hour,
                             minute,
@@ -1071,8 +1127,7 @@ fn compile_date_and_time(
                 if let (Some(part), true) = (pending_day_part, clock.needs_meridiem)
                     && let Some((hour, minute, second)) = clock.value.as_hm()
                 {
-                    let pm = part != DayPart::morning;
-                    let hour = (hour % 12) + if pm { 12 } else { 0 };
+                    let hour = hour_in_day_part(hour, part);
                     clock.value = ClockTime::Hm {
                         hour,
                         minute,
@@ -1257,12 +1312,12 @@ fn compile_date_and_time(
                     from.month = to.month;
                 }
                 clause.date = Some(DateSpec::CalendarRange { from, to });
-            } else if calendar_value.month.is_some()
+            } else if let Some(month) = calendar_value.month
                 && calendar_value.day.is_none()
                 && modifier.is_some()
             {
                 clause.date = Some(DateSpec::CalendarPeriod {
-                    month: calendar_value.month.unwrap(),
+                    month,
                     year: calendar_value.year,
                     modifier,
                     week: None,
@@ -1464,6 +1519,38 @@ fn empty_recurrence(freq: Frequency) -> Recurrence {
     }
 }
 
+/// Hindi and Hinglish put a frequency count after its period ("hafte mein
+/// teen baar", "din mein do baar"). Move the count in front of the period
+/// so one reading order covers "three times a week" in every language.
+fn prepose_frequency_count(mut tokens: Vec<Token>) -> Vec<Token> {
+    let Some(times) = tokens.iter().position(|token| token.label == Role::Times) else {
+        return tokens;
+    };
+    let names_period = |token: &Token| matches!(token.label, Role::Unit | Role::Freq);
+    if tokens[times + 1..].iter().any(names_period) {
+        return tokens;
+    }
+    let count_start = if times > 0 && tokens[times - 1].label == Role::Num {
+        times - 1
+    } else {
+        times
+    };
+    let Some(period) = tokens[..count_start].iter().rposition(names_period) else {
+        return tokens;
+    };
+    if tokens[period + 1..count_start]
+        .iter()
+        .any(|token| token.label != Role::O)
+    {
+        return tokens;
+    }
+    let count: Vec<Token> = tokens.drain(count_start..=times).collect();
+    for (offset, token) in count.into_iter().enumerate() {
+        tokens.insert(period + offset, token);
+    }
+    tokens
+}
+
 fn compile_clause(
     input: &[Token],
     diagnostics: &mut Vec<Diagnostic>,
@@ -1496,9 +1583,21 @@ fn compile_clause(
             {
                 token.label = Role::Holiday;
             }
+            // "working day" / "business days" is one weekday group; its
+            // second word must not read as a daily frequency.
+            if token.label == Role::Unit
+                && matches!(token.raw.text.to_lowercase().as_str(), "day" | "days")
+                && index.checked_sub(1).is_some_and(|previous| {
+                    input[previous].label == Role::DayGroup
+                        && working_day_word(&input[previous].raw.text.to_lowercase())
+                })
+            {
+                token.label = Role::DayGroup;
+            }
             token
         })
         .collect();
+    let relabeled = prepose_frequency_count(relabeled);
     let input: &[Token] = &relabeled;
     let last_meaningful = input.iter().rev().find(|token| token.label != Role::O);
     if let Some(last) = last_meaningful.filter(|token| token.label == Role::RangeEnd) {
@@ -1539,7 +1638,7 @@ fn compile_clause(
         && !input.iter().any(|token| {
             matches!(
                 token.label,
-                Role::Unit | Role::Freq | Role::Weekday | Role::DayGroup | Role::Month
+                Role::Unit | Role::Freq | Role::Weekday | Role::DayGroup | Role::Month | Role::Dom
             ) || day_part_selects(token)
                 // "roz" arrives as RECUR but names a frequency itself
                 || (token.label == Role::Recur
@@ -1583,23 +1682,25 @@ fn compile_clause(
         };
     let mut duration: Option<Duration> = None;
     let mut starting_date: Option<DateSpec> = None;
+    // Whether the phrase named its frequency. A recurrence that only lists
+    // selectors ("every 15th", "every January") takes the frequency its
+    // selectors imply once the clause is assembled.
+    let mut explicit_frequency = implicit_ordinal;
+    // A clock that arrived inside a bound ("except Wednesday at 9am")
+    // belongs to the clause.
+    let mut bound_time: Option<TimeSpec> = None;
 
     let mut index = 0usize;
     while index < tokens.len() {
         let token = &tokens[index];
 
-        if token.label == Role::Unit
-            && matches!(
-                token.raw.text.to_lowercase().as_str(),
-                "तारीख" | "तारीख़" | "tareek" | "tareekh" | "taareekh" | "taareek" | "tarikh"
-            )
-        {
+        if token.label == Role::Unit && date_selector_word(&token.raw.text.to_lowercase()) {
             // तारीख names a DOM selector, not a recurrence frequency or a
             // standalone calendar period. The model must also supply its day.
             let adjacent_day = index
                 .checked_sub(1)
                 .and_then(|i| tokens.get(i))
-                .is_some_and(|t| t.label == Role::Dom)
+                .is_some_and(|t| matches!(t.label, Role::Dom | Role::Ord))
                 || tokens.get(index + 1).is_some_and(|t| t.label == Role::Dom);
             if !adjacent_day {
                 return fail(
@@ -1619,9 +1720,34 @@ fn compile_clause(
                 && let Some(rule) = recurrence.as_mut()
             {
                 rule.freq = freq;
+                explicit_frequency = true;
                 if doubled {
                     rule.interval = 2;
                 }
+            }
+            // "alternate Saturdays": the marker itself doubles the step.
+            if alternating_word(&token.raw.text.to_lowercase())
+                && let Some(rule) = recurrence.as_mut()
+            {
+                rule.interval = 2;
+            }
+            // "every other Friday": the corpus briefs label "other" GLUE and
+            // the structural generators NUM; either way it is a step of two.
+            if let Some(next) = tokens.get(index + 1)
+                && next.label == Role::O
+                && matches!(
+                    next.raw.text.to_lowercase().as_str(),
+                    "other" | "alternate" | "alternating"
+                )
+                && tokens.get(index + 2).is_some_and(|after| {
+                    matches!(after.label, Role::Weekday | Role::DayGroup | Role::Unit)
+                })
+            {
+                if let Some(rule) = recurrence.as_mut() {
+                    rule.interval = 2;
+                }
+                index += 2;
+                continue;
             }
             // "every morning 9am" / "every night 10pm": the day part right
             // after the recurrence marker selects a daily frequency and
@@ -1636,6 +1762,7 @@ fn compile_clause(
                     if let Some(rule) = recurrence.as_mut() {
                         rule.freq = Frequency::daily;
                     }
+                    explicit_frequency = true;
                     // the day-part token itself is consumed by the body's
                     // own DayPart handling, which queues it for the clock
                     let _ = part;
@@ -1653,6 +1780,7 @@ fn compile_clause(
                             rule.interval = 2;
                         }
                     }
+                    explicit_frequency = true;
                     index += 2;
                     continue;
                 }
@@ -1663,9 +1791,19 @@ fn compile_clause(
 
         if token.label == Role::Freq {
             let word = token.raw.text.to_lowercase();
-            let Some((freq, doubled)) = frequency_word(&word) else {
+            let named = frequency_word(&word)
+                .or_else(|| Some((unit(&word).and_then(unit_frequency)?, false)));
+            let Some((freq, doubled)) = named else {
                 return fail(token, "unsupported", "Unknown recurrence frequency.");
             };
+            explicit_frequency = true;
+            if word == "nightly" {
+                // "nightly at 2" is every night: the night biases its clock.
+                let mut night = token.clone();
+                night.label = Role::DayPart;
+                night.raw.text = "night".into();
+                body.push(night);
+            }
             if let Some(recurrence) = recurrence.as_mut() {
                 recurrence.freq = freq;
                 if doubled {
@@ -1707,7 +1845,7 @@ fn compile_clause(
             };
             if !tokens
                 .get(period)
-                .is_some_and(|token| token.label == Role::Unit)
+                .is_some_and(|token| matches!(token.label, Role::Unit | Role::Freq))
             {
                 return fail(
                     token,
@@ -1715,8 +1853,15 @@ fn compile_clause(
                     "A frequency count needs a positive number and a period.",
                 );
             }
-            let Some(frequency) =
-                unit(&tokens[period].raw.text.to_lowercase()).and_then(unit_frequency)
+            let period_word = tokens[period].raw.text.to_lowercase();
+            // "twice daily", "thrice weekly"; a period noun may also arrive
+            // under either label ("week" in "twice a week").
+            let named = frequency_word(&period_word)
+                .filter(|(_, doubled)| !doubled)
+                .map(|(frequency, _)| frequency)
+                .or_else(|| unit(&period_word).and_then(unit_frequency));
+            explicit_frequency = true;
+            let Some(frequency) = named.filter(|frequency| *frequency != Frequency::minutely)
             else {
                 return fail(
                     token,
@@ -1730,8 +1875,83 @@ fn compile_clause(
             rule.freq = frequency;
             rule.times_per = Some(count as i64);
             recurrence = Some(rule);
-            index = period;
+            index = period + 1;
             continue;
+        }
+
+        // An ordinal before a period is either a day of that period ("the
+        // last day of every month") or the step ("every third day").
+        if recurrence.is_some() && matches!(token.label, Role::Ord | Role::Dom | Role::Deictic) {
+            let unit_of = |token: &Token| {
+                (token.label == Role::Unit)
+                    .then(|| unit(&token.raw.text.to_lowercase()))
+                    .flatten()
+            };
+            let value = number(&token.raw.text.to_lowercase()).filter(|value| is_integer(*value));
+            // "har mahine ki pehli tarikh", "आख़िरी तारीख": an ordinal before
+            // तारीख is that day of the month.
+            if token.label == Role::Ord
+                && let Some(value) = value.filter(|value| *value == -1.0 || *value >= 1.0)
+                && tokens.get(index + 1).is_some_and(|next| {
+                    next.label == Role::Unit && date_selector_word(&next.raw.text.to_lowercase())
+                })
+            {
+                if let Some(rule) = recurrence.as_mut() {
+                    rule.by_month_day
+                        .get_or_insert_with(Vec::new)
+                        .push(value as i64);
+                }
+                index += 1;
+                continue;
+            }
+            if let (Some(next_unit), Some(value)) = (tokens.get(index + 1).and_then(unit_of), value)
+            {
+                let enclosing = tokens[index + 2..]
+                    .iter()
+                    .filter_map(unit_of)
+                    .find(|unit| matches!(unit, Unit::month | Unit::quarter | Unit::year));
+                let day_of_period = next_unit == Unit::day
+                    && enclosing.is_some()
+                    && (value == -1.0 || (1.0..=31.0).contains(&value));
+                if day_of_period && let Some(rule) = recurrence.as_mut() {
+                    rule.by_month_day
+                        .get_or_insert_with(Vec::new)
+                        .push(value as i64);
+                    if enclosing == Some(Unit::year) {
+                        rule.by_month
+                            .get_or_insert_with(Vec::new)
+                            .push(if value < 0.0 { 12 } else { 1 });
+                    }
+                    index += 2;
+                    continue;
+                }
+                if token.label != Role::Deictic && value >= 2.0 && enclosing.is_none() {
+                    if let Some(rule) = recurrence.as_mut() {
+                        rule.interval = value as i64;
+                    }
+                    index += 1;
+                    continue;
+                }
+            }
+            // "every 2nd Saturday": a small day number directly before a
+            // weekday counts that weekday within the month.
+            if token.label == Role::Dom
+                && let Some(value) = value.filter(|value| (1.0..=5.0).contains(value))
+                && tokens
+                    .get(index + 1)
+                    .is_some_and(|next| next.label == Role::Weekday)
+                && !index
+                    .checked_sub(1)
+                    .is_some_and(|previous| tokens[previous].label == Role::Month)
+            {
+                if let Some(rule) = recurrence.as_mut() {
+                    rule.by_set_pos
+                        .get_or_insert_with(Vec::new)
+                        .push(value as i64);
+                }
+                index += 1;
+                continue;
+            }
         }
 
         if recurrence.is_some() && token.label == Role::Unit {
@@ -1746,6 +1966,7 @@ fn compile_clause(
             if let Some(rule) = recurrence.as_mut() {
                 rule.freq = frequency;
             }
+            explicit_frequency = true;
             index += 1;
             continue;
         }
@@ -1879,8 +2100,24 @@ fn compile_clause(
             continue;
         }
 
-        let is_weekday_interval = token.label == Role::Num
-            && tokens.get(index + 1).is_some_and(|token| {
+        // "every half an hour": an article may sit between the quantity
+        // and its unit.
+        // आधे/half reaches here as a clock offset when the model reads it
+        // the way it does in "साढ़े आठ"; before a unit it is a quantity.
+        let quantity_token = token.label == Role::Num
+            || (token.label == Role::ClockOffset
+                && number(&token.raw.text.to_lowercase()) == Some(0.5));
+        let mut interval_target = index + 1;
+        while quantity_token
+            && tokens.get(interval_target).is_some_and(|token| {
+                matches!(token.label, Role::O | Role::Num)
+                    && matches!(token.raw.text.to_lowercase().as_str(), "a" | "an")
+            })
+        {
+            interval_target += 1;
+        }
+        let is_weekday_interval = quantity_token
+            && tokens.get(interval_target).is_some_and(|token| {
                 matches!(token.label, Role::Weekday | Role::DayGroup | Role::Unit)
             });
         if recurrence.is_some() && is_weekday_interval {
@@ -1891,6 +2128,21 @@ fn compile_clause(
                     "Recurrence interval must be positive.",
                 );
             };
+            // A fraction of an hour is a whole number of minutes.
+            let hour_fraction = !is_integer(interval)
+                && interval > 0.0
+                && is_integer(interval * 60.0)
+                && tokens[interval_target].label == Role::Unit
+                && unit(&tokens[interval_target].raw.text.to_lowercase()) == Some(Unit::hour);
+            if hour_fraction {
+                if let Some(rule) = recurrence.as_mut() {
+                    rule.freq = Frequency::minutely;
+                    rule.interval = (interval * 60.0) as i64;
+                }
+                explicit_frequency = true;
+                index = interval_target + 1;
+                continue;
+            }
             if !is_integer(interval) || interval < 1.0 {
                 return fail(
                     token,
@@ -1901,7 +2153,7 @@ fn compile_clause(
             if let Some(rule) = recurrence.as_mut() {
                 rule.interval = interval as i64;
             }
-            index += 1;
+            index = interval_target;
             continue;
         }
 
@@ -1926,8 +2178,11 @@ fn compile_clause(
             if bound.is_empty() {
                 return fail(token, "invalid-bound", "A bound needs a date.");
             }
-            let date = compile_date_and_time(bound, diagnostics, context)?.date;
-            let Some(date) = date else {
+            let bound_clause = compile_date_and_time(bound, diagnostics, context)?;
+            if bound_time.is_none() {
+                bound_time = bound_clause.time;
+            }
+            let Some(date) = bound_clause.date else {
                 return fail(token, "invalid-bound", "A bound needs a date.");
             };
 
@@ -1968,6 +2223,9 @@ fn compile_clause(
     if shift.is_some() {
         clause.shift = shift;
     }
+    if clause.time.is_none() && recurrence.is_some() {
+        clause.time = bound_time;
+    }
     if let Some(duration) = duration {
         clause.duration = Some(duration);
     }
@@ -1990,6 +2248,19 @@ fn compile_clause(
             },
             None => clause_recurrence,
         });
+    }
+    // A bare plural names the habit, not one date: "Mondays and Thursdays
+    // at 7" recurs weekly.
+    if recurrence.is_none()
+        && matches!(clause.date, Some(DateSpec::Weekday { modifier: None, .. }))
+        && clause.end_date.is_none()
+        && body.iter().any(|token| {
+            let word = token.raw.text.to_lowercase();
+            token.label == Role::Weekday && word.ends_with("days") && weekday(&word).is_some()
+        })
+    {
+        recurrence = Some(empty_recurrence(Frequency::weekly));
+        explicit_frequency = true;
     }
     if matches!(clause.date, Some(DateSpec::DayGroup { modifier: None, .. })) {
         let mut rule = recurrence
@@ -2017,6 +2288,31 @@ fn compile_clause(
         }
         if let Some(DateSpec::Weekday { days, .. }) = clause.date.take() {
             rule.by_day = Some(days);
+        }
+        if !explicit_frequency {
+            if rule.by_set_pos.is_some() {
+                // "every second Saturday" counts within the month.
+                rule.freq = Frequency::monthly;
+            } else if rule.by_month.is_some() && rule.by_day.is_none() {
+                // "every January", "each March 3rd"
+                rule.freq = Frequency::yearly;
+            } else if rule.by_month_day.is_some() && rule.by_day.is_none() {
+                // "every 15th"
+                rule.freq = Frequency::monthly;
+            }
+        }
+        if rule.times_per == Some(1) {
+            // "once a day at 9am" is the plain daily rule.
+            rule.times_per = None;
+        }
+        if matches!(rule.freq, Frequency::minutely | Frequency::hourly)
+            && rule.span.is_none()
+            && rule.count.is_none()
+            && rule.until.is_none()
+            && clause.duration.is_some()
+        {
+            // "every 15 minutes for 2 hours": the duration bounds the series.
+            rule.span = clause.duration.take();
         }
         clause.recurrence = Some(rule);
     }
@@ -2109,11 +2405,49 @@ fn merge_clause(first: &Clause, next: Clause) -> Clause {
     merged
 }
 
+/// "every Tuesday at 3pm and every Friday at 5pm": a conjunction followed
+/// by a new recurrence marker starts an independent rule.
+fn split_recurrences(tokens: &[Token]) -> Vec<&[Token]> {
+    let marks = |token: &Token| matches!(token.label, Role::Recur | Role::Freq);
+    let conjunction = |token: &Token| {
+        token.label == Role::O
+            && matches!(
+                token.raw.text.to_lowercase().as_str(),
+                "and" | "," | ";" | "&" | "plus" | "also" | "aur" | "और"
+            )
+    };
+    let mut groups: Vec<&[Token]> = Vec::new();
+    let mut start = 0usize;
+    for index in 1..tokens.len().saturating_sub(1) {
+        if conjunction(&tokens[index])
+            && tokens[index + 1].label == Role::Recur
+            && tokens[start..index].iter().any(marks)
+            // "har roz" style doubled markers stay together
+            && tokens[start..index]
+                .iter()
+                .any(|token| !matches!(token.label, Role::O | Role::Recur))
+        {
+            groups.push(&tokens[start..index]);
+            start = index + 1;
+        }
+    }
+    groups.push(&tokens[start..]);
+    groups
+}
+
 fn compile_group(
     tokens: &[Token],
     diagnostics: &mut Vec<Diagnostic>,
     context: &[Token],
 ) -> CompileResult<Vec<Clause>> {
+    let independent = split_recurrences(tokens);
+    if independent.len() > 1 {
+        let mut clauses = Vec::new();
+        for group in independent {
+            clauses.extend(compile_group(group, diagnostics, context)?);
+        }
+        return Ok(clauses);
+    }
     let mut clocks = 0;
     for token in tokens.iter() {
         if matches!(token.label, Role::Hour | Role::TimeNamed | Role::DayPart) {
@@ -2205,6 +2539,21 @@ fn compile_group(
                 let next = compile_clause(group, diagnostics, context)?;
                 clauses.push(merge_clause(&first, next));
             }
+            // "twice a day at 9am and 9pm": the listed clocks are the count.
+            let listed = clauses.len() as i64;
+            if clauses.iter().all(|clause| {
+                clause.time.is_some()
+                    && clause
+                        .recurrence
+                        .as_ref()
+                        .is_some_and(|rule| rule.times_per == Some(listed))
+            }) {
+                for clause in clauses.iter_mut() {
+                    if let Some(rule) = clause.recurrence.as_mut() {
+                        rule.times_per = None;
+                    }
+                }
+            }
             return Ok(clauses);
         }
     }
@@ -2225,7 +2574,7 @@ fn compile_expression(text: &str, tokens: Vec<Token>, context: &[Token]) -> Expr
                 .filter(|token| {
                     token.label != Role::Glue
                         || token.raw.kind == 2
-                        || ["past", "to", "and", "a", "an"]
+                        || ["past", "to", "and", "a", "an", "other"]
                             .contains(&token.raw.text.to_lowercase().as_str())
                 })
                 .map(|mut token| {

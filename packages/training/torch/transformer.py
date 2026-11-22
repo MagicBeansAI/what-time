@@ -1,7 +1,7 @@
-"""Proof-of-concept transformer tagger for the what-time Rust backend.
+"""The transformer tagger behind the what-time Rust backend.
 
-Same contract as TimeTagger: feature-row IDs in, per-token role logits and
-clause-boundary logits out. The architecture is a small pre-LayerNorm encoder
+Feature-row IDs in, per-token role logits and clause-boundary logits out.
+The architecture is a small pre-LayerNorm encoder
 (summed feature-row embeddings + learned positions, N blocks of 4-head
 self-attention and tanh-GELU feed-forward, mean-pooled context into the head).
 Every op is chosen so inference can be mirrored exactly in Rust f32: plain
@@ -15,8 +15,8 @@ import torch
 from torch import Tensor, nn
 from torch.nn import functional as F
 
-FEATURE_ROWS = 580
-PADDING_ROW = FEATURE_ROWS
+from features import FEATURE_ROWS
+
 ROLE_CLASSES = 40
 
 
@@ -27,24 +27,17 @@ def gelu_tanh(value: Tensor) -> Tensor:
 class TimeTransformer(nn.Module):
     def __init__(
         self,
-        feature_rows: int = 324,
-        d_model: int = 64,
-        layers: int = 2,
+        feature_rows: int = FEATURE_ROWS,
+        d_model: int = 96,
+        layers: int = 3,
         heads: int = 4,
-        ffn: int = 256,
+        ffn: int = 384,
         max_positions: int = 128,
     ) -> None:
         super().__init__()
-        if feature_rows not in (324, 580):
-            raise ValueError("Feature rows must be 324 (S) or 580 (M)")
+        if feature_rows != FEATURE_ROWS:
+            raise ValueError(f"The featurizer emits {FEATURE_ROWS} feature rows")
         self.feature_rows = feature_rows
-        mapping = torch.arange(FEATURE_ROWS + 1)
-        if feature_rows == 324:
-            mapping[140:396] = 140 + torch.arange(256) % 128
-            mapping[396:524] = 324
-            mapping[524:580] = 268 + torch.arange(56)
-            mapping[580] = 324
-        self.register_buffer("row_map", mapping, persistent=False)
         self.d_model = d_model
         self.heads = heads
         self.d_head = d_model // heads
@@ -104,8 +97,6 @@ class TimeTransformer(nn.Module):
     def forward(
         self, rows: Tensor, valid: Tensor, neighbors: Tensor | None = None
     ) -> tuple[Tensor, Tensor]:
-        if self.feature_rows == 324:
-            rows = self.row_map[rows]
         row_mask = (rows != self.feature_rows).unsqueeze(-1)
         embedded = F.embedding(rows.clamp_max(self.feature_rows - 1), self.embedding)
         x = (embedded * row_mask).sum(dim=2) * valid.unsqueeze(-1)

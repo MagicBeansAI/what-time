@@ -122,7 +122,11 @@ fn apply_shift(epoch: f64, shift: Option<&Shift>, time_zone: &str) -> Result<f64
     add_duration(epoch, &duration, time_zone)
 }
 
-fn at_time(date: &Civil, seconds: f64, time_zone: &str) -> Result<f64, NonexistentTimeError> {
+pub(crate) fn at_time(
+    date: &Civil,
+    seconds: f64,
+    time_zone: &str,
+) -> Result<f64, NonexistentTimeError> {
     let day_offset = (seconds / 86_400.0).floor();
     let local = if seconds == seconds_of_day(date) {
         *date
@@ -290,10 +294,9 @@ pub fn resolve_occurrence(
     }
 
     if end_seconds.is_none()
-        && period.end.is_some()
+        && let Some(period_end) = period.end.as_ref()
         && clause.time.as_ref().and_then(|t| t.open) != Some(OpenBound::end)
     {
-        let period_end = period.end.as_ref().unwrap();
         let end =
             at_time(period_end, seconds_of_day(period_end), &options.time_zone).map_err(|e| e.0)?;
         occurrence.end = Some(seconds(apply_shift(

@@ -1,0 +1,6 @@
+# The wasm build uses WebAssembly SIMD (128-bit lanes) for the model's matrix
+# products. Supported from Chrome/Edge 91, Firefox 89, Safari 16.4 and
+# Node 16.4. Scripts that set RUSTFLAGS themselves (rust/site/build.sh, the
+# CI and release workflows) repeat the flag, because RUSTFLAGS replaces this.
+[target.wasm32-unknown-unknown]
+rustflags = ["-C", "target-feature=+simd128"]

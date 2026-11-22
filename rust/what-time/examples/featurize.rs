@@ -9,7 +9,7 @@
 
 use std::io::{BufRead, Write};
 
-use what_time::testing::{LABELS, tokenize};
+use what_time::testing::{FEATURE_ROWS, LABELS, ROWS_PER_TOKEN, tokenize};
 
 #[derive(serde::Deserialize)]
 struct Span {
@@ -105,12 +105,16 @@ fn main() {
             })
             .collect();
 
-        // Each parallel array keeps its own base: rows advance 17 slots per
-        // token, the token-indexed arrays one, neighbors two.
+        // Each parallel array keeps its own base: rows advance
+        // ROWS_PER_TOKEN slots per token, the token-indexed arrays one,
+        // neighbors two.
         let row_base = rows.len();
         let neighbor_base = neighbors.len();
         let base = labels.len();
-        rows.resize(row_base + tokens.len() * 17, 580);
+        rows.resize(
+            row_base + tokens.len() * ROWS_PER_TOKEN,
+            FEATURE_ROWS as u16,
+        );
         labels.resize(base + tokens.len(), 0);
         boundaries.resize(base + tokens.len(), 0);
         kinds.resize(base + tokens.len(), 0);
@@ -120,11 +124,8 @@ fn main() {
         let mut previous: i64 = -1;
         let mut aligned = true;
         for (index, token) in tokens.iter().enumerate() {
-            for (feature, row) in what_time::testing::feature_rows(token.features)
-                .iter()
-                .enumerate()
-            {
-                rows[row_base + index * 17 + feature] = *row;
+            for (feature, row) in what_time::testing::feature_rows(token).iter().enumerate() {
+                rows[row_base + index * ROWS_PER_TOKEN + feature] = *row;
             }
             kinds[base + index] = token.kind;
             neighbors[neighbor_base + index * 2] = previous as i16;
@@ -191,6 +192,8 @@ fn main() {
         "skipped": skipped,
         "misaligned": misaligned,
         "featurizer": "rust",
+        "rowsPerToken": ROWS_PER_TOKEN,
+        "featureRows": FEATURE_ROWS,
     });
     std::fs::write(format!("{prefix}.json"), manifest.to_string()).expect("manifest");
     println!(

@@ -2,13 +2,23 @@
 
 ## Model
 
-The active model is a ~144k-parameter transformer encoder (two pre-LayerNorm
-blocks, four heads, feed-forward width 256, learned positions, mean-pooled
-context head), stored with symmetric per-tensor int8 quantization
+The active model is a ~575k-parameter transformer encoder (three
+pre-LayerNorm blocks, width 96, four heads, feed-forward width 384, learned
+positions, mean-pooled context head), stored with symmetric per-tensor int8
+quantization
 (`rust/what-time/assets/weights-transformer.json`). Inference is a pure-Rust
 forward pass (`rust/what-time/src/model/transformer.rs`) mirrored op-for-op
 from the training network; exported parity fixtures gate logit drift below
 2e-3.
+
+Each token enters as up to 20 summed feature rows from a 2,116-row table:
+the shape rows (character classes, length, casing, number bucket, an 8-bit
+word hash, neighbor punctuation, position flags) plus three word-form rows —
+ten more bits of the word hash and hashes of the three-letter prefix and
+suffix, which stay close across romanizations (somvar/somwar). Training hides
+the word-form rows of each token at random half the time; without that the
+model trusts the hash bucket of a word it has never seen, which belongs to
+whatever trained word shares it.
 
 The model predicts one of 35 semantic roles per token plus a clause-boundary
 score. Timezones, calendar arithmetic, DST, and the reference instant are
@@ -52,21 +62,37 @@ repeated. Reserved carrier phrases remain excluded from training.
 See [`packages/training/V2_RUN.md`](packages/training/V2_RUN.md) for the
 commands, measured comparison, training proportions and remaining gaps.
 
-## Metrics (current checkpoint — `quarter-gaps-r2`, shipped as v0.2.2)
+## Metrics (current checkpoint — `lex-on`, shipped as v0.3.0)
 
 Per-build history lives in [`SCORES.md`](SCORES.md).
 
-- Pinned corpora: 568/568 schedule cases (zero known gaps), 15/15
-  multilingual fixtures, 22/22 end-to-end occurrence cases.
-- LLM held-out: 0.9955 exact token-label/boundary sequences on a 2,000-row
+- Pinned corpora: 632/632 schedule cases (zero known gaps, 37 new
+  recurring-schedule pins), 60/60 cron cases end to end, 15/15 multilingual
+  fixtures, 22/22 end-to-end occurrence cases.
+- Recurrence families (`torch/recurrence_families.py`, never-trained
+  seeds): 1.0000 exact on 4,701 rows.
+- LLM held-out: 1.0000 exact token-label/boundary sequences on a 2,000-row
   union slice (1,000 of them from a never-trained external-model corpus).
-- Generator held-out: 0.9606 on 5,000 rows; extra families: 0.9950 on
-  4,983 rows. These are synthetic, generator-related evaluations, not
-  real-user accuracy claims.
+- Structural generator held-out: 0.9868 on 5,000 rows (0.9606 before). The
+  slice wraps expressions in carrier sentences reserved from training ("the
+  train leaves at", "the workshop continues"), so it measures unseen
+  carriers.
+- Word-form rows ablation, same data and seed: without them 0.9858
+  structural, 0.9938 extra, 0.9985 recurrence, so they add a little on every
+  slice and stay.
+- Extra families: 0.9946 on 4,983 rows. These are synthetic,
+  generator-related evaluations, not real-user accuracy claims.
 - Numeric parity: exported fixtures reproduce the quantized training
   network's logits within 2e-3 with identical argmax.
 
 ## Known limitations
+
+- Seconds and seasons are not schedules: "every 10 seconds" and "every
+  summer" return diagnostics. Cron has no seconds field either.
+- Cron is exported only when it is exact. Every other week or every N days,
+  the nth weekday of a month and the last day of a month stay RRULE-only
+  with an `unsupported-cron` diagnostic, and cron cannot carry a start or
+  end date or a count (`cron-unbounded`).
 
 - Coverage includes तारीख/tarikh (all common romanizations), bare "ki 15",
   daily roz/roj/rozz, Devanagari numerals, mins durations, postposed
@@ -91,4 +117,16 @@ Per-build history lives in [`SCORES.md`](SCORES.md).
 Requires the Rust featurizer (`cargo build --release -p what-time --example
 featurize`) so training tokenization matches runtime tokenization exactly.
 The export writes the weights JSON and parity fixtures into `rust/` and
-`cargo test` fails closed if predictions shift.
+`cargo test` fails closed if predictions shift. `--candidate` keeps them in
+`runs/<run>/export` until `torch/promote.py <run>` copies them in. The current
+checkpoint trained from scratch (the architecture changed, so no warm start).
+A first attempt reached only 0.79 structural: the background prose was
+missing from the checkout, and the recurrence generator labeled a carrier's
+closing connector GLUE and "per"/"half an" differently from the other
+generators. Fixing those, not the architecture, closed the gap:
+
+```sh
+uv run python torch/fetch_prose.py      # background prose, once per checkout
+uv run python torch/train_transformer.py --run lex-on --candidate --epochs 12
+uv run python torch/promote.py lex-on
+```

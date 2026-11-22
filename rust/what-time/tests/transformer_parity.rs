@@ -19,6 +19,10 @@ fn matches_pytorch_logits_from_quantized_weights() {
     );
 
     let classes = 41usize; // 40 roles + boundary
+    // The exporter writes whole row blocks; their width is the fixture's own.
+    let total: usize = lengths.iter().map(|length| *length as usize).sum();
+    let width = rows.len() / total;
+    assert_eq!(rows.len(), total * width, "ragged parity rows");
     let mut checked = 0usize;
     let mut argmax_mismatches = 0usize;
     let mut max_error: f32 = 0.0;
@@ -26,9 +30,9 @@ fn matches_pytorch_logits_from_quantized_weights() {
     let mut logit_offset = 0usize;
     for length in &lengths {
         let length = *length as usize;
-        let rows_slice = &rows[row_offset..row_offset + length * 17];
+        let rows_slice = &rows[row_offset..row_offset + length * width];
         let expected = &logits[logit_offset..logit_offset + length * classes];
-        let predictions = transformer::infer_rows(rows_slice).unwrap();
+        let predictions = transformer::infer_rows_per_token(rows_slice, width).unwrap();
         for token in 0..length {
             let predicted = &predictions.logits.as_ref().unwrap()[token * 40..(token + 1) * 40];
             let reference = &expected[token * classes..token * classes + 40];
@@ -63,10 +67,13 @@ fn matches_pytorch_logits_from_quantized_weights() {
             }
             checked += 1;
         }
-        row_offset += length * 17;
+        row_offset += length * width;
         logit_offset += length * classes;
     }
     assert!(checked > 0);
+    eprintln!(
+        "transformer parity: {checked} tokens, max logit drift {max_error:.2e}, {argmax_mismatches} argmax mismatches"
+    );
     assert!(
         max_error < 2e-3,
         "max logit drift {max_error:.6} exceeds gate"

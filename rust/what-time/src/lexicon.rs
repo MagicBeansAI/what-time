@@ -56,12 +56,12 @@ pub fn spoken_quantity(word: &str) -> Option<f64> {
         "thirty" => 30.0,
         "forty" => 40.0,
         "fifty" => 50.0,
-        "half" => 0.5,
+        "half" | "aadha" | "aadhe" | "adha" | "आधा" | "आधे" => 0.5,
         "quarter" => 0.25,
         "couple" => 2.0,
         "few" => 3.0,
         "several" => 3.0,
-        "other" => 2.0,
+        "other" | "alternate" | "alternating" => 2.0,
         "once" => 1.0,
         "twice" => 2.0,
         "thrice" => 3.0,
@@ -204,13 +204,36 @@ pub fn weekday(text: &str) -> Option<Weekday> {
 
 fn extra_weekday(text: &str) -> Option<Weekday> {
     match text {
-        "सोमवार" | "somvaar" | "somwar" => Some(WEEKDAYS[0]),
-        "मंगलवार" | "mangal" | "mangalvaar" => Some(WEEKDAYS[1]),
-        "बुधवार" | "budh" | "budhvaar" => Some(WEEKDAYS[2]),
-        "गुरुवार" | "guruvaar" | "guruwar" => Some(WEEKDAYS[3]),
-        "शुक्रवार" | "shukravaar" | "shukrawar" => Some(WEEKDAYS[4]),
-        "शनिवार" | "shanivaar" | "shanivar" => Some(WEEKDAYS[5]),
-        "रविवार" | "ravivaar" | "raviwar" => Some(WEEKDAYS[6]),
+        "सोमवार" | "somvaar" | "somwar" | "somvar" | "somwaar" | "sombar" => {
+            Some(WEEKDAYS[0])
+        }
+        "मंगलवार" | "mangal" | "mangalvaar" | "mangalwar" | "mangalvar" | "mangalwaar" => {
+            Some(WEEKDAYS[1])
+        }
+        "बुधवार" | "budh" | "budhvaar" | "budhwar" | "budhvar" | "budhwaar" => {
+            Some(WEEKDAYS[2])
+        }
+        "गुरुवार"
+        | "बृहस्पतिवार"
+        | "guruvaar"
+        | "guruwar"
+        | "guruvar"
+        | "guruwaar"
+        | "brihaspativar"
+        | "veervaar"
+        | "veerwar" => Some(WEEKDAYS[3]),
+        "शुक्रवार"
+        | "shukravaar"
+        | "shukrawar"
+        | "shukravar"
+        | "shukrawaar"
+        | "shukrvar"
+        | "shukrwar" => Some(WEEKDAYS[4]),
+        "शनिवार" | "shanivaar" | "shanivar" | "shaniwar" | "shaniwaar" => {
+            Some(WEEKDAYS[5])
+        }
+        "रविवार" | "इतवार" | "ravivaar" | "raviwar" | "ravivar" | "raviwaar" | "itvaar"
+        | "itwar" | "itvar" => Some(WEEKDAYS[6]),
         _ => None,
     }
 }
@@ -263,8 +286,11 @@ pub fn unit(text: &str) -> Option<Unit> {
         "महीने" | "महीना" | "mahine" | "mahina" => return Some(Unit::month),
         "साल" | "वर्ष" | "saal" => return Some(Unit::year),
         "तिमाही" => return Some(Unit::quarter),
-        "मिनट" => return Some(Unit::minute),
-        "घंटे" | "घंटा" | "ghante" | "ghanta" => return Some(Unit::hour),
+        "मिनट" | "मिनटों" | "minat" => return Some(Unit::minute),
+        "घंटे" | "घंटा" | "घंटों" | "घण्टे" | "ghante" | "ghanta" | "ghanton" =>
+        {
+            return Some(Unit::hour);
+        }
         _ => {}
     }
     let singular = text.strip_suffix('s').unwrap_or(text);

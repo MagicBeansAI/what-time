@@ -76,6 +76,11 @@ an existing external corpus before generating a different batch.
 ## Background prose
 
 `data/prose/` contains the filtered Tatoeba sentences the generators use as
-surrounding carrier text; git-ignored, fetched via `../src/fetch-corpus.ts`
+surrounding carrier text; git-ignored, rebuilt with
+`uv run python torch/fetch_prose.py` (download into `data/downloads/`, the
+pinned filter, a seeded 50,000-sentence sample, and a manifest recording the
+download's digest — Tatoeba republishes, so it can differ from the pin).
+Train only with it present: without it the tagger mislabels ordinary words
+it never saw. Formerly fetched via `../src/fetch-corpus.ts`
 history in git. `corpus.json` is the tracked pin (URL, license, digest,
 filters).

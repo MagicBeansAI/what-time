@@ -38,7 +38,8 @@ what-time/src/
   occurrence.rs  clauses + periods → occurrences
   exclusions.rs  recurrence exception filters
   recurrence.rs  bounded recurrence expansion
-  rrule.rs       RFC 5545 export
+  rrule.rs       RFC 5545 export, plus the export plan cron reads
+  cron.rs        five-field cron export (refuses what cron cannot state)
   resolve.rs     schedules → instants / previews / rules
   schedule.rs    parser facade
 
@@ -51,10 +52,11 @@ evals/
 
 1. **Tokenization** — one CPU scan splits the input into tokens and emits a
    sparse feature row per token: character shape, casing, digit and
-   punctuation class, length bucket, lexicon membership, and hashes of
-   neighboring tokens.
-2. **The model** — a ~144k-parameter transformer encoder (two 4-head
-   blocks, `model/transformer.rs`), int8-quantized, trained on the standard
+   punctuation class, length bucket, lexicon membership, hashes of
+   neighboring tokens, and word-form hashes (word, prefix, suffix).
+2. **The model** — a ~575k-parameter transformer encoder (three 4-head
+   blocks, `model/transformer.rs`; the GPU kernels take their dimensions
+   from the weights), int8-quantized, trained on the standard
    generator supervision plus LLM-authored English/Hindi/Hinglish corpora.
    It classifies tokens into 35
    named semantic roles (clock hours, weekdays, range separators, …) plus a
@@ -64,8 +66,9 @@ evals/
    The compiler never consults the reference date.
 4. **Resolution** — the resolver turns schedules into instants. Calendar days
    and weeks preserve wall-clock time across DST; hours and minutes add
-   elapsed time. Recurrence produces a bounded preview plus RFC 5545
-   properties.
+   elapsed time. Recurrence produces a bounded preview, RFC 5545
+   properties, and five-field cron expressions where cron can state the
+   rule exactly.
 
 The caller provides the reference instant and timezone; context never enters
 the model. An unknown timezone rejects the call rather than falling back.

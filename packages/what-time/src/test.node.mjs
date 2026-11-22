@@ -20,6 +20,17 @@ test("english parses to occurrences", async () => {
   assert.ok(result.rrules[0].includes("FREQ=WEEKLY"));
 });
 
+test("recurring phrases export cron, or say why not", async () => {
+  const window = await parse("every 15 minutes between 9am and 6pm on weekdays", context);
+  assert.deepEqual(window.crons, ["*/15 9-17 * * MON-FRI", "0 18 * * MON-FRI"]);
+  const hinglish = await parse("har do ghante mein", context);
+  assert.deepEqual(hinglish.crons, ["0 */2 * * *"]);
+  const nth = await parse("first monday of every month", context);
+  assert.deepEqual(nth.crons, []);
+  assert.ok(nth.diagnostics.some((value) => value.code === "unsupported-cron"));
+  assert.ok(nth.rrules[0].includes("BYSETPOS=1"));
+});
+
 test("hindi day-part biases the hour to pm", async () => {
   const result = await parse("कल शाम को आठ बजे मीटिंग", context);
   assert.equal(result.occurrences[0].start, "2026-09-14T20:00:00+05:30");

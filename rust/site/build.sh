@@ -4,7 +4,8 @@ set -e
 cd "$(dirname "$0")/.."
 export PATH="$HOME/.cargo/bin:$PATH"
 # Keep build-machine home paths out of the shipped wasm (panic locations).
-export RUSTFLAGS="--remap-path-prefix=$HOME="
+# Keep the wasm SIMD flag from .cargo/config.toml: RUSTFLAGS replaces it.
+export RUSTFLAGS="--remap-path-prefix=$HOME= -C target-feature=+simd128"
 cargo build --quiet -p what-time-wasm --target wasm32-unknown-unknown --release
 wasm-bindgen --target web --out-dir site/wasm target/wasm32-unknown-unknown/release/what_time_wasm.wasm
 python3 - <<'PY'

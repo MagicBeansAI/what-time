@@ -1,7 +1,7 @@
 /* @ts-self-types="./what_time_wasm.d.ts" */
 
 /**
- * Full parse: occurrences, diagnostics, rrules, timings.
+ * Full parse: occurrences, diagnostics, rrules, crons, timings.
  * @param {string} text
  * @param {string} reference
  * @param {string} time_zone

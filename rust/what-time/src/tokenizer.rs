@@ -115,6 +115,14 @@ fn number_bucket(text: &str, kind: u8) -> u32 {
         .unwrap_or(15) as u32
 }
 
+/// Feature rows a token can occupy: nine shape rows, up to eight flag
+/// rows, and three lexical rows.
+pub const ROWS_PER_TOKEN: usize = 20;
+/// Size of the embedding table; this id also pads unused row slots.
+pub const FEATURE_ROWS: usize = 2116;
+/// First row of the lexical region that follows the 580 shape rows.
+const LEXICAL_BASE: u16 = 580;
+
 #[derive(Clone, Copy, PartialEq, Debug)]
 struct TokenShape {
     kind: u8,
@@ -123,6 +131,27 @@ struct TokenShape {
     flags: u32,
     punctuation: u32,
     ordinal: bool,
+    lexical: u32,
+}
+
+/// Word-form hashes that let the model tell vocabulary apart and relate
+/// spelling variants: ten more bits of the whole-word hash (the shape rows
+/// carry only eight), and the three-letter prefix and suffix, which stay
+/// stable across romanizations ("somvar"/"somwar", "mangalvaar"/
+/// "mangalwar"). Bit 26 marks a word; numbers and punctuation carry none.
+fn lexical(folded: &str, kind: u8) -> u32 {
+    if kind != 0 {
+        return 0;
+    }
+    let characters: Vec<char> = folded.chars().collect();
+    let prefix: String = characters.iter().take(3).collect();
+    let suffix: String = characters[characters.len().saturating_sub(3)..]
+        .iter()
+        .collect();
+    ((hash(folded) >> 8) & 1023)
+        | ((hash(&prefix) & 255) << 10)
+        | ((hash(&suffix) & 255) << 18)
+        | (1 << 26)
 }
 
 fn shape(word: &str) -> TokenShape {
@@ -148,16 +177,17 @@ fn shape(word: &str) -> TokenShape {
     let ordinal = matches!(folded.as_str(), "st" | "nd" | "rd" | "th");
     TokenShape {
         kind,
-        identity: (kind as u32
+        identity: kind as u32
             | (length_bucket << 2)
             | (character_class(first) << 5)
             | (character_class(last) << 11)
             | ((hash(&folded) & 255) << 17)
-            | (number_bucket(word, kind) << 25)) as u32,
+            | (number_bucket(word, kind) << 25),
         hash: consonant_hash,
         flags,
         punctuation: punctuation_class(word),
         ordinal,
+        lexical: lexical(&folded, kind),
     }
 }
 
@@ -297,14 +327,15 @@ pub fn tokenize(text: &str) -> Vec<RawToken> {
                 text: part.to_string(),
                 kind: current.kind,
                 features: (current.identity, context),
+                lexical: current.lexical,
             }
         })
         .collect()
 }
 
-pub fn feature_rows(features: (u32, u32)) -> Vec<u16> {
-    let (identity, context) = features;
-    // Each feature owns a disjoint region of the 580-row embedding table.
+pub fn feature_rows(token: &RawToken) -> Vec<u16> {
+    let (identity, context) = token.features;
+    // Each feature owns a disjoint region of the embedding table.
     let mut rows = vec![
         (identity & 3) as u16,                   // Kind
         (4 + ((identity >> 2) & 7)) as u16,      // Length
@@ -322,6 +353,13 @@ pub fn feature_rows(features: (u32, u32)) -> Vec<u16> {
         if flags & (1 << bit) != 0 {
             rows.push((524 + bit) as u16);
         }
+    }
+
+    let lexical = token.lexical;
+    if lexical & (1 << 26) != 0 {
+        rows.push(LEXICAL_BASE + (lexical & 1023) as u16); // Word hash, high bits
+        rows.push(LEXICAL_BASE + 1024 + ((lexical >> 10) & 255) as u16); // Prefix
+        rows.push(LEXICAL_BASE + 1280 + ((lexical >> 18) & 255) as u16); // Suffix
     }
 
     rows

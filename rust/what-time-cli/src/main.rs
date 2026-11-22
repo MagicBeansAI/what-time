@@ -4,7 +4,7 @@ use std::process::ExitCode;
 use what_time::ParseContext;
 
 const USAGE: &str = "\
-what-time — parse English, Hindi, and Hinglish schedule expressions into dates and recurrence rules
+what-time — parse English, Hindi, and Hinglish schedule expressions into dates, recurrence rules, and cron
 
 USAGE:
     what-time [OPTIONS] <TEXT>
@@ -17,6 +17,7 @@ OPTIONS:
     -t, --time-zone <ZONE>       IANA time zone name [default: UTC]
     -l, --limit <COUNT>          Maximum previewed occurrences, 1..=1000 [default: 30]
     -j, --json                   Print the full parse result as JSON
+    -c, --cron                   Print only the cron expressions, one per line
     -h, --help                   Print this help
 
 Text may also be piped: what-time -j -r <INSTANT> < phrase.txt
@@ -29,6 +30,7 @@ struct Args {
     time_zone: String,
     limit: i64,
     json: bool,
+    cron: bool,
 }
 
 fn now_reference() -> String {
@@ -74,6 +76,7 @@ fn parse_args() -> Result<Args, String> {
         time_zone: "UTC".to_string(),
         limit: 30,
         json: false,
+        cron: false,
     };
     let mut values = std::env::args().skip(1);
     let mut reference_set = false;
@@ -88,6 +91,7 @@ fn parse_args() -> Result<Args, String> {
                 std::process::exit(0);
             }
             "-j" | "--json" => args.json = true,
+            "-c" | "--cron" => args.cron = true,
             "-r" | "--reference" => {
                 args.reference = values.next().ok_or("--reference needs a value")?;
                 reference_set = true;
@@ -157,6 +161,24 @@ fn main() -> ExitCode {
                         return ExitCode::FAILURE;
                     }
                 }
+            } else if args.cron {
+                for cron in &result.crons {
+                    println!("{cron}");
+                }
+                for diagnostic in &result.diagnostics {
+                    if matches!(
+                        diagnostic.code.as_str(),
+                        "unsupported-cron" | "unsupported-export" | "cron-unbounded"
+                    ) || diagnostic.severity == what_time::Severity::error
+                    {
+                        eprintln!("[{}] {}", diagnostic.code, diagnostic.message);
+                    }
+                }
+                // Exit 1 when the text has no schedule cron can state.
+                if result.crons.is_empty() {
+                    return ExitCode::FAILURE;
+                }
+                return ExitCode::SUCCESS;
             } else {
                 if result.occurrences.is_empty() {
                     println!("no occurrences");
@@ -186,6 +208,9 @@ fn main() -> ExitCode {
                 }
                 for rule in &result.rrules {
                     println!("{rule}");
+                }
+                for cron in &result.crons {
+                    println!("CRON:{cron}");
                 }
                 for diagnostic in &result.diagnostics {
                     if diagnostic.severity == what_time::Severity::error {

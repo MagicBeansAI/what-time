@@ -19,7 +19,7 @@ fn context(reference: &str, time_zone: &str, limit: i64) -> what_time::ParseCont
     }
 }
 
-/// Full parse: occurrences, diagnostics, rrules, timings.
+/// Full parse: occurrences, diagnostics, rrules, crons, timings.
 #[wasm_bindgen]
 pub fn parse(text: &str, reference: &str, time_zone: &str, limit: i64, date_order: &str) -> String {
     let order = if date_order == "DMY" {

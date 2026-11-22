@@ -128,6 +128,84 @@ fn schedule_corpora_match() {
     );
 }
 
+#[derive(Deserialize)]
+struct CronCase {
+    id: String,
+    text: String,
+    crons: Vec<String>,
+    /// The `RRULE:` line of each rule, pinned where cron has no expression.
+    rrules: Option<Vec<String>>,
+}
+
+/// Cron cases the model does not yet read correctly, by id; the same
+/// contract as `KNOWN_GAPS`.
+const KNOWN_CRON_GAPS: [&str; 0] = [];
+
+/// Recurring phrases through the whole pipeline — model, compiler,
+/// resolver, exporters — against authored cron expressions. The reference
+/// is Sunday 2026-11-22, 15:30 in Kolkata.
+#[test]
+fn cron_corpus_matches() {
+    let parser = Parser::new(Default::default());
+    let context = ParseContext {
+        reference: "2026-11-22T10:00:00Z".into(),
+        time_zone: "Asia/Kolkata".into(),
+        limit: Some(5),
+        ..Default::default()
+    };
+    let cases: Vec<CronCase> = read_lines("cron")
+        .iter()
+        .map(|line| serde_json::from_str(line).unwrap())
+        .collect();
+    assert!(cases.len() >= 50, "expected the full cron corpus");
+    let mut mismatches = Vec::new();
+    for case in &cases {
+        let result = parser.parse(&case.text, &context).unwrap();
+        let rules: Vec<String> = result
+            .rrules
+            .iter()
+            .filter_map(|rule| rule.lines().last().map(String::from))
+            .collect();
+        let matches = result.crons == case.crons
+            && case.rrules.as_ref().is_none_or(|expected| &rules == expected)
+            && !result.occurrences.is_empty()
+            // No expression must come with its reason.
+            && (!case.crons.is_empty()
+                || result
+                    .diagnostics
+                    .iter()
+                    .any(|value| value.code == "unsupported-cron"));
+        if matches == KNOWN_CRON_GAPS.contains(&case.id.as_str()) {
+            mismatches.push(format!(
+                "{} {:?}: expected {:?} {:?}, got {:?} {:?} ({:?})",
+                case.id,
+                case.text,
+                case.crons,
+                case.rrules,
+                result.crons,
+                rules,
+                result
+                    .diagnostics
+                    .iter()
+                    .map(|value| value.code.as_str())
+                    .collect::<Vec<_>>()
+            ));
+        }
+    }
+    assert!(
+        mismatches.is_empty(),
+        "{} mismatching cron cases:\n{}",
+        mismatches.len(),
+        mismatches.join("\n")
+    );
+    eprintln!(
+        "cron eval: {}/{} cases match ({} known gap(s) expected to fail)",
+        cases.len() - KNOWN_CRON_GAPS.len(),
+        cases.len(),
+        KNOWN_CRON_GAPS.len()
+    );
+}
+
 #[test]
 fn rejects_malformed_or_ambiguous_input() {
     let parser = ScheduleParser::new(Default::default());

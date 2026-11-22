@@ -3,7 +3,9 @@
 use crate::calendar::{LocalPeriod, add_civil, resolve_dates, week_beginning};
 use crate::clock::resolve_time;
 use crate::exclusions::{excluded_weekdays, exclusion_filter};
-use crate::occurrence::{NumericOccurrence, ResolutionContext, add_duration, resolve_occurrence};
+use crate::occurrence::{
+    NumericOccurrence, ResolutionContext, add_duration, at_time, resolve_occurrence,
+};
 use crate::types::{Clause, Frequency, Recurrence, Unit, WEEKDAYS, WeekStart};
 use crate::zoned::{
     Civil, add_days, civil, day_number, day_of_week, days_in_month, utc, zoned_to_epoch,
@@ -18,6 +20,57 @@ pub struct RecurrenceExpansion {
     #[allow(dead_code)]
     pub excluded: Vec<NumericOccurrence>,
     pub date_excluded: Vec<NumericOccurrence>,
+    /// For a sub-daily rule confined to a daily clock window ("every 15
+    /// minutes between 9am and 6pm"): each firing time of day, in seconds
+    /// from the window day's midnight, with its first occurrence. Exports
+    /// build one rule per group of slots.
+    pub slots: Option<Vec<(i64, NumericOccurrence)>>,
+}
+
+/// The step of a sub-daily rule, in minutes.
+pub fn sub_daily_step(rule: &Recurrence) -> Option<i64> {
+    match rule.freq {
+        Frequency::minutely => Some(rule.interval),
+        Frequency::hourly => Some(rule.interval * 60),
+        _ => None,
+    }
+}
+
+/// The daily firing times of a sub-daily rule with a clock window, as
+/// seconds from the window day's midnight (past 86 400 when the window
+/// crosses midnight). The window includes both of its boundaries: "every 2
+/// hours from 9am to 5pm" fires at 9, 11, 1, 3 and 5.
+pub fn window_times(
+    clause: &Clause,
+    rule: &Recurrence,
+    options: &crate::types::ResolveOptions,
+) -> Result<Option<Vec<f64>>, String> {
+    let Some(step) = sub_daily_step(rule) else {
+        return Ok(None);
+    };
+    let Some(time) = &clause.time else {
+        return Ok(None);
+    };
+    let (start, end) = resolve_time(time, options)?;
+    let open_end = time.open == Some(crate::types::OpenBound::end);
+    let (end, inclusive) = match end {
+        // "every hour after 6pm" runs to the end of that day.
+        None if open_end => (86_400.0, false),
+        None => return Ok(None),
+        Some(end) if end == start => {
+            return Err("An hourly recurrence window needs distinct clock boundaries.".into());
+        }
+        Some(end) if end > start => (end, true),
+        Some(end) => (end + 86_400.0, true),
+    };
+    let step = step as f64 * 60.0;
+    let mut times = Vec::new();
+    let mut value = start;
+    while (value < end || (inclusive && value == end)) && value < start + 86_400.0 {
+        times.push(value);
+        value += step;
+    }
+    Ok(Some(times))
 }
 
 pub fn hours_for_rule(rule: &Recurrence) -> Option<Vec<i64>> {
@@ -38,13 +91,63 @@ pub fn normalize_recurrence(
     let Some(times_per) = rule.times_per else {
         return Ok(rule.clone());
     };
+    if times_per == 1 {
+        // "once a month" is the plain rule.
+        let mut normalized = rule.clone();
+        normalized.times_per = None;
+        return Ok(normalized);
+    }
     let maximum = match rule.freq {
         Frequency::weekly => 7,
         Frequency::daily => 24,
+        Frequency::monthly => 4,
+        Frequency::yearly => 12,
+        Frequency::hourly => 60,
         _ => 0,
     };
-    if !(1..=maximum).contains(&times_per) {
-        return Err("Frequency counts need 1–7 times per week or 1–24 times per day.".into());
+    if !(1..=maximum).contains(&times_per)
+        || (rule.freq == Frequency::yearly && 12 % times_per != 0)
+        || (rule.freq == Frequency::hourly && (60 % times_per != 0 || rule.interval != 1))
+    {
+        return Err(
+            "Frequency counts need 1–7 times per week, 1–24 per day, 1–4 per month, an even split of the year, or an even split of the hour."
+                .into(),
+        );
+    }
+    if rule.freq == Frequency::hourly {
+        // "twice an hour" is every 30 minutes.
+        let mut normalized = rule.clone();
+        normalized.freq = Frequency::minutely;
+        normalized.interval = 60 / times_per;
+        normalized.times_per = None;
+        return Ok(normalized);
+    }
+    if rule.freq == Frequency::monthly {
+        let mut normalized = rule.clone();
+        if rule.by_month_day.is_none() && rule.by_day.is_none() {
+            normalized.by_month_day = Some(
+                (0..times_per)
+                    .map(|index| 1 + index * 28 / times_per)
+                    .collect(),
+            );
+        }
+        normalized.times_per = None;
+        return Ok(normalized);
+    }
+    if rule.freq == Frequency::yearly {
+        let mut normalized = rule.clone();
+        if rule.by_month.is_none() {
+            normalized.by_month = Some(
+                (0..times_per)
+                    .map(|index| 1 + index * 12 / times_per)
+                    .collect(),
+            );
+            if rule.by_month_day.is_none() && rule.by_day.is_none() {
+                normalized.by_month_day = Some(vec![1]);
+            }
+        }
+        normalized.times_per = None;
+        return Ok(normalized);
     }
     if rule.freq == Frequency::weekly && rule.by_day.is_none() {
         let first_day = if week_start == WeekStart::SU { 6 } else { 0 };
@@ -138,6 +241,10 @@ fn matches(date: &Civil, anchor: &Civil, rule: &Recurrence, anchor_week: i64) ->
     }
 
     match rule.freq {
+        Frequency::minutely => {
+            let minutes = ((utc(date) - utc(anchor)) / 60_000.0).round();
+            minutes as i64 % rule.interval == 0
+        }
         Frequency::hourly => {
             let hours = ((utc(date) - utc(anchor)) / 3_600_000.0).round();
             hours as i64 % rule.interval == 0
@@ -204,43 +311,6 @@ fn candidate(
             end: None,
             open: None,
         });
-        if let Some(time) = &clause.time {
-            let (start, end) = resolve_time(time, context.options)?;
-            if let Some(end) = end {
-                if end == start {
-                    return Err(
-                        "An hourly recurrence window needs distinct clock boundaries.".into(),
-                    );
-                }
-                let length = if end > start {
-                    end - start
-                } else {
-                    end - start + 86_400.0
-                };
-                if length == 86_400.0 {
-                    event.duration = Some(crate::types::Duration {
-                        components: None,
-                        amount: 1.0,
-                        unit: Unit::day,
-                    });
-                } else {
-                    let end_civil = add_civil(date, length / 60.0, Unit::minute);
-                    event.time = Some(crate::types::TimeSpec {
-                        start: crate::types::ClockTime::Hm {
-                            hour: date.hour as i64,
-                            minute: date.minute as i64,
-                            second: Some(date.second as i64),
-                        },
-                        end: Some(crate::types::ClockTime::Hm {
-                            hour: end_civil.hour as i64,
-                            minute: end_civil.minute as i64,
-                            second: Some(end_civil.second as i64),
-                        }),
-                        open: None,
-                    });
-                }
-            }
-        }
     }
     // The recurrence chooses the date; one-off weekday roll-forward must not
     // run again.
@@ -296,7 +366,14 @@ pub fn expand_recurrence(
         Some(start) => resolve_dates(Some(start), &local_reference, options)?[0].start,
         None => local_reference,
     };
-    let generated_clock = rule.freq == Frequency::hourly || hours_for_rule(&rule).is_some();
+    let sub_daily = sub_daily_step(&rule).is_some();
+    let generated_clock = sub_daily || hours_for_rule(&rule).is_some();
+    let clock_unit = if rule.freq == Frequency::minutely {
+        Unit::minute
+    } else {
+        Unit::hour
+    };
+    let window = window_times(&clause, &rule, options)?;
     if rule.freq == Frequency::daily && rule.times_per.is_some() && clause.time.is_some() {
         return Err(
             "A daily frequency count needs distinct times; it cannot share one fixed clock.".into(),
@@ -307,14 +384,20 @@ pub fn expand_recurrence(
     } else {
         context.reference
     };
-    let steps_per_day: i64 = if generated_clock { 24 } else { 1 };
-    let mut beginning = if rule.freq == Frequency::hourly {
+    let steps_per_day: i64 = if !generated_clock {
+        1
+    } else if clock_unit == Unit::minute {
+        1440
+    } else {
+        24
+    };
+    let mut beginning = if sub_daily {
         requested
     } else {
         requested.start_of_day()
     };
-    if generated_clock && clause.time.is_some() {
-        let seconds = resolve_time(clause.time.as_ref().unwrap(), options)?.0;
+    if generated_clock && let Some(time) = &clause.time {
+        let seconds = resolve_time(time, options)?.0;
         beginning = Civil {
             hour: (seconds / 3600.0).floor() as i32,
             minute: ((seconds / 60.0).floor() % 60.0) as i32,
@@ -347,6 +430,23 @@ pub fn expand_recurrence(
         }
         until = until.min(add_duration(requested_instant, span, &options.time_zone)?);
     }
+    if let Some(times) = &window {
+        return expand_window(
+            &clause,
+            &rule,
+            times,
+            &context,
+            WindowBounds {
+                requested,
+                requested_instant,
+                until,
+                horizon,
+                limit,
+            },
+            &is_excluded,
+            &is_pattern_excluded,
+        );
+    }
     let mut seed_rule = rule.clone();
     seed_rule.interval = 1;
     let mut first: Option<NumericOccurrence> = None;
@@ -362,7 +462,7 @@ pub fn expand_recurrence(
             &beginning,
             offset as f64,
             if generated_clock {
-                Unit::hour
+                clock_unit
             } else {
                 Unit::day
             },
@@ -392,6 +492,7 @@ pub fn expand_recurrence(
             until: None,
             excluded: Vec::new(),
             date_excluded: Vec::new(),
+            slots: None,
         });
     }
     let last_day = day_number(&civil(horizon.min(until), &options.time_zone)?);
@@ -412,7 +513,10 @@ pub fn expand_recurrence(
 
     let scan_limit: i64 = 100_000 * steps_per_day;
     // With one weekday, the intervening days cannot satisfy the rule.
-    let step: i64 = if !generated_clock
+    let step: i64 = if sub_daily {
+        // Every occurrence sits a whole number of intervals from the anchor.
+        rule.interval
+    } else if !generated_clock
         && rule.freq == Frequency::weekly
         && rule.by_day.as_ref().is_none_or(|days| days.len() == 1)
     {
@@ -426,7 +530,7 @@ pub fn expand_recurrence(
             &anchor,
             offset as f64,
             if generated_clock {
-                Unit::hour
+                clock_unit
             } else {
                 Unit::day
             },
@@ -472,6 +576,7 @@ pub fn expand_recurrence(
                 excluded,
                 date_excluded,
                 truncated: true,
+                slots: None,
             });
         }
         if rule.count.is_some_and(|rule_count| count >= rule_count) {
@@ -485,7 +590,7 @@ pub fn expand_recurrence(
             &anchor,
             offset as f64,
             if generated_clock {
-                Unit::hour
+                clock_unit
             } else {
                 Unit::day
             },
@@ -504,5 +609,145 @@ pub fn expand_recurrence(
         excluded,
         date_excluded,
         truncated: false,
+        slots: None,
+    })
+}
+
+struct WindowBounds {
+    requested: Civil,
+    requested_instant: f64,
+    until: f64,
+    horizon: f64,
+    limit: usize,
+}
+
+/// Expands a sub-daily rule confined to a daily clock window. The window
+/// restarts on every eligible day, so each day fires at the same clock
+/// times whatever the step.
+fn expand_window(
+    clause: &Clause,
+    rule: &Recurrence,
+    times: &[f64],
+    context: &ResolutionContext,
+    bounds: WindowBounds,
+    is_excluded: &crate::exclusions::ExclusionFilter,
+    is_pattern_excluded: &crate::exclusions::ExclusionFilter,
+) -> Result<RecurrenceExpansion, String> {
+    let options = context.options;
+    let WindowBounds {
+        requested,
+        requested_instant,
+        until,
+        horizon,
+        limit,
+    } = bounds;
+    // The step is the sub-daily interval; days are selected by the BY* parts.
+    let mut day_rule = rule.clone();
+    day_rule.freq = Frequency::daily;
+    day_rule.interval = 1;
+    let overnight = times.iter().any(|value| *value >= 86_400.0);
+    let first_day = add_days(
+        &requested.start_of_day(),
+        if overnight { -1.0 } else { 0.0 },
+    );
+    let instant = |day: &Civil, seconds: f64| -> Result<Option<NumericOccurrence>, String> {
+        let start = match at_time(day, seconds, &options.time_zone) {
+            Ok(start) => start,
+            // A clock time inside a DST gap does not occur that day.
+            Err(_) => return Ok(None),
+        };
+        let end = match &clause.duration {
+            Some(duration) => Some(add_duration(start, duration, &options.time_zone)?),
+            None => None,
+        };
+        Ok(Some(NumericOccurrence {
+            start,
+            end,
+            open: None,
+            all_day: false,
+            clause: context.clause_index,
+        }))
+    };
+
+    let mut occurrences: Vec<NumericOccurrence> = Vec::new();
+    let mut excluded: Vec<NumericOccurrence> = Vec::new();
+    let mut date_excluded: Vec<NumericOccurrence> = Vec::new();
+    let mut slots: Vec<Option<NumericOccurrence>> = vec![None; times.len()];
+    let mut first: Option<NumericOccurrence> = None;
+    let mut count: i64 = 0;
+    let mut truncated = false;
+    let mut finished = false;
+    let end = horizon.min(until);
+
+    'days: for offset in 0..366 * 8 {
+        let day = add_days(&first_day, offset as f64);
+        if !matches(&day, &day, &day_rule, 0) {
+            continue;
+        }
+        let skipped = is_excluded.excludes(&day);
+        for (index, seconds) in times.iter().enumerate() {
+            let Some(occurrence) = instant(&day, *seconds)? else {
+                continue;
+            };
+            if occurrence.start < requested_instant {
+                continue;
+            }
+            if skipped {
+                if !finished && occurrence.start < end {
+                    excluded.push(occurrence.clone());
+                    if !is_pattern_excluded.excludes(&day) {
+                        date_excluded.push(occurrence);
+                    }
+                }
+                continue;
+            }
+            if occurrence.start >= until {
+                break 'days;
+            }
+            if slots[index].is_none() {
+                slots[index] = Some(occurrence.clone());
+            }
+            if first.is_none() {
+                first = Some(occurrence.clone());
+            }
+            if finished {
+                continue;
+            }
+            if occurrence.start >= end || rule.count.is_some_and(|limit| count >= limit) {
+                finished = true;
+                continue;
+            }
+            count += 1;
+            if occurrences.len() >= limit {
+                truncated = true;
+                finished = true;
+                // One past the limit, as the caller's truncation check expects.
+                occurrences.push(occurrence);
+                continue;
+            }
+            occurrences.push(occurrence);
+        }
+        if finished && slots.iter().all(Option::is_some) {
+            break;
+        }
+    }
+    if first.is_none() {
+        return Err("No eligible recurrence start within eight years.".into());
+    }
+    let slots = times
+        .iter()
+        .zip(slots)
+        .filter_map(|(seconds, occurrence)| {
+            occurrence.map(|occurrence| ((*seconds as i64).rem_euclid(86_400), occurrence))
+        })
+        .collect();
+    Ok(RecurrenceExpansion {
+        occurrences,
+        first,
+        truncated,
+        until: if until.is_finite() { Some(until) } else { None },
+        excluded,
+        date_excluded,
+        slots: Some(slots),
     })
 }

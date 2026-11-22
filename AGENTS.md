@@ -24,8 +24,15 @@ trains its model. Keep naming kebab-case and the layout as-is.
 cargo test --manifest-path rust/Cargo.toml   # library suite + gold corpora + parity gates
 rust/site/build.sh                           # wasm + static playground rebuild
 cargo build --release -p what-time --example featurize   # required before training
+cd packages/training && uv run python torch/fetch_prose.py   # once per checkout: background prose
 cd packages/training && pnpm train           # retrain + export weights
+# or keep the export aside until it passes cargo test:
+uv run python torch/train_transformer.py --run <run> --candidate && uv run python torch/promote.py <run>
 ```
+
+After promoting weights, refresh every embedded copy of the wasm:
+`rust/site/build.sh`, then copy `rust/site/wasm/what_time_wasm{.js,.d.ts,_bg.wasm,_bg.wasm.d.ts}`
+into `packages/what-time/wasm/`.
 
 ## Rules
 
@@ -33,6 +40,11 @@ cd packages/training && pnpm train           # retrain + export weights
   npm wrapper and the wasm bindings must stay thin.
 - Never train on the runtime parser's own output. Supervision comes from
   the generators or gate-checked external corpora.
+- `torch/validate_llm_corpus.py` takes no flags: any run rewrites
+  `data/llm/accepted.jsonl` from `raw.jsonl` alone, dropping the archived and
+  supplement rows merged into the training pool. Copy the pool aside before
+  running it (a training run's `data/synth/<run>/llm.jsonl` holds every
+  non-held-out pool row if it is ever lost).
 - LLM-authored corpus data must pass `torch/validate_llm_corpus.py` before
   training and stays ≤25% of any training mix.
 - Keep `natural.py::RESERVED` phrases out of training corpora; they back

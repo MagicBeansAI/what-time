@@ -1,20 +1,21 @@
-//! CPU inference for the experimental transformer tagger.
+//! CPU inference for the transformer tagger.
 //!
 //! Mirrors the training-time network op for op: summed
 //! feature-row embeddings, learned positions, pre-LayerNorm self-attention
-//! blocks with tanh-GELU feed-forward, mean-pooled context head. Like
-//! `cpu.rs`, dots accumulate in f64 and round to f32 so the exported parity
-//! fixtures match within the eval gate. The weights ship int8-quantized
-//! (symmetric per-tensor) in `assets/weights-transformer.json`.
+//! blocks with tanh-GELU feed-forward, mean-pooled context head. Matrix
+//! products accumulate in f32 across several lanes so they vectorize;
+//! normalization, softmax and activations run in f64. The exported parity
+//! fixtures gate the result. The weights ship int8-quantized (symmetric
+//! per-tensor) in `assets/weights-transformer.json`.
 
 use std::sync::OnceLock;
 
 use crate::model::predictions::Predictions;
-use crate::tokenizer::feature_rows;
+use crate::tokenizer::{FEATURE_ROWS, ROWS_PER_TOKEN, feature_rows};
 use crate::types::RawToken;
 
-const ROWS_PER_TOKEN: usize = 17;
-const SOURCE_ROWS: usize = 581; // 0..=580, with 580 as padding
+/// The tokenizer's row ids, `0..=FEATURE_ROWS`, the last one padding.
+const SOURCE_ROWS: usize = FEATURE_ROWS + 1;
 
 pub struct TransformerWeights {
     pub d_model: usize,
@@ -31,6 +32,8 @@ pub struct TransformerWeights {
     pub(crate) head: (Vec<f32>, Vec<f32>),   // [2d, 64]
     pub(crate) output: (Vec<f32>, Vec<f32>), // [64, role_classes + 1]
     pub(crate) blocks: Vec<BlockWeights>,
+    /// Tokenizer row id -> embedding row; `feature_rows` marks padding.
+    pub(crate) row_map: Vec<u16>,
 }
 
 pub(crate) struct BlockWeights {
@@ -151,6 +154,9 @@ pub(crate) fn load() -> Result<&'static TransformerWeights, String> {
                 ffn,
                 feature_rows,
                 role_classes,
+                row_map: (0..SOURCE_ROWS)
+                    .map(|row| embedding_row(row as u16, feature_rows))
+                    .collect(),
                 boundary_threshold: document["boundaryThreshold"].as_f64().unwrap_or(1.75),
                 embedding: tensor(tensors, "embedding")?.0,
                 position: tensor(tensors, "position")?.0,
@@ -170,41 +176,74 @@ pub fn available() -> bool {
     load().is_ok()
 }
 
-fn compact_feature(row: u16) -> u16 {
+/// Maps a tokenizer row onto a model's embedding table. The current table
+/// takes every row as is. Two earlier, smaller tables stay loadable: 580
+/// rows (no lexical region) and 324 rows (word hashes folded, consonant
+/// hashes dropped).
+fn embedding_row(row: u16, feature_rows: usize) -> u16 {
+    let padding = feature_rows as u16;
+    if feature_rows >= FEATURE_ROWS {
+        return row;
+    }
+    if row >= 580 {
+        return padding;
+    }
+    if feature_rows >= 580 {
+        return row;
+    }
     if row < 140 {
         row
     } else if row < 396 {
         140 + ((row - 140) % 128)
     } else if row < 524 {
-        324
+        padding
     } else {
         row - 256
     }
 }
 
-pub(crate) fn feature_map() -> &'static Vec<u16> {
-    static MAP: OnceLock<Vec<u16>> = OnceLock::new();
-    MAP.get_or_init(|| {
-        (0..SOURCE_ROWS)
-            .map(|row| compact_feature(row as u16))
-            .collect()
-    })
+/// Lanes in a dot product: independent f32 partial sums the compiler keeps
+/// in vector registers. Like PyTorch's own reductions, the sum is f32 but
+/// never one long serial chain, so rounding stays well inside the parity
+/// gate.
+const LANES: usize = 8;
+
+fn dot(a: &[f32], b: &[f32]) -> f32 {
+    let n = a.len().min(b.len());
+    let (a, b) = (&a[..n], &b[..n]);
+    let mut lanes = [0f32; LANES];
+    let left = a.chunks_exact(LANES);
+    let right = b.chunks_exact(LANES);
+    let mut sum = 0f32;
+    for (x, y) in left.remainder().iter().zip(right.remainder()) {
+        sum += x * y;
+    }
+    for (x, y) in left.zip(right) {
+        for lane in 0..LANES {
+            lanes[lane] += x[lane] * y[lane];
+        }
+    }
+    let mut pairs = LANES;
+    while pairs > 1 {
+        pairs /= 2;
+        for lane in 0..pairs {
+            lanes[lane] += lanes[lane + pairs];
+        }
+    }
+    lanes[0] + sum
 }
 
 /// out[j] = x · W[j] + b[j] with W stored [out, in] row-major.
 fn linear(x: &[f32], weight: &[f32], bias: &[f32], out_dim: usize, in_dim: usize, out: &mut [f32]) {
+    let x = &x[..in_dim];
     for j in 0..out_dim {
-        let mut sum = f64::from(bias[j]);
-        let base = j * in_dim;
-        for (i, value) in x.iter().take(in_dim).enumerate() {
-            sum += f64::from(*value) * f64::from(weight[base + i]);
-        }
-        out[j] = sum as f32;
+        out[j] = bias[j] + dot(x, &weight[j * in_dim..(j + 1) * in_dim]);
     }
 }
 
 /// out[j] = x · W[:, j] + b[j] for W stored [in, out] row-major (the three
 /// raw head parameters are initialized transposed relative to nn.Linear).
+/// Rows of W are added in turn, so every pass reads memory in order.
 fn linear_t(
     x: &[f32],
     weight: &[f32],
@@ -213,12 +252,13 @@ fn linear_t(
     in_dim: usize,
     out: &mut [f32],
 ) {
-    for j in 0..out_dim {
-        let mut sum = f64::from(bias[j]);
-        for i in 0..in_dim {
-            sum += f64::from(x[i]) * f64::from(weight[i * out_dim + j]);
+    let out = &mut out[..out_dim];
+    out.copy_from_slice(&bias[..out_dim]);
+    for (i, value) in x.iter().take(in_dim).enumerate() {
+        let row = &weight[i * out_dim..(i + 1) * out_dim];
+        for (slot, w) in out.iter_mut().zip(row) {
+            *slot += value * w;
         }
-        out[j] = sum as f32;
     }
 }
 
@@ -241,10 +281,11 @@ fn layer_norm(x: &[f32], weight: &[f32], bias: &[f32], out: &mut [f32]) {
     }
 }
 
+/// tanh-GELU in f32, as the training network computes it.
 fn gelu_tanh(value: f32) -> f32 {
-    let v = f64::from(value);
-    let inner = (2.0 / std::f64::consts::PI).sqrt() * (v + 0.044715 * v.powi(3));
-    (0.5 * v * (1.0 + inner.tanh())) as f32
+    const ROOT_TWO_OVER_PI: f32 = 0.797_884_6;
+    let inner = ROOT_TWO_OVER_PI * (value + 0.044715 * value * value * value);
+    0.5 * value * (1.0 + inner.tanh())
 }
 
 fn sigmoid(value: f32) -> f32 {
@@ -266,11 +307,21 @@ fn softmax(scores: &mut [f32]) {
     }
 }
 
-/// One sequence of mapped feature rows (17 per token), one label per token.
+/// One sequence of tokenizer feature rows (`ROWS_PER_TOKEN` per token), one
+/// label per token.
 pub fn infer_rows(rows: &[u16]) -> Result<Predictions, crate::Error> {
+    infer_rows_per_token(rows, ROWS_PER_TOKEN)
+}
+
+/// As [`infer_rows`], for row blocks of another width (parity fixtures
+/// record the width they were exported with).
+pub fn infer_rows_per_token(
+    rows: &[u16],
+    rows_per_token: usize,
+) -> Result<Predictions, crate::Error> {
     let model = load().map_err(crate::Error::model_unavailable)?;
-    let map = feature_map();
-    let count = rows.len() / ROWS_PER_TOKEN;
+    let map = &model.row_map;
+    let count = rows.len() / rows_per_token;
     let d = model.d_model;
     let heads = model.heads;
     let d_head = d / heads;
@@ -285,8 +336,13 @@ pub fn infer_rows(rows: &[u16]) -> Result<Predictions, crate::Error> {
     let mut embedded = vec![0f32; count * d];
     for token in 0..count {
         let mut sum = vec![0f64; d];
-        for feature in 0..ROWS_PER_TOKEN {
-            let mapped = map[rows[token * ROWS_PER_TOKEN + feature] as usize];
+        for feature in 0..rows_per_token {
+            let source = rows[token * rows_per_token + feature] as usize;
+            // Rows past this table (a fixture padded for a wider one) are padding.
+            let mapped = map
+                .get(source)
+                .copied()
+                .unwrap_or(model.feature_rows as u16);
             if mapped as usize == model.feature_rows {
                 continue;
             }
@@ -329,14 +385,12 @@ pub fn infer_rows(rows: &[u16]) -> Result<Predictions, crate::Error> {
             // residual: x += attn_out(attention(q[token], k[*], v[*]))
             for head in 0..heads {
                 let q_base = token * 3 * d + head * d_head;
+                let query = &qkv[q_base..q_base + d_head];
+                let scale = 1.0 / (d_head as f32).sqrt();
                 for other in 0..count {
                     let k_base = other * 3 * d + d + head * d_head;
-                    let mut dot = 0f64;
-                    for i in 0..d_head {
-                        dot += f64::from(qkv[q_base + i]) * f64::from(qkv[k_base + i]);
-                    }
                     attn_scores[head * count * count + token * count + other] =
-                        (dot / (d_head as f64).sqrt()) as f32;
+                        dot(query, &qkv[k_base..k_base + d_head]) * scale;
                 }
             }
             attended.iter_mut().for_each(|value| *value = 0.0);
@@ -344,13 +398,13 @@ pub fn infer_rows(rows: &[u16]) -> Result<Predictions, crate::Error> {
                 let base = head * count * count + token * count;
                 softmax(&mut attn_scores[base..base + count]);
                 let v_offset = 2 * d + head * d_head;
-                for i in 0..d_head {
-                    let mut sum = 0f64;
-                    for other in 0..count {
-                        sum += f64::from(attn_scores[base + other])
-                            * f64::from(qkv[other * 3 * d + v_offset + i]);
+                let target = &mut attended[head * d_head..(head + 1) * d_head];
+                for other in 0..count {
+                    let weight = attn_scores[base + other];
+                    let value = &qkv[other * 3 * d + v_offset..other * 3 * d + v_offset + d_head];
+                    for (slot, v) in target.iter_mut().zip(value) {
+                        *slot += weight * v;
                     }
-                    attended[head * d_head + i] = sum as f32;
                 }
             }
             delta.iter_mut().for_each(|value| *value = 0.0);
@@ -490,9 +544,9 @@ pub fn infer_rows(rows: &[u16]) -> Result<Predictions, crate::Error> {
 
 /// Token-level entry: builds feature rows and runs the forward pass.
 pub fn infer(tokens: &[RawToken]) -> Result<Predictions, crate::Error> {
-    let mut rows = vec![580u16; tokens.len() * ROWS_PER_TOKEN];
+    let mut rows = vec![FEATURE_ROWS as u16; tokens.len() * ROWS_PER_TOKEN];
     for (index, token) in tokens.iter().enumerate() {
-        for (feature, row) in feature_rows(token.features).iter().enumerate() {
+        for (feature, row) in feature_rows(token).iter().enumerate() {
             rows[index * ROWS_PER_TOKEN + feature] = *row;
         }
     }

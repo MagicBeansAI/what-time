@@ -51,7 +51,15 @@ export interface Diagnostic {
 
 export interface ParseResult {
   occurrences: TimeRange[];
+  /** RFC 5545 rules, one `DTSTART…\nRRULE:…` block per recurring rule. */
   rrules: string[];
+  /**
+   * Five-field cron expressions (`minute hour day-of-month month
+   * day-of-week`, weekday names) in the caller's time zone, for every
+   * recurring rule cron can state exactly. A rule it cannot state adds an
+   * `unsupported-cron` diagnostic and stays available in `rrules`.
+   */
+  crons: string[];
   truncated: boolean;
   diagnostics: Diagnostic[];
   timings: {
@@ -72,6 +80,11 @@ export interface Expression {
 
 let ready: Promise<void> | null = null;
 
+/** The smallest module using a SIMD instruction: `(func (result v128) i32.const 0 i8x16.splat)`. */
+const SIMD_PROBE = new Uint8Array([
+  0, 97, 115, 109, 1, 0, 0, 0, 1, 5, 1, 96, 0, 1, 123, 3, 2, 1, 0, 10, 8, 1, 6, 0, 65, 0, 253, 15, 11,
+]);
+
 /**
  * Loads and instantiates the wasm module once. In browsers and bundlers
  * the glue fetches its own module URL; under Node (SSR, tests) there is no
@@ -87,7 +100,13 @@ export function init(): Promise<void> {
       // built at runtime so browser bundlers never try to resolve them.
       const isNode =
         typeof process !== "undefined" && process.versions?.node !== undefined;
-      if (!isNode) throw new Error("wasm module could not be loaded");
+      if (!isNode) {
+        throw new Error(
+          WebAssembly.validate(SIMD_PROBE)
+            ? "wasm module could not be loaded"
+            : "what-time needs WebAssembly SIMD (Chrome/Edge 91+, Firefox 89+, Safari 16.4+, Node 16.4+)",
+        );
+      }
       const fsModule = "node:fs/prom" + "ises";
       const urlModule = "node:u" + "rl";
       const { readFile } = (await import(/* @vite-ignore */ fsModule)) as typeof import("node:fs/promises");
