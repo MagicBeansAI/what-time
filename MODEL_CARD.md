@@ -62,21 +62,32 @@ repeated. Reserved carrier phrases remain excluded from training.
 See [`packages/training/V2_RUN.md`](packages/training/V2_RUN.md) for the
 commands, measured comparison, training proportions and remaining gaps.
 
-## Metrics (current checkpoint — `lex-on`, shipped as v0.3.0)
+## Metrics (current checkpoint — `neg-r1`, shipped as v0.4.1)
 
 Per-build history lives in [`SCORES.md`](SCORES.md).
 
-- Pinned corpora: 632/632 schedule cases (zero known gaps, 37 new
-  recurring-schedule pins), 60/60 cron cases end to end, 15/15 multilingual
-  fixtures, 22/22 end-to-end occurrence cases.
+- Pinned corpora: 661/661 schedule cases (zero known gaps), 60/60 cron
+  cases end to end, 86/86 cron lines read back, 15/15 multilingual
+  fixtures, 22/22 end-to-end occurrence cases, and 100 phrase/zone pairs
+  whose exported cron fires identically under the `cron` crate.
 - Recurrence families (`torch/recurrence_families.py`, never-trained
-  seeds): 1.0000 exact on 4,701 rows.
+  seeds): 0.9989 exact on 4,701 rows, negatives included.
 - LLM held-out: 1.0000 exact token-label/boundary sequences on a 2,000-row
   union slice (1,000 of them from a never-trained external-model corpus).
-- Structural generator held-out: 0.9868 on 5,000 rows (0.9606 before). The
-  slice wraps expressions in carrier sentences reserved from training ("the
-  train leaves at", "the workshop continues"), so it measures unseen
-  carriers.
+- Structural generator held-out: 0.9850 on 5,000 rows (0.9868 for the
+  v0.3.0 weights). The slice wraps expressions in carrier sentences
+  reserved from training ("the train leaves at", "the workshop
+  continues"), so it measures unseen carriers.
+- Negatives: training now includes a family of schedule words that name
+  nothing (publication titles, past events without a date, preferences,
+  "every"/"har" meaning "each"), paired with real schedules that use the
+  same words. On a held-out contrast check written apart from the
+  generator, 22 of 27 non-schedules return nothing (14 for the v0.3.0
+  weights) and 10 of 10 real schedules still parse. A sentence naming a
+  real day, even a past one ("last night was cold"), is a date expression,
+  not a negative.
+- Independent evaluation (271 phrases written without seeing the parser):
+  265 match on the first four occurrences (261 for the v0.3.0 weights).
 - Word-form rows ablation, same data and seed: without them 0.9858
   structural, 0.9938 extra, 0.9985 recurrence, so they add a little on every
   slice and stay.
@@ -86,6 +97,11 @@ Per-build history lives in [`SCORES.md`](SCORES.md).
   network's logits within 2e-3 with identical argmax.
 
 ## Known limitations
+
+- Some mentions still read as schedules: "quarterly earnings beat
+  expectations", "roz roz ki chik chik se thak gaya", "Monday is my
+  favourite day". Callers that create schedules from free text should
+  confirm with the user.
 
 - Seconds and seasons are not schedules: "every 10 seconds" and "every
   summer" return diagnostics. Cron has no seconds field either.

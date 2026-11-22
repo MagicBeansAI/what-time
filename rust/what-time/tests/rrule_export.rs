@@ -42,6 +42,7 @@ fn rule(freq: Frequency, interval: i64) -> Recurrence {
         start: None,
         except: None,
         span: None,
+        until_time: None,
     }
 }
 

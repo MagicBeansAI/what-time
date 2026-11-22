@@ -2,6 +2,39 @@
 
 Short and honest. Scores per build live in [`SCORES.md`](SCORES.md).
 
+## 0.4.1
+
+- Clock exceptions: "every hour except 1pm", "every 30 minutes between 9
+  and 5 except 12:30", "every hour on weekdays except between 12 and 2pm".
+  The window splits around the excluded times (a range is half-open: 2pm
+  fires again), so cron (`0 0-12,14-23 * * *`), RRULE and the preview all
+  agree; days after the exception select the rule's days.
+- End bounds keep their clock: "every 2 hours until 8pm today" stops at
+  20:00 (new optional `untilTime` on a recurrence; RRULE `UNTIL` is that
+  instant); "until 6pm" with no date means today.
+- One-off first/last day of a period: "on the last day of the month",
+  "the first day of next month at 9am".
+- A clock split off by an event word rejoins its rule: "every night
+  before bed at 10:30" is 22:30 daily, "daily after lunch at 2pm" 14:00.
+- "this Saturday" is the coming Saturday, never a day already past; day
+  groups ("this weekend", "last weekdays") keep the calendar week, and
+  `bareWeekday: thisWeek` still gives the strict calendar-week reading.
+- A stray exception marker before the real one ("on weekdays except …")
+  no longer opens an exception of its own.
+- "Monday through Friday" is a day range even when "through" is labeled
+  an end bound; "every quarter hour" is 15 minutes; "monthly on day 25".
+- A bare day group or plural weekday that opens an ordinary sentence is a
+  topic, not a schedule ("weekends go by too fast"); alone, after a
+  preposition, or with a clock it still recurs.
+- Model retrained (`neg-r1`, same 575k architecture) with a negatives
+  family and the new grammar shapes: held-out contrast check 22/27
+  non-schedules empty (was 14/27) with every real schedule kept;
+  independent set 265/271 (was 261); all pinned corpora and the scheduler
+  compatibility test pass; latency unchanged (0.42 ms native).
+- Cron descriptions name hour runs: `0 0-12,14-23 * * *` is "Every hour
+  from midnight to noon and from 2:00 PM to 11:00 PM".
+- Pinned corpora: 661 schedules (+10 closed gaps, +5 negatives).
+
 ## 0.4.0
 
 - **Cron to English**: `parse_cron` / `describe_cron` (Rust), `-x` (CLI),

@@ -1273,6 +1273,7 @@ fn compile_date_and_time(
                 start: None,
                 except: None,
                 span: None,
+                until_time: None,
             });
         } else if period.is_some_and(|(captured, _)| captured == Unit::week) {
             // "friday last week" / "monday next week": anchor the weekday to
@@ -1549,7 +1550,58 @@ fn empty_recurrence(freq: Frequency) -> Recurrence {
         start: None,
         except: None,
         span: None,
+        until_time: None,
     }
+}
+
+/// "on the last day of the month", "the first day of next month": without
+/// a recurrence, the first or last day of a period is that period's edge
+/// ("end of the month"), which resolves to the single day.
+fn period_edge_days(mut tokens: Vec<Token>) -> Vec<Token> {
+    if tokens
+        .iter()
+        .any(|token| matches!(token.label, Role::Recur | Role::Freq | Role::DayGroup))
+    {
+        return tokens;
+    }
+    let Some(position) = tokens.iter().position(|token| {
+        matches!(token.label, Role::Ord | Role::Deictic | Role::Dom)
+            && matches!(
+                token.raw.text.to_lowercase().as_str(),
+                "last" | "first" | "final"
+            )
+    }) else {
+        return tokens;
+    };
+    let is_day = |token: &Token| {
+        matches!(token.label, Role::Unit | Role::DayGroup)
+            && matches!(
+                token.raw.text.to_lowercase().as_str(),
+                "day" | "din" | "दिन"
+            )
+    };
+    let period_follows = tokens[position + 2..]
+        .iter()
+        .find(|token| token.label != Role::O && token.label != Role::Deictic)
+        .is_some_and(|token| {
+            token.label == Role::Unit
+                && matches!(
+                    unit(&token.raw.text.to_lowercase()),
+                    Some(Unit::week | Unit::month | Unit::quarter | Unit::year)
+                )
+        });
+    if !tokens.get(position + 1).is_some_and(is_day) || !period_follows {
+        return tokens;
+    }
+    let edge = if tokens[position].raw.text.eq_ignore_ascii_case("first") {
+        "start"
+    } else {
+        "end"
+    };
+    tokens[position].label = Role::Edge;
+    tokens[position].raw.text = edge.into();
+    tokens[position + 1].label = Role::O;
+    tokens
 }
 
 /// Hindi and Hinglish put a frequency count after its period ("hafte mein
@@ -1588,7 +1640,7 @@ fn compile_clause(
     input: &[Token],
     diagnostics: &mut Vec<Diagnostic>,
     context: &[Token],
-) -> CompileResult<Clause> {
+) -> CompileResult<Vec<Clause>> {
     // "quarter" right after a deictic or recurrence marker names the
     // calendar period ("next quarter", "every quarter"), never a clock
     // offset — the clock sense only exists in "quarter past/to N".
@@ -1640,6 +1692,7 @@ fn compile_clause(
         })
         .collect();
     let relabeled = prepose_frequency_count(relabeled);
+    let relabeled = period_edge_days(relabeled);
     let input: &[Token] = &relabeled;
     let last_meaningful = input.iter().rev().find(|token| token.label != Role::O);
     if let Some(last) = last_meaningful.filter(|token| token.label == Role::RangeEnd) {
@@ -1731,6 +1784,8 @@ fn compile_clause(
     // A clock that arrived inside a bound ("except Wednesday at 9am")
     // belongs to the clause.
     let mut bound_time: Option<TimeSpec> = None;
+    let mut excluded_times: Vec<TimeSpec> = Vec::new();
+    let mut until_time: Option<ClockTime> = None;
 
     let mut index = 0usize;
     while index < tokens.len() {
@@ -2265,11 +2320,60 @@ fn compile_clause(
             // "weekdays except Wednesday at 9am": the clock after an
             // exception is the rule's. A start or end bound's clock is the
             // bound's own ("until 8pm today").
-            if bound_time.is_none() && token.label == Role::Except {
-                bound_time = bound_clause.time;
+            let sub_daily = recurrence
+                .as_ref()
+                .is_some_and(|rule| matches!(rule.freq, Frequency::minutely | Frequency::hourly));
+            // "every hour except 1pm": a clock exception removes those
+            // times from a repeating clock.
+            if token.label == Role::Except
+                && sub_daily
+                && let Some(time) = bound_clause.time.clone()
+            {
+                excluded_times.push(time);
+                // "except between 12 and 2pm on weekdays": the days after a
+                // clock exception select the rule's days.
+                let days = match &bound_clause.date {
+                    None => None,
+                    Some(DateSpec::Weekday {
+                        days,
+                        modifier: None,
+                    }) => Some(days.clone()),
+                    Some(DateSpec::DayGroup {
+                        group,
+                        modifier: None,
+                    }) => Some(if *group == DayGroup::weekday {
+                        WEEKDAYS[..5].to_vec()
+                    } else {
+                        WEEKDAYS[5..].to_vec()
+                    }),
+                    Some(_) => {
+                        return fail(
+                            token,
+                            "unsupported",
+                            "A clock exception can only carry the rule's weekdays.",
+                        );
+                    }
+                };
+                if let (Some(days), Some(rule)) = (days, recurrence.as_mut()) {
+                    rule.by_day = Some(days);
+                }
+                index = end;
+                continue;
             }
-            let Some(date) = bound_clause.date else {
-                return fail(token, "invalid-bound", "A bound needs a date.");
+            if bound_time.is_none() && token.label == Role::Except {
+                bound_time = bound_clause.time.clone();
+            }
+            // "until 8pm today", "until 8pm": the end bound keeps its clock.
+            if token.label == Role::BoundEnd
+                && let Some(time) = &bound_clause.time
+                && time.end.is_none()
+            {
+                until_time = Some(time.start.clone());
+            }
+            let date = match (bound_clause.date, &bound_clause.time, token.label) {
+                (Some(date), _, _) => date,
+                (None, Some(_), Role::BoundEnd) => DateSpec::RelativeDay { offset: 0 },
+                _ => return fail(token, "invalid-bound", "A bound needs a date."),
             };
 
             match token.label {
@@ -2409,10 +2513,112 @@ fn compile_clause(
             // "every 15 minutes for 2 hours": the duration bounds the series.
             rule.span = clause.duration.take();
         }
+        if rule.until.is_some() {
+            rule.until_time = until_time;
+        }
         clause.recurrence = Some(rule);
     }
 
-    Ok(clause)
+    if !excluded_times.is_empty() {
+        return exclude_times(clause, &excluded_times, &input[0]);
+    }
+    Ok(vec![clause])
+}
+
+fn minutes_of(clock: &ClockTime, end: bool) -> Option<i64> {
+    let options = crate::types::ResolveOptions::default();
+    crate::clock::clock_seconds(clock, &options, end)
+        .ok()
+        .map(|seconds| (seconds / 60.0) as i64)
+}
+
+/// Removes excepted clocks from a repeating clock by splitting its daily
+/// window: "every hour except 1pm" is 00:00–12:00 and 14:00–23:00, which
+/// every export states exactly.
+fn exclude_times(clause: Clause, excluded: &[TimeSpec], at: &Token) -> CompileResult<Vec<Clause>> {
+    let unsupported = |message: &str| fail(at, "unsupported", message);
+    let Some(rule) = clause.recurrence.as_ref() else {
+        return unsupported("A clock exception needs a repeating clock.");
+    };
+    let step = match rule.freq {
+        Frequency::minutely => rule.interval,
+        Frequency::hourly => rule.interval * 60,
+        _ => return unsupported("A clock exception needs a repeating clock."),
+    };
+    let (first, last) = match &clause.time {
+        Some(TimeSpec {
+            start,
+            end: Some(end),
+            ..
+        }) => match (minutes_of(start, false), minutes_of(end, true)) {
+            (Some(first), Some(last)) if last > first => (first, last),
+            _ => {
+                return unsupported(
+                    "A clock exception inside an overnight window is not supported.",
+                );
+            }
+        },
+        None if 1440 % step == 0 => (0, 1440 - step),
+        _ => {
+            return unsupported("A clock exception needs a window or a step that divides the day.");
+        }
+    };
+    let removed = |minute: i64| {
+        excluded.iter().any(|time| {
+            let start = minutes_of(&time.start, false);
+            let end = time.end.as_ref().and_then(|end| minutes_of(end, true));
+            match (start, end) {
+                // "except between 12 and 2pm": resume at 2pm.
+                (Some(start), Some(end)) => minute >= start && minute < end,
+                (Some(start), None) => minute == start,
+                _ => false,
+            }
+        })
+    };
+    let kept: Vec<i64> = (0..)
+        .map(|index| first + index * step)
+        .take_while(|minute| *minute <= last)
+        .filter(|minute| !removed(*minute))
+        .collect();
+    if kept.is_empty() {
+        return unsupported("The exception removes every time.");
+    }
+    let mut runs: Vec<Vec<i64>> = Vec::new();
+    for minute in kept {
+        match runs.last_mut() {
+            Some(run) if minute - run[run.len() - 1] == step => run.push(minute),
+            _ => runs.push(vec![minute]),
+        }
+    }
+    let hm = |minute: i64| ClockTime::hm(minute / 60, minute % 60);
+    Ok(runs
+        .into_iter()
+        .map(|run| {
+            let mut part = clause.clone();
+            if run.len() == 1 {
+                part.time = Some(TimeSpec {
+                    start: hm(run[0]),
+                    end: None,
+                    open: None,
+                });
+                if let Some(rule) = part.recurrence.as_mut() {
+                    rule.freq = if rule.by_day.is_some() && rule.by_month_day.is_none() {
+                        Frequency::weekly
+                    } else {
+                        Frequency::daily
+                    };
+                    rule.interval = 1;
+                }
+            } else {
+                part.time = Some(TimeSpec {
+                    start: hm(run[0]),
+                    end: Some(hm(run[run.len() - 1])),
+                    open: None,
+                });
+            }
+            part
+        })
+        .collect())
 }
 
 fn split_expressions(tokens: &[Token]) -> Vec<Vec<Token>> {
@@ -2603,7 +2809,7 @@ fn compile_group(
         }
     }
     if clocks < 2 {
-        return Ok(vec![compile_clause(tokens, diagnostics, context)?]);
+        return compile_clause(tokens, diagnostics, context);
     }
     let has_recurrence = tokens
         .iter()
@@ -2684,11 +2890,12 @@ fn compile_group(
             }
         }
         if groups.len() > 1 {
-            let first = compile_clause(&groups[0], diagnostics, context)?;
-            let mut clauses = vec![first.clone()];
+            let mut clauses = compile_clause(&groups[0], diagnostics, context)?;
+            let first = clauses[0].clone();
             for group in &groups[1..] {
-                let next = compile_clause(group, diagnostics, context)?;
-                clauses.push(merge_clause(&first, next));
+                for next in compile_clause(group, diagnostics, context)? {
+                    clauses.push(merge_clause(&first, next));
+                }
             }
             // "twice a day at 9am and 9pm": the listed clocks are the count.
             let listed = clauses.len() as i64;
@@ -2708,7 +2915,7 @@ fn compile_group(
             return Ok(clauses);
         }
     }
-    Ok(vec![compile_clause(tokens, diagnostics, context)?])
+    compile_clause(tokens, diagnostics, context)
 }
 
 fn compile_expression(text: &str, tokens: Vec<Token>, context: &[Token]) -> Expression {
@@ -2932,6 +3139,33 @@ fn repair_labels(tokens: &[Token]) -> Vec<Token> {
             {
                 repaired[index].label = Role::Dom;
             }
+            // "every quarter hour" / "half hour": a fraction of the hour.
+            _ if matches!(token.raw.text.to_lowercase().as_str(), "quarter" | "half")
+                && token.label != Role::Num
+                && previous.is_some_and(|p| matches!(p.label, Role::Recur | Role::Freq))
+                && next.is_some_and(|n| {
+                    matches!(n.raw.text.to_lowercase().as_str(), "hour" | "hours")
+                }) =>
+            {
+                repaired[index].label = Role::Num;
+            }
+            // "monthly on day 25"
+            Role::Hour
+                if previous.is_some_and(|p| {
+                    matches!(p.raw.text.to_lowercase().as_str(), "day" | "din" | "दिन")
+                }) && !next.is_some_and(|n| {
+                    n.raw.text == ":" || matches!(n.label, Role::Meridiem | Role::Minute)
+                }) =>
+            {
+                repaired[index].label = Role::Dom;
+            }
+            // "Monday through Friday": a range of days, not an end bound.
+            Role::BoundEnd
+                if previous.is_some_and(|p| p.label == Role::Weekday)
+                    && next.is_some_and(|n| n.label == Role::Weekday) =>
+            {
+                repaired[index].label = Role::RangeEnd;
+            }
             Role::Hour
                 if previous.is_some_and(|p| p.raw.text == ":")
                     && before_previous.is_some_and(|p| p.label == Role::Hour) =>
@@ -2949,10 +3183,24 @@ fn repair_labels(tokens: &[Token]) -> Vec<Token> {
                 && token.label != Role::Unit
                 && previous.is_some_and(|p| matches!(p.label, Role::Recur | Role::Deictic))
                 && !next.is_some_and(|n| {
-                    matches!(n.raw.text.to_lowercase().as_str(), "past" | "to" | "of")
+                    matches!(
+                        n.raw.text.to_lowercase().as_str(),
+                        "past" | "to" | "of" | "hour" | "hours"
+                    )
                 }) =>
             {
                 repaired[index].label = Role::Unit;
+            }
+            // "every hour on weekdays except 1pm": an exception marker that
+            // stands apart from a later one is not the exception.
+            Role::Except
+                if !previous.is_some_and(|p| p.label == Role::Except)
+                    && !next.is_some_and(|n| n.label == Role::Except)
+                    && words[position + 1..]
+                        .iter()
+                        .any(|&later| tokens[later].label == Role::Except) =>
+            {
+                repaired[index].label = Role::Glue;
             }
             Role::O
                 if token.raw.text.eq_ignore_ascii_case("everyday")
@@ -2974,14 +3222,156 @@ pub fn compile_predictions(
 ) -> Vec<Expression> {
     let repaired = repair_labels(tokens);
     let tokens = repaired.as_slice();
-    let expressions: Vec<Expression> = split_expressions(tokens)
+    let expressions: Vec<Expression> = rejoin_clocks(split_expressions(tokens), tokens)
         .into_iter()
         .map(|expression| {
             let ordered = numeric_date_order(&expression, date_order);
             compile_expression(text, ordered, tokens)
         })
         .collect();
-    drop_redundant_frequencies(expressions)
+    let expressions = drop_redundant_frequencies(expressions);
+    drop_subject_day_mentions(expressions, tokens)
+}
+
+/// "weekends go by too fast", "honestly Tuesdays drag on": a bare day
+/// group or plural weekday that opens an ordinary sentence is a topic, not
+/// a schedule. It still recurs when it is the whole input ("weekends"),
+/// follows a preposition or recurrence word ("on weekends", "har
+/// shanivar"), or carries a clock ("weekdays at 9").
+fn drop_subject_day_mentions(expressions: Vec<Expression>, tokens: &[Token]) -> Vec<Expression> {
+    let introduces = |word: &str| {
+        matches!(
+            word,
+            "on" | "at"
+                | "for"
+                | "every"
+                | "each"
+                | "all"
+                | "by"
+                | "until"
+                | "till"
+                | "from"
+                | "har"
+                | "हर"
+                | "ko"
+                | "को"
+                | "pe"
+                | "par"
+                | "पर"
+                | "se"
+                | "से"
+        )
+    };
+    expressions
+        .into_iter()
+        .filter(|expression| {
+            let Some(schedule) = &expression.schedule else {
+                return true;
+            };
+            let words: Vec<&Token> = tokens.iter().filter(|token| token.raw.kind != 3).collect();
+            let inside: Vec<&&Token> = words
+                .iter()
+                .filter(|token| {
+                    token.raw.start >= expression.start && token.raw.end <= expression.end
+                })
+                .collect();
+            let bare = !inside.is_empty()
+                && inside.iter().all(|token| {
+                    matches!(token.label, Role::DayGroup | Role::Join)
+                        || (token.label == Role::Weekday
+                            && token.raw.text.to_lowercase().ends_with('s'))
+                        || matches!(token.raw.text.as_str(), "," | "&")
+                })
+                && schedule.clauses.iter().all(|clause| clause.time.is_none());
+            if !bare {
+                return true;
+            }
+            let before = words
+                .iter()
+                .rev()
+                .find(|token| token.raw.end <= expression.start);
+            let after = words
+                .iter()
+                .filter(|token| token.raw.start >= expression.end && token.label == Role::O)
+                .count();
+            let introduced = before.is_some_and(|token| introduces(&token.raw.text.to_lowercase()));
+            // Keep it unless it opens a sentence that goes on without it.
+            introduced || after < 2
+        })
+        .collect()
+}
+
+/// "every night before bed at 10:30", "daily after lunch at 2": a stray
+/// word splits a recurrence from its clock. A clock-only expression a few
+/// words after a recurrence or day that has no clock of its own is that
+/// rule's clock; a direction word left dangling before the gap ("before
+/// bed") points at an event the parser cannot place, so it is dropped.
+fn rejoin_clocks(expressions: Vec<Vec<Token>>, tokens: &[Token]) -> Vec<Vec<Token>> {
+    let clock_only = |expression: &[Token]| {
+        expression.iter().any(|token| {
+            matches!(
+                token.label,
+                Role::Hour | Role::TimeNamed | Role::ClockOffset
+            )
+        }) && expression.iter().all(|token| {
+            matches!(
+                token.label,
+                Role::Hour
+                    | Role::Minute
+                    | Role::Second
+                    | Role::Meridiem
+                    | Role::TimeNamed
+                    | Role::ClockOffset
+                    | Role::Glue
+                    | Role::O
+            )
+        })
+    };
+    let wants_clock = |expression: &[Token]| {
+        expression.iter().any(|token| {
+            matches!(
+                token.label,
+                Role::Recur | Role::Freq | Role::Weekday | Role::DayGroup | Role::DayPart
+            )
+        }) && !expression.iter().any(|token| {
+            matches!(
+                token.label,
+                Role::Hour | Role::TimeNamed | Role::ClockOffset
+            )
+        })
+    };
+    let gap_words = |left: &[Token], right: &[Token]| {
+        let (Some(end), Some(start)) = (left.last(), right.first()) else {
+            return usize::MAX;
+        };
+        tokens
+            .iter()
+            .filter(|token| {
+                token.raw.kind != 3
+                    && token.raw.start >= end.raw.end
+                    && token.raw.end <= start.raw.start
+            })
+            .count()
+    };
+    let mut merged: Vec<Vec<Token>> = Vec::new();
+    for expression in expressions {
+        if let Some(previous) = merged.last_mut()
+            && clock_only(&expression)
+            && wants_clock(previous)
+            && gap_words(previous, &expression) <= 3
+        {
+            while previous
+                .last()
+                .is_some_and(|token| matches!(token.label, Role::DirBefore | Role::DirAfter))
+            {
+                previous.pop();
+            }
+            previous.extend(expression);
+            continue;
+        }
+        merged.push(expression);
+    }
+    merged
 }
 
 /// "send the weekly report every Friday at 4:30pm": a bare frequency word

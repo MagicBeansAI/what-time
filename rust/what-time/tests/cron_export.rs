@@ -580,3 +580,130 @@ fn round_trips_what_the_exporter_writes() {
         assert_eq!(read_cron(line).crons, [line], "{line}");
     }
 }
+
+// ------------------------------------------------- gaps closed in 0.4.1
+
+#[test]
+fn removes_excepted_clocks_by_splitting_the_window() {
+    let result = resolved(
+        "every hour except 1pm",
+        &["RECUR", "UNIT", "EXCEPT", "HOUR", "MERIDIEM"],
+    );
+    assert_eq!(result.crons, ["0 0-12,14-23 * * *"]);
+    assert!(!result.occurrences.iter().any(|o| o.start.contains("T13:")));
+    // An excepted range is half-open: 2pm itself fires again.
+    let lunch = resolved(
+        "every hour on weekdays except between 12 and 2pm",
+        &[
+            "RECUR",
+            "UNIT",
+            "GLUE",
+            "DAYGROUP",
+            "EXCEPT",
+            "RANGE_START",
+            "HOUR",
+            "RANGE_END",
+            "HOUR",
+            "MERIDIEM",
+        ],
+    );
+    assert_eq!(lunch.crons, ["0 0-11,14-23 * * MON-FRI"]);
+    // Days after the exception select the rule's days, not the exception's.
+    let trailing = resolved(
+        "every hour except between 12 and 2pm on weekdays",
+        &[
+            "RECUR",
+            "UNIT",
+            "EXCEPT",
+            "RANGE_START",
+            "HOUR",
+            "RANGE_END",
+            "HOUR",
+            "MERIDIEM",
+            "GLUE",
+            "DAYGROUP",
+        ],
+    );
+    assert_eq!(trailing.crons, lunch.crons);
+}
+
+#[test]
+fn ends_a_series_at_the_bound_clock() {
+    let result = resolved(
+        "every 2 hours until 8pm today",
+        &[
+            "RECUR",
+            "NUM",
+            "UNIT",
+            "BOUND_END",
+            "HOUR",
+            "MERIDIEM",
+            "REL_DAY",
+        ],
+    );
+    assert_eq!(
+        starts(&result, 9),
+        ["2026-11-22T16:00", "2026-11-22T18:00", "2026-11-22T20:00"]
+    );
+    assert!(codes(&result).contains(&"cron-unbounded"));
+    assert!(result.rrules[0].contains("UNTIL=20261122T143000Z"));
+    // Without a date the bound is today's clock.
+    let today = resolved(
+        "every 15 minutes until 6pm",
+        &["RECUR", "NUM", "UNIT", "BOUND_END", "HOUR", "MERIDIEM"],
+    );
+    assert_eq!(
+        today.occurrences.last().map(|o| &o.start[..16]),
+        Some("2026-11-22T18:00")
+    );
+}
+
+#[test]
+fn resolves_a_one_off_first_or_last_day_of_a_period() {
+    let last = resolved(
+        "on the last day of the month",
+        &["GLUE", "GLUE", "ORD", "UNIT", "GLUE", "GLUE", "UNIT"],
+    );
+    assert_eq!(starts(&last, 2), ["2026-11-30T00:00"]);
+    let first = resolved(
+        "the first day of next month at 9am",
+        &[
+            "GLUE", "ORD", "UNIT", "GLUE", "DEICTIC", "UNIT", "GLUE", "HOUR", "MERIDIEM",
+        ],
+    );
+    assert_eq!(starts(&first, 2), ["2026-12-01T09:00"]);
+}
+
+#[test]
+fn rejoins_a_clock_split_off_by_an_event_word() {
+    let text = "every night before bed at 10:30";
+    let tokens = oracle(
+        text,
+        &[
+            "RECUR",
+            "DAYPART",
+            "DIR_BEFORE",
+            "O",
+            "GLUE",
+            "HOUR",
+            "GLUE",
+            "MINUTE",
+        ],
+    );
+    let expressions = compile_predictions(text, &tokens, DateOrder::MDY);
+    assert_eq!(expressions.len(), 1, "{expressions:?}");
+    let result = resolve(expressions[0].schedule.as_ref().unwrap(), &context()).unwrap();
+    assert_eq!(result.crons, ["30 22 * * *"]);
+}
+
+#[test]
+fn reads_this_weekday_as_the_coming_one() {
+    // Sunday 2026-11-22: "this Saturday" is the 28th, not yesterday.
+    let saturday = resolved(
+        "this Saturday at 11am",
+        &["DEICTIC", "WEEKDAY", "GLUE", "HOUR", "MERIDIEM"],
+    );
+    assert_eq!(starts(&saturday, 1), ["2026-11-28T11:00"]);
+    let monday = resolved("this Monday", &["DEICTIC", "WEEKDAY"]);
+    assert_eq!(starts(&monday, 1), ["2026-11-23T00:00"]);
+}

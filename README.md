@@ -4,7 +4,7 @@
     <b>Neural schedule parsing in English, हिन्दी, and Hinglish — on-device, exact, open.</b>
   </p>
   <p>
-    <img src="https://img.shields.io/badge/what--time-v0.4.0-2563EB.svg" alt="what-time v0.4.0" />
+    <img src="https://img.shields.io/badge/what--time-v0.4.1-2563EB.svg" alt="what-time v0.4.1" />
     <a href="#-license"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT" /></a>
     <img src="https://img.shields.io/badge/lang-English%20%7C%20हिन्दी%20%7C%20Hinglish-8B5CF6.svg" alt="Trilingual" />
     <a href="#-what-it-does"><img src="https://img.shields.io/badge/targets-Rust%20%7C%20WASM%20%7C%20npm%20%7C%20GPU-orange.svg" alt="Targets" /></a>

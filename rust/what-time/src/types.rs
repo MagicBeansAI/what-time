@@ -326,6 +326,10 @@ pub struct Recurrence {
     /// A bound on the entire series, distinct from the duration of each occurrence.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub span: Option<Duration>,
+    /// The clock at which `until` ends the series ("until 8pm today"),
+    /// inclusive; without it the series runs through the end of that day.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub until_time: Option<ClockTime>,
 }
 
 #[derive(Clone, Default, PartialEq, Debug, Serialize, Deserialize)]

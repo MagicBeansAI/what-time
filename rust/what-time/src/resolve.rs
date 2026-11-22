@@ -78,6 +78,7 @@ fn weekday_policy(clause: &Clause, options: &ResolveOptions) -> Clause {
             start: None,
             except: None,
             span: None,
+            until_time: None,
         }),
         ..clause.clone()
     }

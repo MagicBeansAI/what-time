@@ -5,7 +5,7 @@ use crate::types::{
     Weekday, weekday_index,
 };
 use crate::zoned::{
-    Civil, add_days, add_months, day_of_week, days_in_month, from_utc, is_valid, utc,
+    Civil, add_days, add_months, day_number, day_of_week, days_in_month, from_utc, is_valid, utc,
 };
 
 pub struct LocalPeriod {
@@ -187,6 +187,21 @@ pub fn week_beginning(date: &Civil, week_start: WeekStart) -> Civil {
     )
 }
 
+/// The given weekday within the reference's calendar week, past or not:
+/// the anchor that day groups ("this weekend", "last weekdays") count from.
+fn calendar_week_date(
+    day: crate::types::Weekday,
+    reference: &Civil,
+    options: &ResolveOptions,
+) -> Civil {
+    let week_start = if su_week(options) { 6 } else { 0 };
+    let position = (weekday_index(day) as i32 - week_start + 7) % 7;
+    add_days(
+        &week_beginning(reference, options.week_start.unwrap_or(WeekStart::MO)),
+        position as f64,
+    )
+}
+
 fn weekday_date(
     day: crate::types::Weekday,
     modifier: Option<Modifier>,
@@ -201,10 +216,19 @@ fn weekday_date(
     let position = (target as i32 - week_start + 7) % 7;
     let start = options.week_start.unwrap_or(WeekStart::MO);
 
-    if modifier == Some(Modifier::this)
-        || modifier.is_none() && options.bare_weekday == Some(BareWeekday::thisWeek)
-    {
+    if modifier.is_none() && options.bare_weekday == Some(BareWeekday::thisWeek) {
         return add_days(&week_beginning(reference, start), position as f64);
+    }
+    if modifier == Some(Modifier::this) {
+        // "this Saturday" said on a Sunday is the coming one: a scheduled
+        // day is never already over. The calendar-week reading remains
+        // available through `bareWeekday: thisWeek`.
+        let in_week = add_days(&week_beginning(reference, start), position as f64);
+        return if day_number(&in_week) < day_number(reference) {
+            add_days(&in_week, 7.0)
+        } else {
+            in_week
+        };
     }
     if modifier == Some(Modifier::last) {
         let back = if future_back(current, target) == 0 {
@@ -375,8 +399,7 @@ pub fn resolve_dates(
                 WEEKDAYS[..5].to_vec()
             };
             if let Some(group_modifier) = modifier {
-                let mut start =
-                    weekday_date(selected_days[0], Some(Modifier::this), reference, options);
+                let mut start = calendar_week_date(selected_days[0], reference, options);
                 if *group_modifier == Modifier::last {
                     start = add_days(&start, -7.0);
                 }

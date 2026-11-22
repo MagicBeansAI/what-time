@@ -435,6 +435,7 @@ fn clause(group: &TimeGroup, filter: &DayFilter) -> Clause {
             start: None,
             except: None,
             span: None,
+            until_time: None,
         }),
         ..Default::default()
     }
@@ -610,9 +611,40 @@ impl CronExpression {
                 )
             }
         } else {
-            let names: Vec<String> = self.hours.iter().map(|hour| clock(hour * 60)).collect();
-            format!("in the hours starting {}", list(&names))
+            // Runs of hours: "from midnight to noon and from 2:00 PM to
+            // 11:00 PM"; lone hours are listed.
+            let last_minute = self.minutes[self.minutes.len() - 1];
+            let mut runs: Vec<(u32, u32)> = Vec::new();
+            for hour in &self.hours {
+                match runs.last_mut() {
+                    Some(run) if run.1 + 1 == *hour => run.1 = *hour,
+                    _ => runs.push((*hour, *hour)),
+                }
+            }
+            if runs.iter().all(|run| run.0 == run.1) {
+                let names: Vec<String> = self.hours.iter().map(|hour| clock(hour * 60)).collect();
+                format!("in the hours starting {}", list(&names))
+            } else {
+                let parts: Vec<String> = runs
+                    .iter()
+                    .map(|(first, last)| {
+                        if first == last {
+                            format!("at {}", clock(first * 60 + self.minutes[0]))
+                        } else {
+                            format!(
+                                "from {} to {}",
+                                clock(first * 60 + self.minutes[0]),
+                                clock(last * 60 + last_minute)
+                            )
+                        }
+                    })
+                    .collect();
+                list(&parts)
+            }
         };
+        if self.minutes == [0] && hour_phrase.starts_with("from") {
+            return format!("Every hour {hour_phrase}");
+        }
         format!("{minute_phrase}, {hour_phrase}")
     }
 
@@ -776,6 +808,10 @@ mod tests {
         assert_eq!(
             describe("*/7 * * * *"),
             "Every 7 minutes past the hour (minutes 0 through 56)"
+        );
+        assert_eq!(
+            describe("0 0-12,14-23 * * *"),
+            "Every hour from midnight to noon and from 2:00 PM to 11:00 PM"
         );
         assert_eq!(describe("@hourly"), "Every hour");
         assert_eq!(describe("@weekly"), "At midnight every Sunday");

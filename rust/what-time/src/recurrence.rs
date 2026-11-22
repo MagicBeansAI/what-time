@@ -435,11 +435,22 @@ pub fn expand_recurrence(
     let mut until = f64::INFINITY;
     if let Some(rule_until) = &rule.until {
         let period = &resolve_dates(Some(rule_until), &local_reference, options)?[0];
-        until = zoned_to_epoch(
-            period.end.as_ref().unwrap_or(&add_days(&period.start, 1.0)),
-            &options.time_zone,
-        )?
-        .epoch_ms;
+        until = match &rule.until_time {
+            // "until 8pm today": through 20:00 itself.
+            Some(clock) => {
+                let seconds = crate::clock::clock_seconds(clock, options, true)?;
+                at_time(&period.start.start_of_day(), seconds, &options.time_zone)
+                    .map_err(|error| error.0)?
+                    + 1.0
+            }
+            None => {
+                zoned_to_epoch(
+                    period.end.as_ref().unwrap_or(&add_days(&period.start, 1.0)),
+                    &options.time_zone,
+                )?
+                .epoch_ms
+            }
+        };
     }
     if let Some(span) = &rule.span {
         if span.amount.fract() != 0.0 || span.amount <= 0.0 {

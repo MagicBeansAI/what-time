@@ -33,7 +33,7 @@ HOUR_WORDS = ["hours", "hours", "hrs", "hour"]
 STEP_ORDINALS = [("second", 2), ("third", 3), ("fourth", 4), ("fifth", 5)]
 POSITION_ORDINALS = ["first", "second", "third", "fourth", "last"]
 FREQUENCIES = [
-    "hourly", "daily", "daily", "nightly", "nightly", "weekly", "weekly",
+    "hourly", "daily", "daily", "everyday", "nightly", "nightly", "weekly", "weekly",
     "biweekly", "fortnightly", "monthly", "monthly", "quarterly", "quarterly",
     "yearly", "annually",
 ]
@@ -781,6 +781,141 @@ def hindi_group(s: Sentence, devanagari: bool) -> None:
         hindi_clock(s, devanagari)
 
 
+# ---------------------------------------------------------------- negatives
+# Schedule vocabulary that names nothing: titles, past events with no date,
+# preferences and generalities, "every"/"har" as "each one". All O. The
+# other families keep the same words as real schedules, so the contrast is
+# what the tagger learns. A sentence that names a real day, even a past one
+# ("last night was cold", "पिछला हफ़्ता"), is a date expression and stays
+# out of this list. (Kept apart from the independent evaluation set: none
+# of its sentences appear here.)
+TITLE_FIRST = ["Daily", "Sunday", "Weekly", "Saturday", "Morning", "Evening", "Monday", "Nightly"]
+TITLE_SECOND = ["Mail", "Times", "Telegraph", "Express", "Post", "Herald", "Standard", "Review",
+                "Gazette", "Chronicle", "Planet", "Show", "Digest"]
+TITLE_VERBS = ["she reads the", "he subscribes to the", "I saw it in the", "they quoted the",
+               "my dad buys the", "an article in the", "we were featured in the", "a reporter from the"]
+PAST_EVENTS = [
+    "we had a {adj} weekend", "it was a {adj} day", "what a {adj} week it has been",
+    "the night was {adj}", "that morning was {adj}", "our weekend was {adj}",
+    "the whole month felt {adj}", 
+]
+ADJECTIVES = ["lovely", "lazy", "quiet", "busy", "long", "strange", "cold", "wonderful", "rough", "calm"]
+PREFERENCES = [
+    "{days} are {judgement}", "I love {days}", "I hate {days}", "{days} always feel {judgement}",
+    "nobody likes {days}", "{days} at the office are {judgement}",
+]
+PREFERENCE_DAYS = ["Mondays", "Fridays", "weekends", "mornings", "evenings", "Sundays", "nights"]
+JUDGEMENTS = ["the worst", "the best", "too short", "too long", "quiet", "chaotic", "relaxing"]
+GENERALITIES = [
+    "daily life can be hard", "a weekly magazine sat on the desk", "the monthly budget is tight",
+    "the annual report is ready", "every student passed the exam", "every one of them agreed",
+    "each of the boxes was heavy", "every little detail matters", "every so often it rains",
+    "every now and then we talk", "the nightly news was boring", "morning coffee is essential",
+    "she is a night owl", "he works the night shift", "the evening sky turned orange",
+    "a quarter of the cake is left", "second place is not bad", "the first chapter is long",
+    "time is money", "it takes time", "the weekend crowd was huge", "weekday traffic is awful",
+]
+HINGLISH_NEGATIVES = [
+    "weekend bahut accha tha", "har koi aa gaya", "har baat pe hasta hai", "roz ki zindagi thaka deti hai",
+    "subah subah chai chahiye", "har cheez mehngi hai", 
+    "raat bahut lambi thi", "har ek ne mana kiya",
+]
+HINDI_NEGATIVES = [
+    "हर कोई जानता है", "रोज़मर्रा की ज़िंदगी आसान नहीं", "मेरा पसंदीदा दिन रविवार है",
+    "हर बात पर बहस होती है", "वह रात बहुत ठंडी थी", "सुबह की चाय ज़रूरी है", "हर चीज़ महंगी है",
+]
+
+
+def negative(s: Sentence) -> None:
+    rng = s.rng
+    kind = rng.random()
+    if kind < 0.2:
+        text = f"{rng.choice(TITLE_VERBS)} {rng.choice(TITLE_FIRST)} {rng.choice(TITLE_SECOND)}"
+    elif kind < 0.38:
+        text = rng.choice(PAST_EVENTS).format(adj=rng.choice(ADJECTIVES))
+    elif kind < 0.55:
+        text = rng.choice(PREFERENCES).format(
+            days=rng.choice(PREFERENCE_DAYS), judgement=rng.choice(JUDGEMENTS))
+    elif kind < 0.8:
+        text = rng.choice(GENERALITIES)
+    elif kind < 0.92:
+        text = rng.choice(HINGLISH_NEGATIVES)
+    else:
+        text = rng.choice(HINDI_NEGATIVES)
+    if rng.random() < 0.3:
+        text = text[0].upper() + text[1:]
+    s.add(text)
+
+
+def clock_exception(s: Sentence) -> None:
+    """every hour except 1pm, every 30 minutes between 9 and 5 except 12:30"""
+    rng = s.rng
+    s.add(rng.choice(["every", "each"]), "RECUR")
+    if rng.random() < 0.5:
+        s.add("hour", "UNIT")
+    else:
+        number(s, rng.choice([15, 20, 30]))
+        s.add(rng.choice(["minutes", "mins"]), "UNIT")
+    if rng.random() < 0.35:
+        english_window(s)
+    if rng.random() < 0.3:
+        day_selector(s)
+    s.add(rng.choice(["except", "except", "but not", "excluding", "except at"]), "EXCEPT")
+    if rng.random() < 0.35:
+        s.add("between", "RANGE_START")
+        s.clock(2)
+        s.add("and", "RANGE_END")
+        s.clock(2)
+    else:
+        s.clock(rng.choice([2, 2, 3]))
+    if rng.random() < 0.25:
+        day_selector(s)
+
+
+def clock_bound(s: Sentence) -> None:
+    """every 15 minutes until 6pm, every 2 hours until 8pm today"""
+    rng = s.rng
+    s.add(rng.choice(["every", "each"]), "RECUR")
+    number(s, rng.choice([5, 10, 15, 30, 2, 3]))
+    s.add(rng.choice(["minutes", "hours", "mins", "hrs"]), "UNIT")
+    s.add(rng.choice(["until", "till", "up to"]), "BOUND_END")
+    s.clock(2)
+    if rng.random() < 0.4:
+        s.add(rng.choice(["today", "tonight", "tomorrow"]), "REL_DAY")
+
+
+def event_anchor(s: Sentence) -> None:
+    """every night before bed at 10:30, daily after lunch at 2pm"""
+    rng = s.rng
+    if rng.random() < 0.5:
+        s.add(rng.choice(["every", "each"]), "RECUR")
+        s.add(rng.choice(DAY_PARTS), "DAYPART")
+    else:
+        s.add(rng.choice(["daily", "weekly", "nightly"]), "FREQ")
+    s.in_expression = False
+    s.add(rng.choice(["before bed", "after lunch", "after dinner", "before work",
+                      "after the gym", "before school"]))
+    s.in_expression = True
+    at_clock(s)
+
+
+def period_edge(s: Sentence) -> None:
+    """on the last day of the month, the first day of next month at 9am"""
+    rng = s.rng
+    if rng.random() < 0.5:
+        s.add(rng.choice(["on the", "the"]))
+    s.add(rng.choice(["last", "last", "first"]), "ORD")
+    s.add("day", "UNIT")
+    s.add("of")
+    if rng.random() < 0.5:
+        s.add(rng.choice(["this", "next"]), "DEICTIC")
+    else:
+        s.add("the", "GLUE")
+    s.add(rng.choice(["month", "month", "year", "quarter"]), "UNIT")
+    if rng.random() < 0.4:
+        at_clock(s)
+
+
 ENGLISH = [
     (sub_hourly, 20),
     (counted_step, 12),
@@ -793,6 +928,10 @@ ENGLISH = [
     (frequency_word, 10),
     (exceptions, 4),
     (plural_days, 5),
+    (clock_exception, 5),
+    (clock_bound, 4),
+    (event_anchor, 3),
+    (period_edge, 3),
 ]
 HINDI = [
     (hindi_step, 30),
@@ -811,8 +950,16 @@ def pick(rng: random.Random, table):
 def render(rng: random.Random) -> Sentence:
     sentence = Sentence(rng)
     roll = rng.random()
-    if roll < 0.06:
+    if roll < 0.04:
         sentence.add(rng.choice(NEGATIVES))
+        return sentence
+    if roll < 0.14:
+        negative(sentence)
+        if rng.random() < 0.3:
+            # A negative beside a real schedule: only the schedule is labeled.
+            sentence.add(rng.choice([",", "and", "so"]))
+            sentence.clause()
+            pick(rng, ENGLISH)(sentence)
         return sentence
     language = "english" if roll < 0.58 else "hinglish" if roll < 0.82 else "hindi"
     devanagari = language == "hindi"
