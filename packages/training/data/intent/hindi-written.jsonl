@@ -1,0 +1,800 @@
+{"id": "hindi-0001", "lang": "hi", "intent": "request", "text": "कल सुबह 7 बजे उठा देना"}
+{"id": "hindi-0002", "lang": "hi", "intent": "request", "text": "परसों 4 बजे डॉक्टर के पास जाना है"}
+{"id": "hindi-0003", "lang": "hi", "intent": "request", "text": "आज रात 10 बजे माँ को फ़ोन करना याद दिलाना"}
+{"id": "hindi-0004", "lang": "hi", "intent": "request", "text": "हर सोमवार सुबह 9 बजे मीटिंग"}
+{"id": "hindi-0005", "lang": "hi", "intent": "request", "text": "रोज़ रात 10 बजे दवा लेने की याद दिलाना"}
+{"id": "hindi-0006", "lang": "hi", "intent": "request", "text": "हर महीने की 5 तारीख़ को किराया देना है, याद दिला देना"}
+{"id": "hindi-0007", "lang": "hi", "intent": "request", "text": "हफ़्ते में दो बार जिम जाना है, रिमाइंडर लगा दो"}
+{"id": "hindi-0008", "lang": "hi", "intent": "request", "text": "20 मिनट बाद याद दिला देना"}
+{"id": "hindi-0009", "lang": "hi", "intent": "request", "text": "एक घंटे में बताना"}
+{"id": "hindi-0010", "lang": "hi", "intent": "request", "text": "कल से रोज़ सुबह 6 बजे उठाना"}
+{"id": "hindi-0011", "lang": "hi", "intent": "request", "text": "शुक्रवार तक हर दिन शाम 5 बजे पानी पीने का रिमाइंडर"}
+{"id": "hindi-0012", "lang": "hi", "intent": "request", "text": "अगले महीने से हर रविवार सुबह योगा क्लास है"}
+{"id": "hindi-0013", "lang": "hi", "intent": "request", "text": "हर मंगलवार शाम 6 बजे"}
+{"id": "hindi-0014", "lang": "hi", "intent": "request", "text": "भाई, कल दोपहर 2 बजे क्लाइंट कॉल नोट कर लो"}
+{"id": "hindi-0015", "lang": "hi", "intent": "request", "text": "सुबह 5:30 बजे का अलार्म लगा दो"}
+{"id": "hindi-0016", "lang": "hi", "intent": "request", "text": "मुझे 15 मिनट में चाय बनाने की याद दिलाना"}
+{"id": "hindi-0017", "lang": "hi", "intent": "request", "text": "रोज सुबह 8 बजे विटामिन की गोली याद दिलाना"}
+{"id": "hindi-0018", "lang": "hi", "intent": "request", "text": "अगले शनिवार शाम 7 बजे दोस्त की शादी में जाना है"}
+{"id": "hindi-0019", "lang": "hi", "intent": "request", "text": "आज शाम 5 बजे बिजली का बिल भरने का reminder देना"}
+{"id": "hindi-0020", "lang": "hi", "intent": "request", "text": "हर रविवार शाम 4 बजे घर की सफ़ाई"}
+{"id": "hindi-0021", "lang": "hi", "intent": "request", "text": "कल रात 11 बजे सोने की याद दिला देना"}
+{"id": "hindi-0022", "lang": "hi", "intent": "request", "text": "दो घंटे बाद बताना कि चावल चढ़ाना है"}
+{"id": "hindi-0023", "lang": "hi", "intent": "request", "text": "15 तारीख़ को सुबह 10 बजे बैंक जाना है"}
+{"id": "hindi-0024", "lang": "hi", "intent": "request", "text": "हर शुक्रवार दोपहर 1 बजे जुमे की नमाज़ की याद दिलाना"}
+{"id": "hindi-0025", "lang": "hi", "intent": "request", "text": "कल से हर दिन सुबह 6 बजे दौड़ने जाना है, उठा देना"}
+{"id": "hindi-0026", "lang": "hi", "intent": "request", "text": "सोमवार को सुबह 11 बजे प्रोजेक्ट की डेमो है"}
+{"id": "hindi-0027", "lang": "hi", "intent": "request", "text": "रात 9 बजे पौधों को पानी देना है"}
+{"id": "hindi-0028", "lang": "hi", "intent": "request", "text": "आधे घंटे बाद पूजा की याद दिलाना"}
+{"id": "hindi-0029", "lang": "hi", "intent": "request", "text": "हर महीने की 1 तारीख़ को EMI की याद दिलाना"}
+{"id": "hindi-0030", "lang": "hi", "intent": "request", "text": "बुधवार शाम 6 बजे पापा को एयरपोर्ट लेने जाना है"}
+{"id": "hindi-0031", "lang": "hi", "intent": "request", "text": "कल सुबह ठीक 9 बजे दाढ़ी बनवाने का अपॉइंटमेंट है"}
+{"id": "hindi-0032", "lang": "hi", "intent": "request", "text": "रोज़ दोपहर 3 बजे चाय ब्रेक रिमाइंडर"}
+{"id": "hindi-0033", "lang": "hi", "intent": "request", "text": "10 मिनट में स्टैंडअप कॉल शुरू होगी, याद रखना"}
+{"id": "hindi-0034", "lang": "hi", "intent": "request", "text": "परसों सुबह की फ़्लाइट है, 4 बजे उठा देना"}
+{"id": "hindi-0035", "lang": "hi", "intent": "request", "text": "हर गुरुवार शाम 7 बजे क्रिकेट प्रैक्टिस"}
+{"id": "hindi-0036", "lang": "hi", "intent": "request", "text": "मुझे रोज़ शाम 6 बजे टहलने की याद दिलाओ"}
+{"id": "hindi-0037", "lang": "hi", "intent": "request", "text": "अगले हफ़्ते सोमवार से रोज़ सुबह 7 बजे अंग्रेज़ी की क्लास"}
+{"id": "hindi-0038", "lang": "hi", "intent": "request", "text": "शनिवार दोपहर 12 बजे बच्चों की पेरेंट-टीचर मीटिंग है"}
+{"id": "hindi-0039", "lang": "hi", "intent": "request", "text": "एक घंटे बाद ऑफ़िस के लिए निकलना है, बता देना"}
+{"id": "hindi-0040", "lang": "hi", "intent": "request", "text": "आज रात 8 बजे खाना ऑर्डर करने की याद दिलाना"}
+{"id": "hindi-0041", "lang": "hi", "intent": "request", "text": "हर हफ्ते मंगलवार और गुरुवार सुबह 7 बजे जिम"}
+{"id": "hindi-0042", "lang": "hi", "intent": "request", "text": "कल शाम 5 बजे सब्ज़ी लानी है, remind कर देना"}
+{"id": "hindi-0043", "lang": "hi", "intent": "request", "text": "सुबह 6 बजे वॉटर पंप चलाने की याद दिला देना"}
+{"id": "hindi-0044", "lang": "hi", "intent": "request", "text": "हर महीने की आख़िरी तारीख़ को सैलरी स्लिप चेक करना"}
+{"id": "hindi-0045", "lang": "hi", "intent": "request", "text": "त्योहार से पहले, 20 तारीख़ को दोपहर 2 बजे दर्ज़ी से कपड़े लेने हैं"}
+{"id": "hindi-0046", "lang": "hi", "intent": "request", "text": "रोज़ सुबह 7 बजे दूध लेने की याद दिलाना"}
+{"id": "hindi-0047", "lang": "hi", "intent": "request", "text": "पाँच मिनट बाद ओवन से केक निकालना है"}
+{"id": "hindi-0048", "lang": "hi", "intent": "request", "text": "शुक्रवार रात 9 बजे फ़िल्म देखने जाना है, टिकट की याद दिला देना"}
+{"id": "hindi-0049", "lang": "hi", "intent": "request", "text": "कल दोपहर 12:30 बजे लंच मीटिंग रख दो"}
+{"id": "hindi-0050", "lang": "hi", "intent": "request", "text": "हर रोज़ रात 9:30 बजे बच्चों को होमवर्क के लिए बिठाना याद दिलाना"}
+{"id": "hindi-0051", "lang": "hi", "intent": "request", "text": "रविवार सुबह 8 बजे मंदिर जाना है"}
+{"id": "hindi-0052", "lang": "hi", "intent": "request", "text": "अभी से 45 मिनट बाद अलार्म बजा देना"}
+{"id": "hindi-0053", "lang": "hi", "intent": "request", "text": "हर दो घंटे में पानी पीने को बोलना"}
+{"id": "hindi-0054", "lang": "hi", "intent": "request", "text": "आज शाम 6 बजे तक रिपोर्ट भेजनी है, याद दिलाना"}
+{"id": "hindi-0055", "lang": "hi", "intent": "request", "text": "कल सुबह 10 बजे डेंटिस्ट"}
+{"id": "hindi-0056", "lang": "hi", "intent": "request", "text": "हर सुबह 7 बजे ध्यान करने की याद दिलाना, कल से शुरू"}
+{"id": "hindi-0057", "lang": "hi", "intent": "request", "text": "सोमवार से शुक्रवार रोज़ सुबह 8:30 बजे ऑफ़िस की बस पकड़नी है"}
+{"id": "hindi-0058", "lang": "hi", "intent": "request", "text": "मेरी कल शाम 4 बजे इंटरव्यू है, 3 बजे याद दिला देना"}
+{"id": "hindi-0059", "lang": "hi", "intent": "request", "text": "रात 12 बजे हैप्पी बर्थडे मैसेज भेजना है"}
+{"id": "hindi-0060", "lang": "hi", "intent": "request", "text": "हर शनिवार सुबह 10 बजे कार धोनी है"}
+{"id": "hindi-0061", "lang": "hi", "intent": "request", "text": "तीन दिन बाद सुबह 9 बजे रिपोर्ट लेने जाना है"}
+{"id": "hindi-0062", "lang": "hi", "intent": "request", "text": "सुनो, आज दोपहर 3 बजे मुझे कॉल करने की याद दिलाना"}
+{"id": "hindi-0063", "lang": "hi", "intent": "request", "text": "दिवाली के अगले दिन सुबह 8 बजे भाई दूज की तैयारी याद दिलाना"}
+{"id": "hindi-0064", "lang": "hi", "intent": "request", "text": "हर तीसरे दिन सुबह 7 बजे पौधों में खाद डालना"}
+{"id": "hindi-0065", "lang": "hi", "intent": "request", "text": "30 मिनट का टाइमर लगा दो"}
+{"id": "hindi-0066", "lang": "hi", "intent": "request", "text": "कल सुबह उठते ही दवा लेनी है, 6:30 बजे बता देना"}
+{"id": "hindi-0067", "lang": "hi", "intent": "request", "text": "अगले महीने की 10 तारीख़ से हर शाम 7 बजे ट्यूशन"}
+{"id": "hindi-0068", "lang": "hi", "intent": "request", "text": "बुधवार तक हर रात 10 बजे आँखों में ड्रॉप डालना"}
+{"id": "hindi-0069", "lang": "hi", "intent": "request", "text": "आज दोपहर 1 बजे लंच के बाद एंटीबायोटिक की याद दिलाना"}
+{"id": "hindi-0070", "lang": "hi", "intent": "request", "text": "शाम के 5 बजे बैंक बंद होने से पहले चेक जमा करना है, 4 बजे बता देना"}
+{"id": "hindi-0071", "lang": "hi", "intent": "request", "text": "हर महीने की 15 तारीख़ को शाम 6 बजे बिजली-पानी का बिल"}
+{"id": "hindi-0072", "lang": "hi", "intent": "request", "text": "मुझे सुबह जल्दी, लगभग 5 बजे उठा देना, ट्रेन है"}
+{"id": "hindi-0073", "lang": "hi", "intent": "request", "text": "हफ़्ते में तीन बार शाम को तैराकी जाना है, रिमाइंडर रखना"}
+{"id": "hindi-0074", "lang": "hi", "intent": "request", "text": "रोज़ सुबह 9 बजे डेली स्टैंडअप"}
+{"id": "hindi-0075", "lang": "hi", "intent": "request", "text": "आज रात 11:30 बजे गीज़र बंद करना याद दिलाना"}
+{"id": "hindi-0076", "lang": "hi", "intent": "request", "text": "कल दोपहर बाद 3 बजे बच्चे को स्कूल से लाना है"}
+{"id": "hindi-0077", "lang": "hi", "intent": "request", "text": "सोमवार की सुबह 10 बजे बॉस के साथ one-on-one नोट कर लो"}
+{"id": "hindi-0078", "lang": "hi", "intent": "request", "text": "एक घंटे बाद दोबारा पूछना कि दवा ली या नहीं"}
+{"id": "hindi-0079", "lang": "hi", "intent": "request", "text": "हर रविवार रात 8 बजे अगले हफ़्ते की प्लानिंग"}
+{"id": "hindi-0080", "lang": "hi", "intent": "request", "text": "अगले मंगलवार सुबह 11 बजे मेरी गाड़ी की सर्विसिंग है"}
+{"id": "hindi-0081", "lang": "hi", "intent": "request", "text": "कल सुबह 7 बजे से पहले पेपर वाले को पैसे देने की याद दिलाना"}
+{"id": "hindi-0082", "lang": "hi", "intent": "request", "text": "रोज रात सोने से पहले 10:30 बजे फ़ोन चार्जिंग पर लगाना याद दिलाना"}
+{"id": "hindi-0083", "lang": "hi", "intent": "request", "text": "आज शाम 7 बजे घर पर मेहमान आ रहे हैं, 5 बजे तक मिठाई मँगवानी है"}
+{"id": "hindi-0084", "lang": "hi", "intent": "request", "text": "हर शुक्रवार तक टाइमशीट भरनी है, दोपहर 3 बजे याद दिलाना"}
+{"id": "hindi-0085", "lang": "hi", "intent": "request", "text": "2 घंटे बाद पूछना कि प्रेजेंटेशन बन गई या नहीं"}
+{"id": "hindi-0086", "lang": "hi", "intent": "request", "text": "परसों रात की ट्रेन है, शाम 6 बजे पैकिंग की याद दिलाना"}
+{"id": "hindi-0087", "lang": "hi", "intent": "request", "text": "हर दिन सुबह की चाय के बाद 7:15 पर कसरत का reminder"}
+{"id": "hindi-0088", "lang": "hi", "intent": "request", "text": "कल से अगले दस दिन तक रोज़ सुबह 6 बजे पूजा की याद दिलाना"}
+{"id": "hindi-0089", "lang": "hi", "intent": "request", "text": "सोमवार को सुबह साढ़े नौ बजे स्कूल में फ़ीस जमा करनी है"}
+{"id": "hindi-0090", "lang": "hi", "intent": "request", "text": "रात के ढाई बजे का अलार्म नहीं, सुबह ढाई बजे का लगाना, फ़्लाइट पकड़नी है"}
+{"id": "hindi-0091", "lang": "hi", "intent": "request", "text": "हर महीने के पहले सोमवार को टीम मीटिंग"}
+{"id": "hindi-0092", "lang": "hi", "intent": "request", "text": "शाम 6 बजे से पहले चाबी लौटानी है, उससे पहले बता देना"}
+{"id": "hindi-0093", "lang": "hi", "intent": "request", "text": "आज रात 9 बजे दादी से वीडियो कॉल पर बात करनी है"}
+{"id": "hindi-0094", "lang": "hi", "intent": "request", "text": "रोज़ शाम 7 बजे कुत्ते को टहलाने की याद दिला देना"}
+{"id": "hindi-0095", "lang": "hi", "intent": "request", "text": "हर हफ़्ते बुधवार को कूड़ेवाली गाड़ी आती है, मंगलवार रात को याद दिला देना"}
+{"id": "hindi-0096", "lang": "hi", "intent": "request", "text": "अगले हफ़्ते गुरुवार दोपहर 2 बजे टीका लगवाना है"}
+{"id": "hindi-0097", "lang": "hi", "intent": "request", "text": "कल सुबह 11 बजे से पहले मैनेजर को ईमेल भेजना है"}
+{"id": "hindi-0098", "lang": "hi", "intent": "request", "text": "बस 10 मिनट बाद नहाने जाना है, बता देना"}
+{"id": "hindi-0099", "lang": "hi", "intent": "request", "text": "रोज़ सुबह 6:45 पर स्कूल बस के लिए बच्चों को जगाना है, अलार्म"}
+{"id": "hindi-0100", "lang": "hi", "intent": "request", "text": "शनिवार रात 8 बजे डिनर बुकिंग है, रिमाइंडर डाल दो"}
+{"id": "hindi-0101", "lang": "hi", "intent": "request", "text": "हर साल 12 नवंबर को शादी की सालगिरह याद दिलाना"}
+{"id": "hindi-0102", "lang": "hi", "intent": "request", "text": "कल दोपहर 1 बजे पापा की दवाई ख़त्म हो जाएगी, 11 बजे याद दिलाना"}
+{"id": "hindi-0103", "lang": "hi", "intent": "request", "text": "शाम को 6 बजे योग"}
+{"id": "hindi-0104", "lang": "hi", "intent": "request", "text": "आधे घंटे में मीटिंग है, 10 मिनट पहले बोल देना"}
+{"id": "hindi-0105", "lang": "hi", "intent": "request", "text": "कल से सोमवार से शुक्रवार हर सुबह 5:45 पर उठाना"}
+{"id": "hindi-0106", "lang": "hi", "intent": "request", "text": "आज रात 10 बजे के बाद मुझे डिस्टर्ब मत करना, 10 बजे याद दिलाना कि फ़ोन साइलेंट करना है"}
+{"id": "hindi-0107", "lang": "hi", "intent": "request", "text": "हर महीने 7 तारीख़ को पानी का बिल भरना है"}
+{"id": "hindi-0108", "lang": "hi", "intent": "request", "text": "अगले रविवार दोपहर 1 बजे घर पर पूजा रखी है, शुक्रवार को पंडित जी को फ़ोन याद दिला देना"}
+{"id": "hindi-0109", "lang": "hi", "intent": "request", "text": "रोज़ सुबह उठकर 6 बजे गुनगुना पानी पीना है, रिमाइंड करो"}
+{"id": "hindi-0110", "lang": "hi", "intent": "request", "text": "मंगलवार को दोपहर 3 बजे वकील से मिलना है"}
+{"id": "hindi-0111", "lang": "hi", "intent": "request", "text": "सुबह के 10 बजे टीम को ईमेल करना, ध्यान दिलाना"}
+{"id": "hindi-0112", "lang": "hi", "intent": "request", "text": "एक मिनट बाद बता देना, चूल्हा बंद करना है"}
+{"id": "hindi-0113", "lang": "hi", "intent": "request", "text": "कल शाम को माँ के साथ मंदिर जाना है, 5 बजे निकलेंगे"}
+{"id": "hindi-0114", "lang": "hi", "intent": "request", "text": "हर शनिवार सुबह 6 बजे मार्केट सब्ज़ी लेने जाना है"}
+{"id": "hindi-0115", "lang": "hi", "intent": "request", "text": "अगले महीने की पहली तारीख़ से रोज़ रात 9 बजे किताब पढ़ने का रिमाइंडर"}
+{"id": "hindi-0116", "lang": "hi", "intent": "request", "text": "आज दोपहर 2 बजे ऑनलाइन क्लास जॉइन करनी है, 1:55 पर बता देना"}
+{"id": "hindi-0117", "lang": "hi", "intent": "request", "text": "हर 15 दिन में रविवार को बाल कटवाने जाना है"}
+{"id": "hindi-0118", "lang": "hi", "intent": "request", "text": "सोमवार से हर सुबह 9:30 पर टीम सिंक"}
+{"id": "hindi-0119", "lang": "hi", "intent": "request", "text": "कल रात की पार्टी 8 बजे है, 7 बजे तैयार होने के लिए बोल देना"}
+{"id": "hindi-0120", "lang": "hi", "intent": "request", "text": "मुझे परसों सुबह 7 बजे गाड़ी की चाबी याद दिलाना"}
+{"id": "hindi-0121", "lang": "hi", "intent": "request", "text": "रात को 11 बजे अलार्म ऑफ़ करना है, फिर से याद दिलाना"}
+{"id": "hindi-0122", "lang": "hi", "intent": "request", "text": "हर महीने की 25 तारीख़ को बीमा प्रीमियम"}
+{"id": "hindi-0123", "lang": "hi", "intent": "request", "text": "अभी से ठीक एक घंटे बाद मुझे जगा देना, झपकी ले रहा हूँ"}
+{"id": "hindi-0124", "lang": "hi", "intent": "request", "text": "बुधवार सुबह 7 बजे ऑफ़िस पहुँचना है, 6 बजे का अलार्म"}
+{"id": "hindi-0125", "lang": "hi", "intent": "request", "text": "रोज़ रात खाने के बाद 9 बजे टहलना है, याद दिलाना"}
+{"id": "hindi-0126", "lang": "hi", "intent": "request", "text": "परसों दोपहर 12 बजे रजिस्ट्री ऑफ़िस जाना है"}
+{"id": "hindi-0127", "lang": "hi", "intent": "request", "text": "कल सुबह 8 बजे पूरे परिवार के साथ घूमने निकलना है, 7 बजे उठा देना"}
+{"id": "hindi-0128", "lang": "hi", "intent": "request", "text": "हर हफ़्ते सोमवार और बुधवार शाम 5 बजे बैडमिंटन"}
+{"id": "hindi-0129", "lang": "hi", "intent": "request", "text": "दस मिनट बाद फ़िर बताना, कपड़े सूख गए होंगे"}
+{"id": "hindi-0130", "lang": "hi", "intent": "request", "text": "आज शाम 6 बजे बाज़ार जाना है, 5:45 पर बोल देना"}
+{"id": "hindi-0131", "lang": "hi", "intent": "request", "text": "रोज़ सुबह 10 बजे खुद को याद दिलाना है कि अख़बार पढ़ना है"}
+{"id": "hindi-0132", "lang": "hi", "intent": "request", "text": "अगले शुक्रवार को रात 8 बजे फ़्लाइट है"}
+{"id": "hindi-0133", "lang": "hi", "intent": "request", "text": "हर रविवार शाम को 5 बजे घर फ़ोन करना"}
+{"id": "hindi-0134", "lang": "hi", "intent": "request", "text": "कल से रोज़ दोपहर 2 बजे आधे घंटे की झपकी, उसके बाद उठा देना"}
+{"id": "hindi-0135", "lang": "hi", "intent": "request", "text": "मुझे आज रात 10 बजे याद दिलाना कि कल सुबह जल्दी उठना है"}
+{"id": "hindi-0136", "lang": "hi", "intent": "request", "text": "गुरुवार को सुबह 9 बजे सरकारी दफ़्तर खुलते ही जाना है"}
+{"id": "hindi-0137", "lang": "hi", "intent": "request", "text": "हर तिमाही की पहली तारीख़ को GST रिटर्न की याद दिलाना"}
+{"id": "hindi-0138", "lang": "hi", "intent": "request", "text": "3 बजे के बाद कभी भी, पर आज ही बिजली वाले को फ़ोन करना याद दिलाना"}
+{"id": "hindi-0139", "lang": "hi", "intent": "request", "text": "सुबह 6 बजे से रात 10 बजे तक हर दो घंटे में पानी का रिमाइंडर, रोज़"}
+{"id": "hindi-0140", "lang": "hi", "intent": "request", "text": "रविवार तक रोज़ रात 8 बजे दादाजी की दवा"}
+{"id": "hindi-0141", "lang": "hi", "intent": "request", "text": "कल सुबह 6 बजे ट्रेकिंग के लिए निकलना है, 5 बजे उठा देना प्लीज़"}
+{"id": "hindi-0142", "lang": "hi", "intent": "request", "text": "हर सोमवार दोपहर 12 बजे वीकली रिपोर्ट भेजनी है"}
+{"id": "hindi-0143", "lang": "hi", "intent": "request", "text": "अभी 25 मिनट बाद पानी की मोटर बंद करनी है"}
+{"id": "hindi-0144", "lang": "hi", "intent": "request", "text": "परसों शाम 5 बजे बहन के घर जाना है"}
+{"id": "hindi-0145", "lang": "hi", "intent": "request", "text": "रोज़ शाम 7 बजे समाचार से पहले चाय चढ़ाने की याद दिलाना"}
+{"id": "hindi-0146", "lang": "hi", "intent": "request", "text": "कल दोपहर 3 बजे के बाद ही फ़ोन करना है, तब बता देना"}
+{"id": "hindi-0147", "lang": "hi", "intent": "request", "text": "अगले महीने से हर बुधवार सुबह 6 बजे तैराकी का रिमाइंडर"}
+{"id": "hindi-0148", "lang": "hi", "intent": "request", "text": "आज रात 12 बजे से पहले असाइनमेंट जमा करना है, 11 बजे याद दिलाना"}
+{"id": "hindi-0149", "lang": "hi", "intent": "request", "text": "हर रोज़ सुबह 7 बजे कबूतरों को दाना डालना, remind me"}
+{"id": "hindi-0150", "lang": "hi", "intent": "request", "text": "सोमवार दोपहर 4 बजे बीमा एजेंट आएगा, मुझे बता देना"}
+{"id": "hindi-0151", "lang": "hi", "intent": "request", "text": "कल सुबह 9:15 पर स्कूल में बच्चे की प्रार्थना सभा में जाना है"}
+{"id": "hindi-0152", "lang": "hi", "intent": "request", "text": "शाम 4 बजे चाय का समय, रोज़ याद दिला देना"}
+{"id": "hindi-0153", "lang": "hi", "intent": "request", "text": "हर 2 हफ़्ते में शनिवार को घर की सफ़ाई वाली को बुलाना है, याद दिलाना"}
+{"id": "hindi-0154", "lang": "hi", "intent": "request", "text": "आज दोपहर 12 बजे पासपोर्ट ऑफ़िस में अपॉइंटमेंट है"}
+{"id": "hindi-0155", "lang": "hi", "intent": "request", "text": "कल से शुक्रवार तक रोज़ सुबह 7 बजे प्रैक्टिस टेस्ट, रिमाइंडर लगा दो"}
+{"id": "hindi-0156", "lang": "hi", "intent": "request", "text": "सुबह 8 बजे टिफ़िन पैक करने की याद दिलाना, रोज़"}
+{"id": "hindi-0157", "lang": "hi", "intent": "request", "text": "सवा घंटे बाद मुझे यहाँ से निकलना है"}
+{"id": "hindi-0158", "lang": "hi", "intent": "request", "text": "रात 9 बजे नेटफ़्लिक्स की जगह किताब, आज से रोज़ याद दिलाना"}
+{"id": "hindi-0159", "lang": "hi", "intent": "request", "text": "अगले बुधवार सुबह 10 बजे मेरी सर्जरी है, पहले से बता देना"}
+{"id": "hindi-0160", "lang": "hi", "intent": "request", "text": "हर शनिवार और रविवार सुबह 8 बजे ट्रैकिंग ग्रुप में जाना है"}
+{"id": "hindi-0161", "lang": "hi", "intent": "request", "text": "एक्ज़ाम से एक दिन पहले, यानी सोमवार शाम 6 बजे, रिवीज़न की याद दिलाना"}
+{"id": "hindi-0162", "lang": "hi", "intent": "request", "text": "रात 2 बजे नहीं, कल सुबह 2 बजे उठाना, मैच देखना है"}
+{"id": "hindi-0163", "lang": "hi", "intent": "request", "text": "तुम मुझे शाम 6 बजे याद दिला देना, बाक़ी सब मैं देख लूँगा"}
+{"id": "hindi-0164", "lang": "hi", "intent": "request", "text": "आज के बाद हर दिन दोपहर 1 बजे लंच पर जाना है, याद दिला देना"}
+{"id": "hindi-0165", "lang": "hi", "intent": "request", "text": "मंगलवार शाम 7:30 बजे पैरेंट्स मीटिंग है"}
+{"id": "hindi-0166", "lang": "hi", "intent": "request", "text": "सोने से पहले रात 10 बजे ऐप पर आज का हिसाब लिखना है, रोज़"}
+{"id": "hindi-0167", "lang": "hi", "intent": "request", "text": "कल सुबह 5 बजे ऊबर बुक करनी है, रात को 9 बजे याद दिला देना"}
+{"id": "hindi-0168", "lang": "hi", "intent": "request", "text": "40 मिनट बाद कुकर की सीटी गिनने के लिए बुलाना"}
+{"id": "hindi-0169", "lang": "hi", "intent": "request", "text": "हर महीने की 3 तारीख़ को सुबह 10 बजे बैंक में पासबुक अपडेट करानी है"}
+{"id": "hindi-0170", "lang": "hi", "intent": "request", "text": "आज शाम 6 बजे गुरुद्वारे जाना है, याद दिला दो"}
+{"id": "hindi-0171", "lang": "hi", "intent": "request", "text": "अगले हफ़्ते हर दिन सुबह 6:30 बजे योगा, सोमवार से"}
+{"id": "hindi-0172", "lang": "hi", "intent": "request", "text": "कल दोपहर 2:30 बजे नई कंपनी का HR राउंड है"}
+{"id": "hindi-0173", "lang": "hi", "intent": "request", "text": "रविवार को शाम 6 बजे दोस्तों के साथ मूवी, रिमाइंडर प्लीज़"}
+{"id": "hindi-0174", "lang": "hi", "intent": "request", "text": "रोज़ रात 11 बजे लाइट बंद करने का अलर्ट"}
+{"id": "hindi-0175", "lang": "hi", "intent": "request", "text": "बस कुछ ही मिनट बाद, पाँच बजे, चाय पीनी है"}
+{"id": "hindi-0176", "lang": "hi", "intent": "request", "text": "दोपहर के 3 बजे पैकेज आने वाला है, घर पर रहना है, 2:30 पर बोल देना"}
+{"id": "hindi-0177", "lang": "hi", "intent": "request", "text": "हर शुक्रवार रात 9 बजे दोस्तों के साथ गेम नाइट"}
+{"id": "hindi-0178", "lang": "hi", "intent": "request", "text": "मेरा कल का दिन खाली नहीं है, सुबह 10 बजे और शाम 4 बजे दो मीटिंग हैं"}
+{"id": "hindi-0179", "lang": "hi", "intent": "request", "text": "आज से रोज़ सुबह 5 बजे उठकर पढ़ाई, अलार्म सेट कर दो"}
+{"id": "hindi-0180", "lang": "hi", "intent": "request", "text": "कुछ देर बाद, आधे घंटे में, कपड़े उतारने की याद दिलाना"}
+{"id": "hindi-0181", "lang": "hi", "intent": "request", "text": "परसों रात 8 बजे गृह प्रवेश की पूजा है"}
+{"id": "hindi-0182", "lang": "hi", "intent": "request", "text": "हर चौथे शनिवार सुबह 11 बजे सोसाइटी की मीटिंग"}
+{"id": "hindi-0183", "lang": "hi", "intent": "request", "text": "कल रात खाने के बाद 9 बजे दादी की दवा याद दिला देना"}
+{"id": "hindi-0184", "lang": "hi", "intent": "request", "text": "सोमवार को सुबह 7 बजे से पहले चाबी ढूँढकर रखनी है, रविवार रात को बता देना"}
+{"id": "hindi-0185", "lang": "hi", "intent": "request", "text": "आज दोपहर बाद 4 बजे नया सिम लेने जाना है"}
+{"id": "hindi-0186", "lang": "hi", "intent": "request", "text": "रोज़ शाम 8 बजे पूरे दिन का ख़र्चा नोट करने का रिमाइंडर"}
+{"id": "hindi-0187", "lang": "hi", "intent": "request", "text": "शनिवार शाम 5 बजे तक सामान पैक कर लेना है, 3 बजे याद दिलाना"}
+{"id": "hindi-0188", "lang": "hi", "intent": "request", "text": "कल से हर दिन सुबह की सैर 6 बजे, उठा देना"}
+{"id": "hindi-0189", "lang": "hi", "intent": "request", "text": "डेढ़ घंटे बाद बोलना कि चाय की दुकान पर जाना है"}
+{"id": "hindi-0190", "lang": "hi", "intent": "request", "text": "बुधवार रात 10 बजे मैच है, टीवी चालू करने की याद दिलाना"}
+{"id": "hindi-0191", "lang": "hi", "intent": "request", "text": "हर महीने की 10 तारीख़ को इंटरनेट का बिल"}
+{"id": "hindi-0192", "lang": "hi", "intent": "request", "text": "कल सुबह 8 बजे दफ़्तर में प्रेजेंटेशन देनी है, 7 बजे याद दिला देना"}
+{"id": "hindi-0193", "lang": "hi", "intent": "request", "text": "मेरा इस रविवार सुबह 9 बजे मैराथन है"}
+{"id": "hindi-0194", "lang": "hi", "intent": "request", "text": "रोज़ सुबह 7 बजे और शाम 7 बजे दवा की याद"}
+{"id": "hindi-0195", "lang": "hi", "intent": "request", "text": "भाई सुन, परसों शाम को 6 बजे चौपाटी चलना है, रिमाइंडर डाल दे"}
+{"id": "hindi-0196", "lang": "hi", "intent": "request", "text": "आज रात के 9 बजे से पहले बच्चों का स्कूल प्रोजेक्ट पूरा करवाना है"}
+{"id": "hindi-0197", "lang": "hi", "intent": "request", "text": "अगले साल जनवरी से हर सुबह 6 बजे जिम, नोट कर लो"}
+{"id": "hindi-0198", "lang": "hi", "intent": "request", "text": "गुरुवार सुबह 10 बजे मेरा कोर्ट केस है, बुधवार शाम को याद दिलाना"}
+{"id": "hindi-0199", "lang": "hi", "intent": "request", "text": "रोज़ सुबह उठने के 10 मिनट बाद विटामिन डी की गोली लेनी है"}
+{"id": "hindi-0200", "lang": "hi", "intent": "request", "text": "कल शाम 6 बजे ऑफ़िस से जल्दी निकलना है, 5:30 पर बता देना"}
+{"id": "hindi-0201", "lang": "hi", "intent": "request", "text": "Alarm लगा दो कल सुबह 6 बजे का"}
+{"id": "hindi-0202", "lang": "hi", "intent": "request", "text": "रोज़ सुबह 7 बजे मुझे गुड मॉर्निंग के साथ आज का शेड्यूल बता देना"}
+{"id": "hindi-0203", "lang": "hi", "intent": "request", "text": "हर बुधवार शाम 6 बजे सब्ज़ी मंडी"}
+{"id": "hindi-0204", "lang": "hi", "intent": "request", "text": "कल दोपहर 3 बजे मेरी फ़्रेंड की बर्थडे पार्टी है, गिफ़्ट याद दिलाना"}
+{"id": "hindi-0205", "lang": "hi", "intent": "request", "text": "शुक्रवार सुबह 7:45 की मेट्रो पकड़नी है, 7 बजे बता देना"}
+{"id": "hindi-0206", "lang": "hi", "intent": "request", "text": "अभी 5 मिनट बाद remind करना, चाय उबल रही होगी"}
+{"id": "hindi-0207", "lang": "hi", "intent": "request", "text": "हर दिन रात 10 बजे डायरी लिखनी है, कल से शुरू"}
+{"id": "hindi-0208", "lang": "hi", "intent": "request", "text": "आने वाले सोमवार से हर सुबह 9 बजे पूजा के बाद रिमाइंडर कि लैपटॉप खोलना है"}
+{"id": "hindi-0209", "lang": "hi", "intent": "request", "text": "मंगलवार तक रोज़ शाम 6 बजे सोसायटी की पानी की टंकी चेक करवानी है"}
+{"id": "hindi-0210", "lang": "hi", "intent": "request", "text": "कल सुबह आठ बजे डॉक्टर की क्लिनिक खुलेगी, तभी फ़ोन करना है"}
+{"id": "hindi-0211", "lang": "hi", "intent": "request", "text": "रात 8 बजे बच्चों को दवा देनी है, remind"}
+{"id": "hindi-0212", "lang": "hi", "intent": "request", "text": "हर महीने की 20 तारीख़ को दोपहर 12 बजे घर का टैक्स भरना है"}
+{"id": "hindi-0213", "lang": "hi", "intent": "request", "text": "आज शाम को 7 बजे गणेश जी की आरती में जाना है"}
+{"id": "hindi-0214", "lang": "hi", "intent": "request", "text": "हफ्ते में एक बार, इतवार को, पूरे घर के पौधों को पानी देना याद दिलाना"}
+{"id": "hindi-0215", "lang": "hi", "intent": "request", "text": "कल शाम 4 बजे से 5 बजे तक वीडियो एडिटिंग का समय ब्लॉक कर दो"}
+{"id": "hindi-0216", "lang": "hi", "intent": "request", "text": "परसों सुबह 9 बजे मेरे घर प्लंबर आएगा, याद दिला देना"}
+{"id": "hindi-0217", "lang": "hi", "intent": "request", "text": "बहन की शादी 25 तारीख़ को है, 24 को सुबह 10 बजे ब्यूटी पार्लर बुक है"}
+{"id": "hindi-0218", "lang": "hi", "intent": "request", "text": "रात के 1 बजे जगाना, जल्दी सोने वाला हूँ"}
+{"id": "hindi-0219", "lang": "hi", "intent": "request", "text": "हर रविवार दोपहर 12 बजे घर का राशन ऑर्डर करना"}
+{"id": "hindi-0220", "lang": "hi", "intent": "request", "text": "आज शाम 6 बजे किराना वाले को फ़ोन"}
+{"id": "hindi-0221", "lang": "hi", "intent": "request", "text": "दोपहर 1 बजे ज़ूम पर इंटरव्यू है, 12:45 पर बता देना"}
+{"id": "hindi-0222", "lang": "hi", "intent": "request", "text": "हर दिन 11 बजे सुबह स्क्रीन से ब्रेक लेने की याद दिलाना"}
+{"id": "hindi-0223", "lang": "hi", "intent": "request", "text": "कल से दो हफ़्ते तक रोज़ सुबह 8 बजे फ़िज़ियो एक्सरसाइज़"}
+{"id": "hindi-0224", "lang": "hi", "intent": "request", "text": "सुबह 4:30 बजे उठकर पापा को स्टेशन छोड़ना है"}
+{"id": "hindi-0225", "lang": "hi", "intent": "request", "text": "मुझे हर शनिवार शाम 5 बजे याद दिलाओ कि अगले हफ़्ते का खाना प्लान करना है"}
+{"id": "hindi-0226", "lang": "hi", "intent": "request", "text": "बस एक घंटे में दुकान बंद हो जाएगी, 40 मिनट बाद बता देना"}
+{"id": "hindi-0227", "lang": "hi", "intent": "request", "text": "गुरुवार रात 9 बजे ऑनलाइन सत्संग"}
+{"id": "hindi-0228", "lang": "hi", "intent": "request", "text": "आज रात सोने से पहले 10:15 पर फ़ोन रखकर किताब उठाना याद दिलाना"}
+{"id": "hindi-0229", "lang": "hi", "intent": "request", "text": "कल सुबह नाश्ते के बाद, यानी 9 बजे, एंटीबायोटिक लेनी है"}
+{"id": "hindi-0230", "lang": "hi", "intent": "request", "text": "अगले शनिवार सुबह 11 बजे गाड़ी का पॉल्यूशन टेस्ट कराना है"}
+{"id": "hindi-0231", "lang": "hi", "intent": "request", "text": "हर महीने की 2 तारीख़ और 17 तारीख़ को सुबह 10 बजे पेमेंट रिमाइंडर"}
+{"id": "hindi-0232", "lang": "hi", "intent": "request", "text": "शाम को जब 7 बजें, तब मुझे दवा की याद दिलाना"}
+{"id": "hindi-0233", "lang": "hi", "intent": "request", "text": "कल रात 9:30 बजे गुड नाइट कॉल, remind me please"}
+{"id": "hindi-0234", "lang": "hi", "intent": "request", "text": "सोमवार से शनिवार रोज़ सुबह 6 बजे मंदिर जाना है"}
+{"id": "hindi-0235", "lang": "hi", "intent": "request", "text": "आधे घंटे में रिमाइंडर, बिजली का बिल भरना है"}
+{"id": "hindi-0236", "lang": "hi", "intent": "request", "text": "परसों दोपहर 1:30 बजे बच्चों की छुट्टी है, लेने जाना है"}
+{"id": "hindi-0237", "lang": "hi", "intent": "request", "text": "रोज़ सुबह 9 बजे मुझे आज की तारीख़ और मौसम बता देना"}
+{"id": "hindi-0238", "lang": "hi", "intent": "request", "text": "बुधवार को सुबह 8 बजे गैस सिलेंडर बुक करना है"}
+{"id": "hindi-0239", "lang": "hi", "intent": "request", "text": "हर शुक्रवार को ऑफ़िस से निकलने से पहले शाम 5:30 पर मेल चेक करने की याद दिलाना"}
+{"id": "hindi-0240", "lang": "hi", "intent": "request", "text": "कल सुबह 6:15 पर कैब आएगी, 5:45 पर उठा देना"}
+{"id": "hindi-0241", "lang": "hi", "intent": "request", "text": "दिसंबर की 1 तारीख़ से हर रात 9 बजे ऑनलाइन कोर्स"}
+{"id": "hindi-0242", "lang": "hi", "intent": "request", "text": "आज रात 11 बजे सब खिड़कियाँ बंद करने की याद दिलाना"}
+{"id": "hindi-0243", "lang": "hi", "intent": "request", "text": "अब से ठीक 2 घंटे बाद दवा खानी है"}
+{"id": "hindi-0244", "lang": "hi", "intent": "request", "text": "रविवार को शाम 7 बजे सबको खाने पर बुलाया है, उससे पहले 4 बजे बाज़ार जाना है"}
+{"id": "hindi-0245", "lang": "hi", "intent": "request", "text": "हर सोमवार सुबह 8 बजे मुझे हफ़्ते के तीन ज़रूरी काम बताना"}
+{"id": "hindi-0246", "lang": "hi", "intent": "request", "text": "मंगलवार रात 10 बजे कार की इंश्योरेंस की तारीख़ ख़त्म हो रही है, उसके पहले दोपहर को याद दिलाना"}
+{"id": "hindi-0247", "lang": "hi", "intent": "request", "text": "कल से रोज़ शाम 5 बजे बालकनी में पौधों को देखना है"}
+{"id": "hindi-0248", "lang": "hi", "intent": "request", "text": "सुबह की पहली मीटिंग 9:30 पर है, 9:15 पर बोल देना, हर दिन"}
+{"id": "hindi-0249", "lang": "hi", "intent": "request", "text": "आज शाम 6 बजे ट्यूशन टीचर आएँगे, बच्चों को बता देना"}
+{"id": "hindi-0250", "lang": "hi", "intent": "request", "text": "हर महीने की 28 तारीख़ को रात 8 बजे नेटफ़्लिक्स बंद करने की याद"}
+{"id": "hindi-0251", "lang": "hi", "intent": "request", "text": "कल दोपहर 2 बजे पोस्ट ऑफ़िस से पार्सल लेना है"}
+{"id": "hindi-0252", "lang": "hi", "intent": "request", "text": "सुबह 7:30 बजे हर दिन मुझे आज का पंचांग पढ़कर सुनाना"}
+{"id": "hindi-0253", "lang": "hi", "intent": "request", "text": "हफ़्ते में चार दिन सुबह साइकिल चलानी है, रिमाइंडर दे दिया करो"}
+{"id": "hindi-0254", "lang": "hi", "intent": "request", "text": "परसों सुबह 6 बजे मेरी बस है, पक्का उठा देना"}
+{"id": "hindi-0255", "lang": "hi", "intent": "request", "text": "10 मिनट बाद कॉल करना है, याद दिलाना"}
+{"id": "hindi-0256", "lang": "hi", "intent": "request", "text": "अगले मंगलवार को दोपहर 12 बजे बैंक में लोन की मीटिंग है"}
+{"id": "hindi-0257", "lang": "hi", "intent": "request", "text": "हर शाम 6 बजे ऑफ़िस से निकलते समय घर पर बता देना है, याद दिलाओ"}
+{"id": "hindi-0258", "lang": "hi", "intent": "request", "text": "अभी से 3 घंटे बाद रिमाइंडर, ग्रॉसरी डिलीवरी आएगी"}
+{"id": "hindi-0259", "lang": "hi", "intent": "request", "text": "कल सुबह की चाय 6 बजे चाहिए, उठा देना"}
+{"id": "hindi-0260", "lang": "hi", "intent": "request", "text": "सोमवार से हर शाम 7 बजे बच्चों के साथ गणित की प्रैक्टिस"}
+{"id": "hindi-0261", "lang": "hi", "intent": "request", "text": "आज दोपहर 12:30 बजे के बाद नेहा को फ़ोन करना है"}
+{"id": "hindi-0262", "lang": "hi", "intent": "request", "text": "बुधवार सुबह 10 बजे का वीडियो कॉल कैलेंडर में डाल दो"}
+{"id": "hindi-0263", "lang": "hi", "intent": "request", "text": "हर दिन सुबह 10 बजे और शाम 4 बजे आँखों की कसरत याद दिलाना"}
+{"id": "hindi-0264", "lang": "hi", "intent": "request", "text": "कल दोपहर 12 बजे मकान मालिक आएगा, किराया तैयार रखना याद दिलाना"}
+{"id": "hindi-0265", "lang": "hi", "intent": "request", "text": "आज रात 8:30 बजे डॉक्टर ने फ़ोन पर बात करने को कहा है"}
+{"id": "hindi-0266", "lang": "hi", "intent": "request", "text": "हर शनिवार रात 10 बजे अगले दिन की छुट्टी के लिए अलार्म बंद करने की याद दिलाना"}
+{"id": "hindi-0267", "lang": "hi", "intent": "request", "text": "बस आधे घंटे में ऑनलाइन क्लास है, 25 मिनट बाद उठा देना"}
+{"id": "hindi-0268", "lang": "hi", "intent": "request", "text": "अगले सोमवार से रोज़ सुबह 5:30 बजे दौड़ने जाना है"}
+{"id": "hindi-0269", "lang": "hi", "intent": "request", "text": "त्योहार वाले दिन, 2 नवंबर को सुबह 7 बजे सफ़ाई करनी है"}
+{"id": "hindi-0270", "lang": "hi", "intent": "request", "text": "कल से हर दिन शाम 6 बजे कुत्ते को खाना देने की याद"}
+{"id": "hindi-0271", "lang": "hi", "intent": "request", "text": "पंद्रह मिनट में निकल रहा हूँ, याद दिला देना कि चार्जर रखना है"}
+{"id": "hindi-0272", "lang": "hi", "intent": "request", "text": "कल सुबह 7 बजे टैंकर आएगा, पानी भरने की तैयारी याद दिला देना"}
+{"id": "hindi-0273", "lang": "hi", "intent": "request", "text": "मेरी हर रविवार सुबह 10 बजे बच्चों की ड्रॉइंग क्लास होती है, उसकी याद दिला देना"}
+{"id": "hindi-0274", "lang": "hi", "intent": "request", "text": "रात के खाने से पहले यानी 8 बजे इंसुलिन लेनी है, रोज़"}
+{"id": "hindi-0275", "lang": "hi", "intent": "request", "text": "शुक्रवार दोपहर 3 बजे फ़ाइनल रिपोर्ट सबमिट करनी है, गुरुवार को याद दिला देना"}
+{"id": "hindi-0276", "lang": "hi", "intent": "request", "text": "कल सुबह 6:30 बजे ताज़ा दूध आएगा, बर्तन बाहर रखना याद दिलाना"}
+{"id": "hindi-0277", "lang": "hi", "intent": "request", "text": "सुबह 5 बजे, सुबह 5 बजे उठाना, मैं सुबह की गाड़ी पकड़ूँगा"}
+{"id": "hindi-0278", "lang": "hi", "intent": "request", "text": "हर महीने 12 तारीख़ को मोबाइल रिचार्ज"}
+{"id": "hindi-0279", "lang": "hi", "intent": "request", "text": "आज शाम 4 बजे चाय पर मिलना है, याद दिलाना कि मिठाई ले जानी है"}
+{"id": "hindi-0280", "lang": "hi", "intent": "request", "text": "बुधवार और शुक्रवार हर हफ़्ते शाम 6 बजे डांस क्लास"}
+{"id": "hindi-0281", "lang": "hi", "intent": "request", "text": "सवा दो बजे मेरी मीटिंग है, पौने दो बजे बता देना"}
+{"id": "hindi-0282", "lang": "hi", "intent": "request", "text": "कल से रोज़ सुबह दस बजे पूरे दिन का टू-डू लिस्ट बताना"}
+{"id": "hindi-0283", "lang": "hi", "intent": "request", "text": "शनिवार को दोपहर 2 बजे बाल कटवाने की अपॉइंटमेंट ले रखी है"}
+{"id": "hindi-0284", "lang": "hi", "intent": "request", "text": "20 मिनट में वापस आ रहा हूँ, तब तक खाना गरम रखने को बोल देना"}
+{"id": "hindi-0285", "lang": "hi", "intent": "request", "text": "रविवार रात 9 बजे सोमवार के स्कूल बैग की तैयारी याद दिलाना"}
+{"id": "hindi-0286", "lang": "hi", "intent": "request", "text": "हर महीने के आख़िरी शुक्रवार को शाम 5 बजे टीम लंच"}
+{"id": "hindi-0287", "lang": "hi", "intent": "request", "text": "कल सुबह 9 बजे मेरी गाड़ी का सर्विस सेंटर में अपॉइंटमेंट है, 8 बजे बता देना"}
+{"id": "hindi-0288", "lang": "hi", "intent": "request", "text": "आज रात 12 बजे के बाद वाईफ़ाई बंद करने के लिए याद दिलाना"}
+{"id": "hindi-0289", "lang": "hi", "intent": "request", "text": "हर सुबह 6 बजे प्राणायाम के लिए उठा देना, सोमवार से"}
+{"id": "hindi-0290", "lang": "hi", "intent": "request", "text": "अगली सोमवार दोपहर 1 बजे से पहले टैक्स डॉक्यूमेंट जमा करने हैं"}
+{"id": "hindi-0291", "lang": "hi", "intent": "request", "text": "रोज़ दोपहर के खाने के बाद 2 बजे बीपी की दवा का रिमाइंडर"}
+{"id": "hindi-0292", "lang": "hi", "intent": "request", "text": "10 बजे रात को मुझे याद दिला देना कि गीज़र चालू करना है, कल सुबह के लिए"}
+{"id": "hindi-0293", "lang": "hi", "intent": "request", "text": "परसों शाम 7 बजे कॉलेज रीयूनियन है, 5 बजे निकलने की याद दिलाना"}
+{"id": "hindi-0294", "lang": "hi", "intent": "request", "text": "बस 2 मिनट बाद बता देना, फ़ोन की बैटरी देखनी है"}
+{"id": "hindi-0295", "lang": "hi", "intent": "request", "text": "हर रोज़ सुबह 5:30 पर दूधवाले के लिए दरवाज़ा खोलना है, अलार्म"}
+{"id": "hindi-0296", "lang": "hi", "intent": "request", "text": "गुरुवार शाम 5 बजे मंदिर में भंडारा है, जाना है"}
+{"id": "hindi-0297", "lang": "hi", "intent": "request", "text": "अगले महीने से हर शनिवार सुबह 8 बजे सफ़ाई अभियान में हिस्सा लेना है"}
+{"id": "hindi-0298", "lang": "hi", "intent": "request", "text": "कल दोपहर का अपॉइंटमेंट 12 बजे है, 11 बजे तक नहा-धोकर तैयार होना है"}
+{"id": "hindi-0299", "lang": "hi", "intent": "request", "text": "इस हफ़्ते हर शाम 7 बजे बच्चों को कहानी सुनानी है, remind"}
+{"id": "hindi-0300", "lang": "hi", "intent": "request", "text": "रात 9 बजे हर दिन ईमेल इनबॉक्स ख़ाली करने का समय है, याद दिला देना"}
+{"id": "hindi-0301", "lang": "hi", "intent": "request", "text": "आज दोपहर ठीक 3:15 पर फ़ोन करना है"}
+{"id": "hindi-0302", "lang": "hi", "intent": "request", "text": "कल सुबह 8 बजे मॉर्निंग वॉक, आज रात को याद दिला देना"}
+{"id": "hindi-0303", "lang": "hi", "intent": "request", "text": "शनिवार रात 10 बजे से पहले किराए की रसीद भेजनी है"}
+{"id": "hindi-0304", "lang": "hi", "intent": "request", "text": "हर महीने की पहली तारीख़ को सुबह 9 बजे SIP चेक करना"}
+{"id": "hindi-0305", "lang": "hi", "intent": "request", "text": "एक घंटे बाद कपड़े प्रेस करने की याद दिलाना"}
+{"id": "hindi-0306", "lang": "hi", "intent": "request", "text": "सुबह की क्लास 7 बजे है, रोज़ 6 बजे उठाना"}
+{"id": "hindi-0307", "lang": "hi", "intent": "request", "text": "बुधवार तक रोज़ शाम 5 बजे सबमिशन की याद दिलाना"}
+{"id": "hindi-0308", "lang": "hi", "intent": "request", "text": "अगले हफ़्ते मंगलवार को शाम 4 बजे बेटी के स्कूल में फ़ंक्शन है"}
+{"id": "hindi-0309", "lang": "hi", "intent": "request", "text": "आज रात 11 बजे सोने से पहले अलार्म 6 बजे का लगाना याद दिलाना"}
+{"id": "hindi-0310", "lang": "hi", "intent": "request", "text": "हर इतवार सुबह 9 बजे नाश्ते में पराठे बनाने हैं, याद दिलाना"}
+{"id": "hindi-0311", "lang": "hi", "intent": "request", "text": "कल सुबह के 11 बजे बैंक वाले का फ़ोन आएगा, उठाना है"}
+{"id": "hindi-0312", "lang": "hi", "intent": "request", "text": "30 सेकंड बाद बताना"}
+{"id": "hindi-0313", "lang": "hi", "intent": "request", "text": "परसों रात की पार्टी में 9 बजे पहुँचना है, 8 बजे बोल देना"}
+{"id": "hindi-0314", "lang": "hi", "intent": "request", "text": "रोज़ सुबह उठते ही, 6 बजे, ग्रीन टी के लिए रिमाइंड करना"}
+{"id": "hindi-0315", "lang": "hi", "intent": "request", "text": "हर शनिवार शाम 4 बजे क्रिकेट मैच है, जर्सी याद दिलाना"}
+{"id": "hindi-0316", "lang": "hi", "intent": "request", "text": "मुझे आज शाम 5:30 बजे ऑफ़िस से कॉल आएगी, ध्यान दिलाना"}
+{"id": "hindi-0317", "lang": "hi", "intent": "request", "text": "कल तक का समय है, दोपहर 12 बजे से पहले फ़ॉर्म भरकर भेजना है"}
+{"id": "hindi-0318", "lang": "hi", "intent": "request", "text": "हर दिन सुबह 6:30 बजे फ़ोन पर समाचार सुनना है, अलार्म बजा देना"}
+{"id": "hindi-0319", "lang": "hi", "intent": "request", "text": "रविवार को सुबह 7 बजे गाँव के लिए निकलना है, शनिवार रात को याद दिला देना"}
+{"id": "hindi-0320", "lang": "hi", "intent": "request", "text": "आज दोपहर 2 बजे के बाद, जब ऑफ़िस ख़ाली हो, तब बॉस से बात करने की याद दिलाना"}
+{"id": "hindi-0321", "lang": "hi", "intent": "request", "text": "हफ़्ते में एक बार, गुरुवार को, शाम 6 बजे फल लाने के लिए रिमाइंडर"}
+{"id": "hindi-0322", "lang": "hi", "intent": "request", "text": "चालीस मिनट बाद मीटिंग शुरू होगी, पंद्रह मिनट पहले बताना"}
+{"id": "hindi-0323", "lang": "hi", "intent": "request", "text": "सोमवार को सुबह 8:15 पर बेटे को डॉक्टर के पास ले जाना है"}
+{"id": "hindi-0324", "lang": "hi", "intent": "request", "text": "कल रात 10 बजे से सुबह 6 बजे तक डू नॉट डिस्टर्ब रखना है, 10 बजे बता देना"}
+{"id": "hindi-0325", "lang": "hi", "intent": "request", "text": "अगले महीने की 5 तारीख़ से हर शाम 6 बजे स्विमिंग पूल"}
+{"id": "hindi-0326", "lang": "hi", "intent": "request", "text": "रोज़ सुबह 8 बजे पेड़ों में पानी डालने की याद दिलाना, गर्मियों तक"}
+{"id": "hindi-0327", "lang": "hi", "intent": "request", "text": "आज शाम 6 बजे जिम का टाइम है, 5:30 पर बता देना"}
+{"id": "hindi-0328", "lang": "hi", "intent": "request", "text": "परसों सुबह 10 बजे का कोई प्लान मत रखना, मुझे बैंक जाना है"}
+{"id": "hindi-0329", "lang": "hi", "intent": "request", "text": "हर मंगलवार और शुक्रवार दोपहर 1 बजे मंदिर में प्रसाद बाँटना है"}
+{"id": "hindi-0330", "lang": "hi", "intent": "request", "text": "रात 7:30 बजे बच्चों का कार्टून ख़त्म करवाना याद दिला देना, रोज़"}
+{"id": "hindi-0331", "lang": "hi", "intent": "request", "text": "कल सुबह 10 बजे ऑफ़िस में नए लोगों की ट्रेनिंग देनी है"}
+{"id": "hindi-0332", "lang": "hi", "intent": "request", "text": "हर सोमवार सुबह 9 बजे फ़ोन पर सप्ताह का बजट देखना"}
+{"id": "hindi-0333", "lang": "hi", "intent": "request", "text": "शाम 6 बजे तक घर पहुँचना है, 5 बजे ऑफ़िस से निकलने का रिमाइंडर लगा दो"}
+{"id": "hindi-0334", "lang": "hi", "intent": "request", "text": "आज दोपहर 12 बजे से पहले टैक्स रिफ़ंड चेक करना है"}
+{"id": "hindi-0335", "lang": "hi", "intent": "request", "text": "बुधवार रात 8 बजे टीम का क्विज़ है, याद दिलाना"}
+{"id": "hindi-0336", "lang": "hi", "intent": "request", "text": "1 घंटे 15 मिनट बाद बताना"}
+{"id": "hindi-0337", "lang": "hi", "intent": "request", "text": "कल से रोज़ दोपहर 12 बजे धूप में 15 मिनट बैठना है, विटामिन डी के लिए, याद दिलाना"}
+{"id": "hindi-0338", "lang": "hi", "intent": "request", "text": "हर शुक्रवार शाम 6 बजे फ़ोन से हफ़्ते की फ़ोटो बैकअप करना"}
+{"id": "hindi-0339", "lang": "hi", "intent": "request", "text": "सुबह के 4 बजे कैब बुक करनी है, रात 12 बजे याद दिला देना"}
+{"id": "hindi-0340", "lang": "hi", "intent": "request", "text": "अगले रविवार सुबह 6 बजे पूरे परिवार का पिकनिक पर जाने का प्लान है"}
+{"id": "hindi-0341", "lang": "hi", "intent": "request", "text": "रात को 9 बजे रोज़ ब्लड प्रेशर नापना है"}
+{"id": "hindi-0342", "lang": "hi", "intent": "request", "text": "कल दोपहर 1 बजे से पहले, यानी 12:30 पर, सैलून के लिए निकल जाना है"}
+{"id": "hindi-0343", "lang": "hi", "intent": "request", "text": "सोमवार से शनिवार रोज़ शाम 5 बजे ट्यूशन, रिमाइंडर"}
+{"id": "hindi-0344", "lang": "hi", "intent": "request", "text": "आज रात 10 बजे मुझे याद दिलाना कि कल मीटिंग के लिए प्रेजेंटेशन ले जानी है"}
+{"id": "hindi-0345", "lang": "hi", "intent": "request", "text": "हर 3 घंटे में बच्चे का दूध देने की याद दिलाना"}
+{"id": "hindi-0346", "lang": "hi", "intent": "request", "text": "शनिवार दोपहर 3 बजे सास-ससुर को एयरपोर्ट से लेना है"}
+{"id": "hindi-0347", "lang": "hi", "intent": "request", "text": "कल सुबह उठकर 6:30 पर पहला काम पानी की टंकी चेक करना"}
+{"id": "hindi-0348", "lang": "hi", "intent": "request", "text": "हर महीने की 8 तारीख़ को सुबह 11 बजे सोसाइटी का मेंटेनेंस भरना है"}
+{"id": "hindi-0349", "lang": "hi", "intent": "request", "text": "आज की रात 9 बजे टीवी पर क्रिकेट है, याद दिला देना"}
+{"id": "hindi-0350", "lang": "hi", "intent": "request", "text": "परसों दोपहर बाद 3 बजे प्रिंसिपल से मिलना है"}
+{"id": "hindi-0351", "lang": "hi", "intent": "request", "text": "रोज़ शाम को 6 बजे घर आकर पहले हाथ-मुँह धोना है, हल्का सा नोटिफ़िकेशन भेज देना"}
+{"id": "hindi-0352", "lang": "hi", "intent": "request", "text": "मेरे लिए कल सुबह 8 बजे एक रिमाइंडर बना दो कि मम्मी की दवा ख़त्म हो रही है"}
+{"id": "hindi-0353", "lang": "hi", "intent": "request", "text": "अगले हफ़्ते हर दिन दोपहर 2 बजे ऑनलाइन परीक्षा की तैयारी का रिमाइंडर, सोमवार से शुक्रवार"}
+{"id": "hindi-0354", "lang": "hi", "intent": "request", "text": "हर रविवार शाम को 6 बजे पूरे हफ़्ते के ख़र्चे का हिसाब"}
+{"id": "hindi-0355", "lang": "hi", "intent": "request", "text": "सोमवार को सुबह 6 बजे उठा देना, नई जॉब का पहला दिन है"}
+{"id": "hindi-0356", "lang": "hi", "intent": "request", "text": "आज रात 8 बजे के बाद बारिश हो सकती है, 7 बजे कपड़े उतारने की याद दिला देना"}
+{"id": "hindi-0357", "lang": "hi", "intent": "request", "text": "बस 3 घंटे बाद एक बार चेक करना कि डाउनलोड ख़त्म हुआ या नहीं"}
+{"id": "hindi-0358", "lang": "hi", "intent": "request", "text": "कल शाम 6 बजे हनुमान मंदिर में जाना है, मंगलवार है"}
+{"id": "hindi-0359", "lang": "hi", "intent": "request", "text": "हर दिन सुबह की पहली चाय के साथ 6:15 पर अख़बार का रिमाइंडर"}
+{"id": "hindi-0360", "lang": "hi", "intent": "request", "text": "अगले साल 15 अप्रैल को सुबह 9 बजे टैक्स भरने की याद दिलाना"}
+{"id": "hindi-0361", "lang": "hi", "intent": "request", "text": "आज रात 10:30 बजे के बाद मुझे बिज़ी मत दिखाना, उससे पहले 10 बजे बता देना कि सोना है"}
+{"id": "hindi-0362", "lang": "hi", "intent": "request", "text": "परसों रविवार है, सुबह 9 बजे कुकिंग क्लास है"}
+{"id": "hindi-0363", "lang": "hi", "intent": "request", "text": "हर दो दिन में सुबह 7 बजे पौधों का हाल देखना, याद दिलाना"}
+{"id": "hindi-0364", "lang": "hi", "intent": "request", "text": "बुधवार की शाम 5 बजे मेरा डेंटिस्ट का फ़ॉलो-अप है"}
+{"id": "hindi-0365", "lang": "hi", "intent": "request", "text": "45 मिनट बाद कपड़े धोने की मशीन चेक करनी है, बता देना"}
+{"id": "hindi-0366", "lang": "hi", "intent": "request", "text": "कल सुबह 6 बजे से रोज़ उठाना, एक महीने तक"}
+{"id": "hindi-0367", "lang": "hi", "intent": "request", "text": "आज शाम 7 बजे के बाद से कोई मीटिंग नहीं रखना, मुझे घर जल्दी जाना है, 6:30 पर याद दिलाना"}
+{"id": "hindi-0368", "lang": "hi", "intent": "request", "text": "शुक्रवार दोपहर 2 बजे जुमे के बाद दोस्तों से मिलना है"}
+{"id": "hindi-0369", "lang": "hi", "intent": "request", "text": "हर शनिवार सुबह 9 बजे पुरानी किताबें बाँटने वाले ग्रुप में जाना है"}
+{"id": "hindi-0370", "lang": "hi", "intent": "request", "text": "रोज़ सुबह 6 बजे उठकर आधा घंटा पढ़ाई, फिर 6:30 पर चाय, दोनों के लिए अलार्म"}
+{"id": "hindi-0371", "lang": "hi", "intent": "request", "text": "कल दोपहर 1 बजे माँ को डॉक्टर के पास ले जाना है, 12 बजे याद दिलाना"}
+{"id": "hindi-0372", "lang": "hi", "intent": "request", "text": "हर महीने की 6 तारीख़ को नौकरानी की तनख़्वाह देनी है"}
+{"id": "hindi-0373", "lang": "hi", "intent": "request", "text": "अगले सोमवार सुबह 9 बजे मेरा पहला दिन है नए ऑफ़िस में, 7 बजे उठा देना"}
+{"id": "hindi-0374", "lang": "hi", "intent": "request", "text": "रात 12 बजे केक काटना है, 11:50 पर याद दिलाना"}
+{"id": "hindi-0375", "lang": "hi", "intent": "request", "text": "दो घंटे बाद दोबारा चेक करना कि ऑर्डर आया या नहीं"}
+{"id": "hindi-0376", "lang": "hi", "intent": "request", "text": "हर रविवार शाम 6 बजे आरती"}
+{"id": "hindi-0377", "lang": "hi", "intent": "request", "text": "आज दोपहर 4 बजे सोसायटी में पानी बंद रहेगा, उससे पहले 3 बजे पानी भर लेना याद दिलाना"}
+{"id": "hindi-0378", "lang": "hi", "intent": "request", "text": "सुबह सुबह 6 बजे ताज़ा अख़बार आता है, रोज़ उसी वक़्त याद दिला देना कि दरवाज़ा खोलना है"}
+{"id": "hindi-0379", "lang": "hi", "intent": "request", "text": "रविवार तक हर दिन सुबह 7 बजे दादी को फ़ोन"}
+{"id": "hindi-0380", "lang": "hi", "intent": "request", "text": "कल शाम 6 बजे दोस्त से मिलने कॉफ़ी शॉप जाना है"}
+{"id": "hindi-0381", "lang": "hi", "intent": "request", "text": "अगले हफ़्ते गुरुवार को रात 9 बजे शादी की रिसेप्शन है"}
+{"id": "hindi-0382", "lang": "hi", "intent": "request", "text": "हर शुक्रवार सुबह 7:30 बजे बच्चों के स्पोर्ट्स डे का सामान याद दिलाना"}
+{"id": "hindi-0383", "lang": "hi", "intent": "request", "text": "आज रात के 8 बजे गैस सिलेंडर बुक करने का रिमाइंडर"}
+{"id": "hindi-0384", "lang": "hi", "intent": "request", "text": "एक घंटे में दादाजी को अस्पताल ले जाना है, याद दिला देना"}
+{"id": "hindi-0385", "lang": "hi", "intent": "request", "text": "कल सुबह 5:50 पर एक अलार्म और 6:00 पर एक अलार्म"}
+{"id": "hindi-0386", "lang": "hi", "intent": "request", "text": "हर बुधवार सुबह 8 बजे रद्दी वाले को बुलाना है"}
+{"id": "hindi-0387", "lang": "hi", "intent": "request", "text": "सुबह 9 बजे से पहले आज दूध का बिल देना है"}
+{"id": "hindi-0388", "lang": "hi", "intent": "request", "text": "इस महीने की 30 तारीख़ को दोपहर 12 बजे प्रॉपर्टी टैक्स की आख़िरी तारीख़ है, 29 को याद दिलाना"}
+{"id": "hindi-0389", "lang": "hi", "intent": "request", "text": "रोज़ दिन में दो बार, सुबह 9 और शाम 9 बजे, मुझे मेरी दवा की याद दिलाना"}
+{"id": "hindi-0390", "lang": "hi", "intent": "request", "text": "परसों से हर सुबह 7 बजे गार्डन में टहलना है"}
+{"id": "hindi-0391", "lang": "hi", "intent": "request", "text": "शनिवार सुबह मेरा पूजा पाठ है, 6 बजे उठाना"}
+{"id": "hindi-0392", "lang": "hi", "intent": "request", "text": "रात 9:45 पर अपना बैग पैक करने का रिमाइंडर, कल सुबह ट्रेन है"}
+{"id": "hindi-0393", "lang": "hi", "intent": "request", "text": "हर महीने की 14 तारीख़ को क्रेडिट कार्ड का बिल, शाम 6 बजे याद दिलाना"}
+{"id": "hindi-0394", "lang": "hi", "intent": "request", "text": "आज शाम 5 बजे के बाद मीटिंग लिंक भेज देना है, 4:45 पर बता देना"}
+{"id": "hindi-0395", "lang": "hi", "intent": "request", "text": "अगले मंगलवार से हर सुबह 10 बजे फ़िज़ियोथेरेपी"}
+{"id": "hindi-0396", "lang": "hi", "intent": "request", "text": "कल रात 8 बजे सबको खाने पर बुलाया है, मैं 5 बजे सब्ज़ी लेने जाऊँगा"}
+{"id": "hindi-0397", "lang": "hi", "intent": "request", "text": "गुरुवार की सुबह टीकाकरण का समय 9:30 है, पहले से बता देना"}
+{"id": "hindi-0398", "lang": "hi", "intent": "request", "text": "आधे घंटे बाद नहाने जाना है, उठा देना"}
+{"id": "hindi-0399", "lang": "hi", "intent": "request", "text": "रोज़ शाम 6 बजे मेरे लिए एक क्विक न्यूज़ समरी भेजना"}
+{"id": "hindi-0400", "lang": "hi", "intent": "request", "text": "सोमवार को सुबह 10 बजे बैंक खुलते ही लॉकर वाला काम निपटाना है"}
+{"id": "hindi-0401", "lang": "hi", "intent": "mention", "text": "बचपन में हम रोज़ शाम को खेलते थे"}
+{"id": "hindi-0402", "lang": "hi", "intent": "mention", "text": "कल रात बहुत बारिश हुई"}
+{"id": "hindi-0403", "lang": "hi", "intent": "mention", "text": "सोमवार सबसे थकाने वाला दिन है"}
+{"id": "hindi-0404", "lang": "hi", "intent": "mention", "text": "सुबह की चाय सबसे अच्छी लगती है"}
+{"id": "hindi-0405", "lang": "hi", "intent": "mention", "text": "ट्रैफ़िक में दो घंटे लग गए"}
+{"id": "hindi-0406", "lang": "hi", "intent": "mention", "text": "हर वक़्त शिकायत करना ठीक नहीं"}
+{"id": "hindi-0407", "lang": "hi", "intent": "mention", "text": "दिन रात मेहनत करके उसने यह मुकाम पाया"}
+{"id": "hindi-0408", "lang": "hi", "intent": "mention", "text": "दिवाली इस साल कब है?"}
+{"id": "hindi-0409", "lang": "hi", "intent": "mention", "text": "अभी कितने बजे हैं?"}
+{"id": "hindi-0410", "lang": "hi", "intent": "mention", "text": "कल हो ना हो मेरी पसंदीदा फ़िल्म है"}
+{"id": "hindi-0411", "lang": "hi", "intent": "mention", "text": "पापा हर सुबह पाँच बजे उठ जाते थे जब हम छोटे थे"}
+{"id": "hindi-0412", "lang": "hi", "intent": "mention", "text": "भारत ने आज शाम तक 280 रन बना लिए"}
+{"id": "hindi-0413", "lang": "hi", "intent": "mention", "text": "आज सोना 72,000 रुपये पर बंद हुआ"}
+{"id": "hindi-0414", "lang": "hi", "intent": "mention", "text": "परसों जो फ़िल्म देखी थी वो बहुत बोरिंग थी"}
+{"id": "hindi-0415", "lang": "hi", "intent": "mention", "text": "रात की रानी की ख़ुशबू बहुत तेज़ होती है"}
+{"id": "hindi-0416", "lang": "hi", "intent": "mention", "text": "आज सुबह मैंने बहुत अच्छा नाश्ता किया"}
+{"id": "hindi-0417", "lang": "hi", "intent": "mention", "text": "कल मीटिंग में बहुत बहस हुई"}
+{"id": "hindi-0418", "lang": "hi", "intent": "mention", "text": "भैया कल सुबह दिल्ली जा रहे हैं"}
+{"id": "hindi-0419", "lang": "hi", "intent": "mention", "text": "शाम की चाय के साथ पकौड़े का मज़ा ही अलग है"}
+{"id": "hindi-0420", "lang": "hi", "intent": "mention", "text": "दैनिक भास्कर में आज एक अच्छा लेख पढ़ा"}
+{"id": "hindi-0421", "lang": "hi", "intent": "mention", "text": "यह गाना सुबह-सुबह सुनने में बहुत अच्छा लगता है"}
+{"id": "hindi-0422", "lang": "hi", "intent": "mention", "text": "इतवार का दिन तो आराम का होता है"}
+{"id": "hindi-0423", "lang": "hi", "intent": "mention", "text": "उस दिन हम पूरे दिन घूमते रहे"}
+{"id": "hindi-0424", "lang": "hi", "intent": "mention", "text": "रविवार की रात मुझे हमेशा उदास कर देती है"}
+{"id": "hindi-0425", "lang": "hi", "intent": "mention", "text": "पिछले हफ़्ते हम शिमला गए थे"}
+{"id": "hindi-0426", "lang": "hi", "intent": "mention", "text": "होली कब आती है, मार्च में या फ़रवरी में?"}
+{"id": "hindi-0427", "lang": "hi", "intent": "mention", "text": "वह रोज़ सुबह छह बजे दौड़ने जाता है, बहुत फ़िट है"}
+{"id": "hindi-0428", "lang": "hi", "intent": "mention", "text": "आज का दिन बहुत लंबा रहा"}
+{"id": "hindi-0429", "lang": "hi", "intent": "mention", "text": "अमिताभ बच्चन की फ़िल्म त्रिशूल रात आठ बजे आती थी टीवी पर"}
+{"id": "hindi-0430", "lang": "hi", "intent": "mention", "text": "मेरा नाम सुबह है, पर लोग मुझे सब कहते हैं"}
+{"id": "hindi-0431", "lang": "hi", "intent": "mention", "text": "आजकल हर कोई फ़ोन में डूबा रहता है"}
+{"id": "hindi-0432", "lang": "hi", "intent": "mention", "text": "चाय पर चर्चा रात भर चलती रही"}
+{"id": "hindi-0433", "lang": "hi", "intent": "mention", "text": "आज मेरा जन्मदिन है, सबने बहुत बधाइयाँ दीं"}
+{"id": "hindi-0434", "lang": "hi", "intent": "mention", "text": "कल शाम को गली में क्रिकेट खेलते हुए खिड़की का शीशा टूट गया"}
+{"id": "hindi-0435", "lang": "hi", "intent": "mention", "text": "भारत-पाकिस्तान का मैच रविवार को हुआ था और भारत जीता"}
+{"id": "hindi-0436", "lang": "hi", "intent": "mention", "text": "इस दुकान का दही रोज़ ताज़ा मिलता है"}
+{"id": "hindi-0437", "lang": "hi", "intent": "mention", "text": "आज एक घंटा देर से पहुँचा और बॉस ने कुछ नहीं कहा"}
+{"id": "hindi-0438", "lang": "hi", "intent": "mention", "text": "सर्दियों की धूप का अपना ही मज़ा है"}
+{"id": "hindi-0439", "lang": "hi", "intent": "mention", "text": "आज टमाटर 80 रुपये किलो बिक रहा है"}
+{"id": "hindi-0440", "lang": "hi", "intent": "mention", "text": "दादी हर शाम तुलसी के पास दिया जलाती थीं"}
+{"id": "hindi-0441", "lang": "hi", "intent": "mention", "text": "भाई ने कहा कि वो परसों शाम को आएगा, मुझे तो पता भी नहीं था"}
+{"id": "hindi-0442", "lang": "hi", "intent": "mention", "text": "हर रात सपने में वही चेहरा दिखता है"}
+{"id": "hindi-0443", "lang": "hi", "intent": "mention", "text": "बीते हुए कल को याद करके क्या फ़ायदा"}
+{"id": "hindi-0444", "lang": "hi", "intent": "mention", "text": "कल सुबह पड़ोस वाले अंकल की तबीयत ख़राब हो गई थी"}
+{"id": "hindi-0445", "lang": "hi", "intent": "mention", "text": "बस में खड़े-खड़े पूरे तीन घंटे हो गए थे"}
+{"id": "hindi-0446", "lang": "hi", "intent": "mention", "text": "आज शनिवार है ना?"}
+{"id": "hindi-0447", "lang": "hi", "intent": "mention", "text": "कौन सा महीना है अभी, नवंबर या दिसंबर?"}
+{"id": "hindi-0448", "lang": "hi", "intent": "mention", "text": "मैंने कल रात बहुत देर तक पढ़ाई की"}
+{"id": "hindi-0449", "lang": "hi", "intent": "mention", "text": "आज ऑफ़िस में लंच ब्रेक सिर्फ़ दस मिनट का मिला"}
+{"id": "hindi-0450", "lang": "hi", "intent": "mention", "text": "सुबह-सुबह मंदिर की घंटियों की आवाज़ सुकून देती है"}
+{"id": "hindi-0451", "lang": "hi", "intent": "mention", "text": "मेरी बहन हर रविवार को अपनी दोस्त से मिलती है"}
+{"id": "hindi-0452", "lang": "hi", "intent": "mention", "text": "तारक मेहता का उल्टा चश्मा रोज़ रात आता है, मुझे बहुत पसंद है"}
+{"id": "hindi-0453", "lang": "hi", "intent": "mention", "text": "शाम ढलते ही बाज़ार में रौनक बढ़ जाती है"}
+{"id": "hindi-0454", "lang": "hi", "intent": "mention", "text": "आज बिजली दिन भर गुल रही"}
+{"id": "hindi-0455", "lang": "hi", "intent": "mention", "text": "हमारी कंपनी में हर शुक्रवार कैज़ुअल ड्रेस होती है"}
+{"id": "hindi-0456", "lang": "hi", "intent": "mention", "text": "रात में सड़कें कितनी शांत लगती हैं"}
+{"id": "hindi-0457", "lang": "hi", "intent": "mention", "text": "अरे वाह, आज तो मौसम बहुत अच्छा है"}
+{"id": "hindi-0458", "lang": "hi", "intent": "mention", "text": "दो साल पहले इसी दिन हमने यह घर लिया था"}
+{"id": "hindi-0459", "lang": "hi", "intent": "mention", "text": "कल का इंतज़ार हर किसी को रहता है"}
+{"id": "hindi-0460", "lang": "hi", "intent": "mention", "text": "पूरा दिन मीटिंग में निकल गया, कुछ काम ही नहीं हुआ"}
+{"id": "hindi-0461", "lang": "hi", "intent": "mention", "text": "रात के खाने में आज दाल चावल बने थे"}
+{"id": "hindi-0462", "lang": "hi", "intent": "mention", "text": "पहले ज़माने में लोग सूरज के साथ उठते थे"}
+{"id": "hindi-0463", "lang": "hi", "intent": "mention", "text": "सुनो, आज सुबह एक अजीब बात हुई मेरे साथ"}
+{"id": "hindi-0464", "lang": "hi", "intent": "mention", "text": "आज की ताज़ा ख़बर बहुत चौंकाने वाली है"}
+{"id": "hindi-0465", "lang": "hi", "intent": "mention", "text": "मेरे चाचा हर मंगलवार व्रत रखते हैं"}
+{"id": "hindi-0466", "lang": "hi", "intent": "mention", "text": "बारिश के मौसम में शाम का नज़ारा कमाल का होता है"}
+{"id": "hindi-0467", "lang": "hi", "intent": "mention", "text": "अख़बार वाला रोज़ देर से आता है, यह उसकी पुरानी आदत है"}
+{"id": "hindi-0468", "lang": "hi", "intent": "mention", "text": "पिछले साल दिसंबर में बहुत ठंड पड़ी थी"}
+{"id": "hindi-0469", "lang": "hi", "intent": "mention", "text": "अगर सुबह जल्दी उठो तो दिन लंबा लगता है"}
+{"id": "hindi-0470", "lang": "hi", "intent": "mention", "text": "लंच के बाद नींद आना आम बात है"}
+{"id": "hindi-0471", "lang": "hi", "intent": "mention", "text": "आज पेट्रोल 105 रुपये लीटर हो गया"}
+{"id": "hindi-0472", "lang": "hi", "intent": "mention", "text": "भारतीय टीम ने कल रात ऑस्ट्रेलिया को 3 विकेट से हराया"}
+{"id": "hindi-0473", "lang": "hi", "intent": "mention", "text": "शुक्रवार की शाम का अपना अलग ही जोश होता है"}
+{"id": "hindi-0474", "lang": "hi", "intent": "mention", "text": "आज सुबह से ही सिर में दर्द है"}
+{"id": "hindi-0475", "lang": "hi", "intent": "mention", "text": "मेरा बेटा रोज़ स्कूल से आकर सो जाता है"}
+{"id": "hindi-0476", "lang": "hi", "intent": "mention", "text": "आजकल रात को जल्दी नींद आ जाती है"}
+{"id": "hindi-0477", "lang": "hi", "intent": "mention", "text": "शाम के छह बजे मैच शुरू हुआ और रात दस बजे ख़त्म"}
+{"id": "hindi-0478", "lang": "hi", "intent": "mention", "text": "सुबह का भूला शाम को घर लौट आए तो उसे भूला नहीं कहते"}
+{"id": "hindi-0479", "lang": "hi", "intent": "mention", "text": "आज का राशिफल पढ़ा, लिखा था कि दिन अच्छा रहेगा"}
+{"id": "hindi-0480", "lang": "hi", "intent": "mention", "text": "कौन बनेगा करोड़पति हर रात देखने के लिए पापा इंतज़ार करते हैं"}
+{"id": "hindi-0481", "lang": "hi", "intent": "mention", "text": "आज धूप बहुत तेज़ थी, दोपहर में तो निकलना मुश्किल था"}
+{"id": "hindi-0482", "lang": "hi", "intent": "mention", "text": "वो बोला कि सोमवार को मीटिंग है, पर मैं तो छुट्टी पर हूँ"}
+{"id": "hindi-0483", "lang": "hi", "intent": "mention", "text": "कल की बात है, मैं बाज़ार से लौट रहा था"}
+{"id": "hindi-0484", "lang": "hi", "intent": "mention", "text": "पिछले रविवार हमने पूरे दिन आराम किया"}
+{"id": "hindi-0485", "lang": "hi", "intent": "mention", "text": "आधा घंटा लाइन में खड़ा रहने के बाद भी टिकट नहीं मिला"}
+{"id": "hindi-0486", "lang": "hi", "intent": "mention", "text": "रोज़ नए बहाने बनाना उसकी आदत है"}
+{"id": "hindi-0487", "lang": "hi", "intent": "mention", "text": "रात गई बात गई"}
+{"id": "hindi-0488", "lang": "hi", "intent": "mention", "text": "सूर्योदय का दृश्य पहाड़ों से बहुत सुंदर दिखता है"}
+{"id": "hindi-0489", "lang": "hi", "intent": "mention", "text": "आज शाम तक की हेडलाइन में वही ख़बर छाई रही"}
+{"id": "hindi-0490", "lang": "hi", "intent": "mention", "text": "इस साल गर्मी कुछ ज़्यादा ही पड़ी"}
+{"id": "hindi-0491", "lang": "hi", "intent": "mention", "text": "एक दिन ऐसा भी आएगा जब सब कुछ बदल जाएगा, ऐसा लोग कहते हैं"}
+{"id": "hindi-0492", "lang": "hi", "intent": "mention", "text": "सारा दिन बस्ते का बोझ उठाकर बच्चे थक जाते हैं"}
+{"id": "hindi-0493", "lang": "hi", "intent": "mention", "text": "मेरे पड़ोसी हर सुबह छह बजे तेज़ आवाज़ में भजन बजाते हैं, बहुत परेशान करते हैं"}
+{"id": "hindi-0494", "lang": "hi", "intent": "mention", "text": "शनिवार की रात फ़िल्म देखने का प्लान उनका है, मेरा नहीं"}
+{"id": "hindi-0495", "lang": "hi", "intent": "mention", "text": "आप मेरे आज सुबह के सवाल का जवाब दे सकते हैं क्या?"}
+{"id": "hindi-0496", "lang": "hi", "intent": "mention", "text": "आज दोपहर का खाना बहुत स्वादिष्ट था"}
+{"id": "hindi-0497", "lang": "hi", "intent": "mention", "text": "रात के तीन बजे अचानक नींद खुल गई थी"}
+{"id": "hindi-0498", "lang": "hi", "intent": "mention", "text": "सन्डे को मेरे घर में सब देर तक सोते हैं"}
+{"id": "hindi-0499", "lang": "hi", "intent": "mention", "text": "एक घंटे की फ़िल्म में दो गाने ही अच्छे थे"}
+{"id": "hindi-0500", "lang": "hi", "intent": "mention", "text": "हर घर कुछ कहता है, वक़्त ने बताया"}
+{"id": "hindi-0501", "lang": "hi", "intent": "mention", "text": "स्कूल के दिनों में हम हर सुबह प्रार्थना में खड़े होते थे"}
+{"id": "hindi-0502", "lang": "hi", "intent": "mention", "text": "आज का पेपर बहुत आसान था"}
+{"id": "hindi-0503", "lang": "hi", "intent": "mention", "text": "शुक्रवार रात की पार्टी में वो नाच-नाचकर थक गया था, बहुत मज़ा आया"}
+{"id": "hindi-0504", "lang": "hi", "intent": "mention", "text": "नवरात्रि में रोज़ रात को गरबा होता है, हमारे शहर में यह बहुत मशहूर है"}
+{"id": "hindi-0505", "lang": "hi", "intent": "mention", "text": "मंगलवार का दिन हनुमान जी का माना जाता है"}
+{"id": "hindi-0506", "lang": "hi", "intent": "mention", "text": "इस ट्रेन को दिल्ली पहुँचने में बारह घंटे लगते हैं"}
+{"id": "hindi-0507", "lang": "hi", "intent": "mention", "text": "तीन दिन से लगातार बारिश हो रही है"}
+{"id": "hindi-0508", "lang": "hi", "intent": "mention", "text": "आज भी कल की तरह ही ठंड है"}
+{"id": "hindi-0509", "lang": "hi", "intent": "mention", "text": "रात भर जागकर उसने किताब ख़त्म कर दी"}
+{"id": "hindi-0510", "lang": "hi", "intent": "mention", "text": "गुड मॉर्निंग वियतनाम फ़िल्म में रॉबिन विलियम्स ने कमाल का अभिनय किया"}
+{"id": "hindi-0511", "lang": "hi", "intent": "mention", "text": "कल रात के खाने में पनीर बना था, बहुत मज़ेदार"}
+{"id": "hindi-0512", "lang": "hi", "intent": "mention", "text": "सुबह की सैर से सेहत अच्छी रहती है, ऐसा डॉक्टर कहते हैं"}
+{"id": "hindi-0513", "lang": "hi", "intent": "mention", "text": "आज सुबह मेरी बस छूट गई, फिर ऑटो लेना पड़ा"}
+{"id": "hindi-0514", "lang": "hi", "intent": "mention", "text": "दीदी ने बताया कि वो अगले हफ़्ते गोवा जा रही है"}
+{"id": "hindi-0515", "lang": "hi", "intent": "mention", "text": "शाम ए अवध लखनऊ की पहचान है"}
+{"id": "hindi-0516", "lang": "hi", "intent": "mention", "text": "आज शेयर बाज़ार 500 अंक गिरकर बंद हुआ"}
+{"id": "hindi-0517", "lang": "hi", "intent": "mention", "text": "रात के अँधेरे में तारे साफ़ दिखाई देते हैं"}
+{"id": "hindi-0518", "lang": "hi", "intent": "mention", "text": "मैं हर वक़्त यही सोचता रहता हूँ कि क्या मैंने सही फ़ैसला लिया"}
+{"id": "hindi-0519", "lang": "hi", "intent": "mention", "text": "दोपहर की धूप में छत पर कपड़े सुखाना अच्छा लगता है"}
+{"id": "hindi-0520", "lang": "hi", "intent": "mention", "text": "एक हफ़्ते में उसने पूरा कोर्स ख़त्म कर दिया"}
+{"id": "hindi-0521", "lang": "hi", "intent": "mention", "text": "आज सुबह से नेटवर्क नहीं आ रहा"}
+{"id": "hindi-0522", "lang": "hi", "intent": "mention", "text": "मेरे दादाजी रोज़ शाम को छड़ी लेकर पार्क जाते थे"}
+{"id": "hindi-0523", "lang": "hi", "intent": "mention", "text": "बुधवार को क्या ख़ास है इतिहास में?"}
+{"id": "hindi-0524", "lang": "hi", "intent": "mention", "text": "आज बच्चों की छुट्टी है तो घर में हंगामा है"}
+{"id": "hindi-0525", "lang": "hi", "intent": "mention", "text": "अगर आप सुबह जल्दी उठते हैं तो ज़्यादा काम निपटा सकते हैं"}
+{"id": "hindi-0526", "lang": "hi", "intent": "mention", "text": "आज भारत और इंग्लैंड का मैच शाम 7 बजे से है, मैं तो खेल से दूर ही रहता हूँ"}
+{"id": "hindi-0527", "lang": "hi", "intent": "mention", "text": "पार्टी रात दो बजे तक चली और सब थक गए"}
+{"id": "hindi-0528", "lang": "hi", "intent": "mention", "text": "पूरे दिन का सफ़र बहुत थकाने वाला रहा"}
+{"id": "hindi-0529", "lang": "hi", "intent": "mention", "text": "हर कोई अपने तरीक़े से दिन शुरू करता है"}
+{"id": "hindi-0530", "lang": "hi", "intent": "mention", "text": "मुझे लगता है कि रविवार की सुबह सबसे सुकून भरी होती है"}
+{"id": "hindi-0531", "lang": "hi", "intent": "mention", "text": "आज जो सब्ज़ी लाया था वो बासी निकली"}
+{"id": "hindi-0532", "lang": "hi", "intent": "mention", "text": "सोनी टीवी पर आज रात एक नया शो शुरू हुआ है"}
+{"id": "hindi-0533", "lang": "hi", "intent": "mention", "text": "बचपन में मैं हर रविवार नाना के घर जाता था"}
+{"id": "hindi-0534", "lang": "hi", "intent": "mention", "text": "इस मंदिर में हर शनिवार भीड़ रहती है"}
+{"id": "hindi-0535", "lang": "hi", "intent": "mention", "text": "चाय की दुकान पर शाम को अक्सर लोग गप्पे मारते हैं"}
+{"id": "hindi-0536", "lang": "hi", "intent": "mention", "text": "वह तीन घंटे तक बिना रुके बोलता रहा"}
+{"id": "hindi-0537", "lang": "hi", "intent": "mention", "text": "आज ही के दिन 1947 में देश आज़ाद हुआ था"}
+{"id": "hindi-0538", "lang": "hi", "intent": "mention", "text": "दिल्ली में आज शाम को आँधी आई थी"}
+{"id": "hindi-0539", "lang": "hi", "intent": "mention", "text": "कल दोपहर मैंने पुराने दोस्त को देखा, पर बात नहीं हुई"}
+{"id": "hindi-0540", "lang": "hi", "intent": "mention", "text": "आजकल हर चीज़ महँगी हो गई है, दूध 60 रुपये लीटर"}
+{"id": "hindi-0541", "lang": "hi", "intent": "mention", "text": "रात की पाली में काम करना आसान नहीं होता"}
+{"id": "hindi-0542", "lang": "hi", "intent": "mention", "text": "मैं आज तक कल का काम आज पर नहीं टालता, ऐसा मेरे गुरुजी कहते थे"}
+{"id": "hindi-0543", "lang": "hi", "intent": "mention", "text": "इस साल की सबसे अच्छी फ़िल्म मुझे सुबह का सपना लगी"}
+{"id": "hindi-0544", "lang": "hi", "intent": "mention", "text": "सुबह चार बजे ही कोयल की आवाज़ आने लगती है"}
+{"id": "hindi-0545", "lang": "hi", "intent": "mention", "text": "भाई साहब हर महीने दो बार गाँव जाते हैं"}
+{"id": "hindi-0546", "lang": "hi", "intent": "mention", "text": "आज सुबह 6 बजे तापमान 8 डिग्री था"}
+{"id": "hindi-0547", "lang": "hi", "intent": "mention", "text": "उसने कहा कि वह कल सुबह तक जवाब देगा, मैं तब तक इंतज़ार करूँगा"}
+{"id": "hindi-0548", "lang": "hi", "intent": "mention", "text": "हर शाम सूरज का डूबना एक नया सबक देता है"}
+{"id": "hindi-0549", "lang": "hi", "intent": "mention", "text": "आज की रात बहुत ठंडी है, रज़ाई निकालनी पड़ेगी, ऐसा लग रहा है"}
+{"id": "hindi-0550", "lang": "hi", "intent": "mention", "text": "तीन घंटे की फ़िल्म थी, पर बिल्कुल बोर नहीं हुआ"}
+{"id": "hindi-0551", "lang": "hi", "intent": "mention", "text": "ऑफ़िस में हर महीने की पहली तारीख़ को तनख़्वाह आ जाती है, यह अच्छी बात है"}
+{"id": "hindi-0552", "lang": "hi", "intent": "mention", "text": "कल सुबह मैं देर से उठा, इसलिए नाश्ता नहीं कर पाया"}
+{"id": "hindi-0553", "lang": "hi", "intent": "mention", "text": "इस बार सोमवार को छुट्टी पड़ रही है, ऐसा अख़बार में पढ़ा"}
+{"id": "hindi-0554", "lang": "hi", "intent": "mention", "text": "रात दिन गाने सुनने से उसकी पढ़ाई का नुक़सान हुआ"}
+{"id": "hindi-0555", "lang": "hi", "intent": "mention", "text": "आज शाम की ट्रेन पूरे दो घंटे लेट आई"}
+{"id": "hindi-0556", "lang": "hi", "intent": "mention", "text": "बच्चों के लिए सुबह की धूप बहुत ज़रूरी है"}
+{"id": "hindi-0557", "lang": "hi", "intent": "mention", "text": "आज के ज़माने में हर कोई जल्दी में है"}
+{"id": "hindi-0558", "lang": "hi", "intent": "mention", "text": "कल सुबह की ख़बर में मैंने तुम्हारा नाम सुना"}
+{"id": "hindi-0559", "lang": "hi", "intent": "mention", "text": "अभी अभी तो आया हूँ, थोड़ा दम लेने दो"}
+{"id": "hindi-0560", "lang": "hi", "intent": "mention", "text": "आज का दिन तो सच में यादगार रहा"}
+{"id": "hindi-0561", "lang": "hi", "intent": "mention", "text": "उसकी शादी पिछले साल जनवरी में हुई थी"}
+{"id": "hindi-0562", "lang": "hi", "intent": "mention", "text": "ऑफ़िस का समय सुबह 9 से शाम 6 बजे तक होता है, ऐसा नियम है"}
+{"id": "hindi-0563", "lang": "hi", "intent": "mention", "text": "मेरे फ़ोन में अलार्म सुबह 6 बजे का लगा रहता था, आजकल पता नहीं क्यों बजता नहीं"}
+{"id": "hindi-0564", "lang": "hi", "intent": "mention", "text": "शाम को घर लौटते वक़्त मुझे हमेशा भूख लग जाती है"}
+{"id": "hindi-0565", "lang": "hi", "intent": "mention", "text": "आज तो सुबह-सुबह ही दूध फट गया, मूड ख़राब हो गया"}
+{"id": "hindi-0566", "lang": "hi", "intent": "mention", "text": "सोमवार की सुबह उठना सबसे मुश्किल काम है"}
+{"id": "hindi-0567", "lang": "hi", "intent": "mention", "text": "गुरुवार को भारत की टीम ने शानदार प्रदर्शन किया"}
+{"id": "hindi-0568", "lang": "hi", "intent": "mention", "text": "बिना सोए पूरी रात गाड़ी चलाई थी हमने"}
+{"id": "hindi-0569", "lang": "hi", "intent": "mention", "text": "आज रात की फ़्लाइट छूट गई, यह मेरे साथ पहली बार हुआ"}
+{"id": "hindi-0570", "lang": "hi", "intent": "mention", "text": "आधी रात को बिल्ली के रोने की आवाज़ आ रही थी"}
+{"id": "hindi-0571", "lang": "hi", "intent": "mention", "text": "आज सुबह से कितनी बार चाय पी ली, गिनती भूल गया"}
+{"id": "hindi-0572", "lang": "hi", "intent": "mention", "text": "आज की शाम बहुत सुहावनी है"}
+{"id": "hindi-0573", "lang": "hi", "intent": "mention", "text": "पुराने ज़माने की फ़िल्मों में रात का सीन हमेशा बारिश वाला होता था"}
+{"id": "hindi-0574", "lang": "hi", "intent": "mention", "text": "बुधवार को पड़ने वाली एकादशी के बारे में दादी बहुत बातें बताती हैं"}
+{"id": "hindi-0575", "lang": "hi", "intent": "mention", "text": "सही वक़्त पर सही काम करना ही समझदारी है"}
+{"id": "hindi-0576", "lang": "hi", "intent": "mention", "text": "आज उसका जवाब आया, कल रात उसने मैसेज पढ़ लिया था"}
+{"id": "hindi-0577", "lang": "hi", "intent": "mention", "text": "वक़्त बहुत बलवान होता है"}
+{"id": "hindi-0578", "lang": "hi", "intent": "mention", "text": "हम कल शाम को वहाँ से लौटे थे"}
+{"id": "hindi-0579", "lang": "hi", "intent": "mention", "text": "आज के दिन मैं सबसे ज़्यादा ख़ुश रहता हूँ, क्योंकि मेरा जन्मदिन होता है"}
+{"id": "hindi-0580", "lang": "hi", "intent": "mention", "text": "रोज़ाना वही रूटीन से तंग आ गया हूँ"}
+{"id": "hindi-0581", "lang": "hi", "intent": "mention", "text": "यह रेस्तरां रोज़ सुबह 11 बजे से रात 11 बजे तक खुला रहता है"}
+{"id": "hindi-0582", "lang": "hi", "intent": "mention", "text": "अगले महीने उसकी बेटी की शादी है, पूरा परिवार तैयारियों में लगा है"}
+{"id": "hindi-0583", "lang": "hi", "intent": "mention", "text": "आज दोपहर को बारिश हुई और बिजली चली गई"}
+{"id": "hindi-0584", "lang": "hi", "intent": "mention", "text": "कल शाम के मैच में विराट ने शतक मारा"}
+{"id": "hindi-0585", "lang": "hi", "intent": "mention", "text": "मैं हर वक़्त फ़ोन पर रहता हूँ, यह मेरी बड़ी कमज़ोरी है"}
+{"id": "hindi-0586", "lang": "hi", "intent": "mention", "text": "सुबह की ओस की बूँदें बहुत प्यारी लगती हैं"}
+{"id": "hindi-0587", "lang": "hi", "intent": "mention", "text": "आज की डेट क्या है?"}
+{"id": "hindi-0588", "lang": "hi", "intent": "mention", "text": "इस बार क्रिसमस किस दिन पड़ रहा है, सोमवार को या मंगलवार को?"}
+{"id": "hindi-0589", "lang": "hi", "intent": "mention", "text": "रोज़ एक सेब खाने से डॉक्टर दूर रहता है"}
+{"id": "hindi-0590", "lang": "hi", "intent": "mention", "text": "पिछली रात मैंने एक अजीब सपना देखा"}
+{"id": "hindi-0591", "lang": "hi", "intent": "mention", "text": "हर दिन एक नया सबक सिखाता है"}
+{"id": "hindi-0592", "lang": "hi", "intent": "mention", "text": "चार घंटे की बस यात्रा के बाद हम पहुँचे"}
+{"id": "hindi-0593", "lang": "hi", "intent": "mention", "text": "आज ग्यारह बजे तक बस खड़े रहने की नौबत आ गई थी"}
+{"id": "hindi-0594", "lang": "hi", "intent": "mention", "text": "मेरे ताऊजी हर साल दिवाली पर गाँव जाते हैं"}
+{"id": "hindi-0595", "lang": "hi", "intent": "mention", "text": "शनिवार की शाम हम अक्सर बालकनी में बैठकर चाय पीते थे"}
+{"id": "hindi-0596", "lang": "hi", "intent": "mention", "text": "कल रात की फ़िल्म का क्लाइमैक्स ज़बरदस्त था"}
+{"id": "hindi-0597", "lang": "hi", "intent": "mention", "text": "आज का दिन अच्छा गया, कोई शिकायत नहीं"}
+{"id": "hindi-0598", "lang": "hi", "intent": "mention", "text": "कल से मैं बहुत थका हुआ हूँ, पर कुछ नहीं कर सकता"}
+{"id": "hindi-0599", "lang": "hi", "intent": "mention", "text": "सुबह-शाम की आरती सुनकर मन शांत हो जाता है"}
+{"id": "hindi-0600", "lang": "hi", "intent": "mention", "text": "इस फ़ोन की बैटरी दो दिन चलती है"}
+{"id": "hindi-0601", "lang": "hi", "intent": "mention", "text": "आज तक चैनल पर बहस देखकर सिर दुखने लगा"}
+{"id": "hindi-0602", "lang": "hi", "intent": "mention", "text": "कभी खुशी कभी ग़म देखे हुए बरसों हो गए"}
+{"id": "hindi-0603", "lang": "hi", "intent": "mention", "text": "संडे को मैं आमतौर पर देर तक सोता हूँ, पर आज नहीं सो सका"}
+{"id": "hindi-0604", "lang": "hi", "intent": "mention", "text": "नवभारत टाइम्स में कल एक अच्छा संपादकीय छपा था"}
+{"id": "hindi-0605", "lang": "hi", "intent": "mention", "text": "रात के राही फ़िल्म का गाना सुनो, कमाल का है"}
+{"id": "hindi-0606", "lang": "hi", "intent": "mention", "text": "ये शाम मस्तानी, मदहोश किए जाए, यह गाना किशोर कुमार ने गाया है"}
+{"id": "hindi-0607", "lang": "hi", "intent": "mention", "text": "रोज़ रोज़ की किचकिच से तंग आ गया हूँ"}
+{"id": "hindi-0608", "lang": "hi", "intent": "mention", "text": "आज भी सुबह-सुबह माँ की आवाज़ कानों में गूँजती है"}
+{"id": "hindi-0609", "lang": "hi", "intent": "mention", "text": "दो घंटे में मैंने पूरी किताब पढ़ डाली, बहुत रोचक थी"}
+{"id": "hindi-0610", "lang": "hi", "intent": "mention", "text": "नीलू आंटी हर सोमवार किटी पार्टी में जाती हैं"}
+{"id": "hindi-0611", "lang": "hi", "intent": "mention", "text": "बेटे ने बताया कि उसका टेस्ट कल था और बहुत अच्छा गया"}
+{"id": "hindi-0612", "lang": "hi", "intent": "mention", "text": "आज के मैच में रोहित ने 74 रन बनाए और टीम 5 विकेट से जीती"}
+{"id": "hindi-0613", "lang": "hi", "intent": "mention", "text": "एक किलो आम आज 150 रुपये में मिला"}
+{"id": "hindi-0614", "lang": "hi", "intent": "mention", "text": "पार्टी में रात भर नाचने के बाद सबके पाँव दुख रहे थे"}
+{"id": "hindi-0615", "lang": "hi", "intent": "mention", "text": "सुबह की पहली किरण के साथ पक्षी चहचहाने लगते हैं"}
+{"id": "hindi-0616", "lang": "hi", "intent": "mention", "text": "आजकल लोग रात को देर तक जागते हैं, यह एक नई आदत बन गई है"}
+{"id": "hindi-0617", "lang": "hi", "intent": "mention", "text": "मेरी ट्रेन तीन घंटे लेट है, पर कोई बात नहीं"}
+{"id": "hindi-0618", "lang": "hi", "intent": "mention", "text": "मंगलवार से आँखें फड़क रही हैं, पता नहीं क्यों"}
+{"id": "hindi-0619", "lang": "hi", "intent": "mention", "text": "इस साल की दीवाली पर बहुत बारिश हुई थी, पिछले साल नहीं"}
+{"id": "hindi-0620", "lang": "hi", "intent": "mention", "text": "शाम का वक़्त हो और चाय न मिले तो मज़ा नहीं आता"}
+{"id": "hindi-0621", "lang": "hi", "intent": "mention", "text": "वो हर दिन देर से आता है और फिर भी कुछ नहीं बोला जाता"}
+{"id": "hindi-0622", "lang": "hi", "intent": "mention", "text": "कल की टेंशन में रात भर नींद नहीं आई थी"}
+{"id": "hindi-0623", "lang": "hi", "intent": "mention", "text": "मुझे सर्दियों की सुबह में रज़ाई से निकलना सबसे बुरा लगता है"}
+{"id": "hindi-0624", "lang": "hi", "intent": "mention", "text": "रविवार को छुट्टी क्यों होती है, इसकी भी एक कहानी है"}
+{"id": "hindi-0625", "lang": "hi", "intent": "mention", "text": "यह रेस्तरां शाम 7 बजे के बाद बहुत भीड़ वाला हो जाता है"}
+{"id": "hindi-0626", "lang": "hi", "intent": "mention", "text": "बैंक में आज पूरे दो घंटे इंतज़ार करना पड़ा"}
+{"id": "hindi-0627", "lang": "hi", "intent": "mention", "text": "आज सुबह की मीटिंग बहुत लंबी चली, सब थक गए"}
+{"id": "hindi-0628", "lang": "hi", "intent": "mention", "text": "इस बार की होली पर हम सब गाँव गए थे"}
+{"id": "hindi-0629", "lang": "hi", "intent": "mention", "text": "अच्छे दिन आने वाले हैं, यह नारा सबने सुना है"}
+{"id": "hindi-0630", "lang": "hi", "intent": "mention", "text": "अगर मैं कल स्कूल गया होता तो आज इतनी परेशानी नहीं होती"}
+{"id": "hindi-0631", "lang": "hi", "intent": "mention", "text": "रात के बारह बजे तक छत पर तारे गिनना हमारी आदत थी"}
+{"id": "hindi-0632", "lang": "hi", "intent": "mention", "text": "आज शाम को मुझे बहुत सुकून मिला जब मैंने पुरानी तस्वीरें देखीं"}
+{"id": "hindi-0633", "lang": "hi", "intent": "mention", "text": "भारत में दिवाली आमतौर पर अक्टूबर या नवंबर में आती है"}
+{"id": "hindi-0634", "lang": "hi", "intent": "mention", "text": "बुधवार को चाँद दिखा था क्या? मैंने नहीं देखा"}
+{"id": "hindi-0635", "lang": "hi", "intent": "mention", "text": "शनिवार-इतवार की छुट्टी के लिए तो सब तरसते हैं"}
+{"id": "hindi-0636", "lang": "hi", "intent": "mention", "text": "आज का दिन जैसे-तैसे कट गया"}
+{"id": "hindi-0637", "lang": "hi", "intent": "mention", "text": "चंद्रमुखी फ़िल्म रात के शो में देखी थी, मज़ा आ गया"}
+{"id": "hindi-0638", "lang": "hi", "intent": "mention", "text": "पिताजी हर रोज़ अख़बार पढ़ते हैं, एक भी दिन नहीं छोड़ते"}
+{"id": "hindi-0639", "lang": "hi", "intent": "mention", "text": "आज दोपहर से सिर भारी हो रहा है"}
+{"id": "hindi-0640", "lang": "hi", "intent": "mention", "text": "मेरी बहन ने कहा कि उसकी मीटिंग कल सुबह 10 बजे है"}
+{"id": "hindi-0641", "lang": "hi", "intent": "mention", "text": "इतने सारे काम हैं कि दिन में 24 घंटे भी कम पड़ते हैं"}
+{"id": "hindi-0642", "lang": "hi", "intent": "mention", "text": "आज के अख़बार में बताया है कि सोमवार को स्कूल बंद रहेंगे"}
+{"id": "hindi-0643", "lang": "hi", "intent": "mention", "text": "क्या तुम्हें पता है कि चंद्रमा की रात कितनी लंबी होती है?"}
+{"id": "hindi-0644", "lang": "hi", "intent": "mention", "text": "आज सुबह की मीटिंग मैं मिस कर गया"}
+{"id": "hindi-0645", "lang": "hi", "intent": "mention", "text": "सुबह की ट्रेन में भीड़ कम होती है, यह सच है"}
+{"id": "hindi-0646", "lang": "hi", "intent": "mention", "text": "भारत में सूर्योदय पूर्वी राज्यों में पहले होता है"}
+{"id": "hindi-0647", "lang": "hi", "intent": "mention", "text": "तीन महीने में उसने 10 किलो वज़न कम कर लिया"}
+{"id": "hindi-0648", "lang": "hi", "intent": "mention", "text": "आज तो शाम तक कोई फ़ोन ही नहीं आया"}
+{"id": "hindi-0649", "lang": "hi", "intent": "mention", "text": "हमारे ऑफ़िस में हर शुक्रवार को पिज़्ज़ा पार्टी होती है, मैं कभी नहीं गया"}
+{"id": "hindi-0650", "lang": "hi", "intent": "mention", "text": "क्या कल का मौसम आज जैसा रहेगा, कोई बता सकता है?"}
+{"id": "hindi-0651", "lang": "hi", "intent": "mention", "text": "सुबह-सुबह उठकर पढ़ना मेरे बस की बात नहीं"}
+{"id": "hindi-0652", "lang": "hi", "intent": "mention", "text": "उसके घर में रोज़ रात को सब साथ खाना खाते हैं, ऐसा मैंने सुना है"}
+{"id": "hindi-0653", "lang": "hi", "intent": "mention", "text": "आज दोपहर का तापमान 38 डिग्री तक पहुँच गया"}
+{"id": "hindi-0654", "lang": "hi", "intent": "mention", "text": "वक़्त किसी के लिए नहीं रुकता"}
+{"id": "hindi-0655", "lang": "hi", "intent": "mention", "text": "पिछले मंगलवार हमारे यहाँ बहुत बड़ी पार्टी हुई थी"}
+{"id": "hindi-0656", "lang": "hi", "intent": "mention", "text": "मेरे पापा सुबह जल्दी उठकर पूजा करते हैं, मैं नहीं"}
+{"id": "hindi-0657", "lang": "hi", "intent": "mention", "text": "आज की रात चाँद बहुत बड़ा दिख रहा है"}
+{"id": "hindi-0658", "lang": "hi", "intent": "mention", "text": "आजकल रोज़ 12 घंटे काम करना पड़ रहा है, बहुत थकान है"}
+{"id": "hindi-0659", "lang": "hi", "intent": "mention", "text": "कल की बात कल पर छोड़ दो"}
+{"id": "hindi-0660", "lang": "hi", "intent": "mention", "text": "उन्होंने कहा कि शाम को वो चाय पर आएँगे, मगर मैं तो शहर में नहीं रहूँगा"}
+{"id": "hindi-0661", "lang": "hi", "intent": "mention", "text": "कल रात तक यह काम पूरा हो चुका था"}
+{"id": "hindi-0662", "lang": "hi", "intent": "mention", "text": "बहुत दिनों बाद आज सुबह की सैर पर गया था"}
+{"id": "hindi-0663", "lang": "hi", "intent": "mention", "text": "सत्यमेव जयते शो हर रविवार सुबह आता था, मुझे बहुत पसंद था"}
+{"id": "hindi-0664", "lang": "hi", "intent": "mention", "text": "चैनल पर रात 9 बजे की ख़बरें हमेशा सनसनीख़ेज़ होती हैं"}
+{"id": "hindi-0665", "lang": "hi", "intent": "mention", "text": "इस साल का सबसे ठंडा दिन आज रहा, 4 डिग्री"}
+{"id": "hindi-0666", "lang": "hi", "intent": "mention", "text": "मेरे पड़ोसी का बेटा हर शाम छत पर पतंग उड़ाता है"}
+{"id": "hindi-0667", "lang": "hi", "intent": "mention", "text": "पढ़ाई में रात-दिन एक कर दिया उसने"}
+{"id": "hindi-0668", "lang": "hi", "intent": "mention", "text": "मुझे वो सुबह आज भी याद है जब हम पहली बार मिले थे"}
+{"id": "hindi-0669", "lang": "hi", "intent": "mention", "text": "इन दिनों रोज़ बिजली जाती है, किसी को तो शिकायत करनी चाहिए"}
+{"id": "hindi-0670", "lang": "hi", "intent": "mention", "text": "आज दोपहर के खाने में हमने राजमा चावल खाए"}
+{"id": "hindi-0671", "lang": "hi", "intent": "mention", "text": "भूखे पेट सुबह का सफ़र बहुत कठिन होता है"}
+{"id": "hindi-0672", "lang": "hi", "intent": "mention", "text": "गुरुवार को पूजा होती है, ऐसा हमारे यहाँ माना जाता है"}
+{"id": "hindi-0673", "lang": "hi", "intent": "mention", "text": "सोमवार को बाज़ार बंद रहता है, यह इस कस्बे का रिवाज़ है"}
+{"id": "hindi-0674", "lang": "hi", "intent": "mention", "text": "अगले साल चुनाव होंगे, ऐसा नेताजी ने कहा"}
+{"id": "hindi-0675", "lang": "hi", "intent": "mention", "text": "आज सुबह रेडियो पर बहुत पुराना गाना बजा"}
+{"id": "hindi-0676", "lang": "hi", "intent": "mention", "text": "कल देर रात तक पड़ोसी के यहाँ शोर होता रहा"}
+{"id": "hindi-0677", "lang": "hi", "intent": "mention", "text": "कल क्या होगा, किसे पता"}
+{"id": "hindi-0678", "lang": "hi", "intent": "mention", "text": "आज की सुबह वाक़ई ख़ूबसूरत थी, धुंध और हल्की ठंड"}
+{"id": "hindi-0679", "lang": "hi", "intent": "mention", "text": "आज के अख़बार की क़ीमत 5 रुपये है"}
+{"id": "hindi-0680", "lang": "hi", "intent": "mention", "text": "आज पाँच बजे तक तीन बार बारिश हो चुकी है"}
+{"id": "hindi-0681", "lang": "hi", "intent": "mention", "text": "नींद में कल रात मैंने किसी को पुकारा, सुबह घर वालों ने बताया"}
+{"id": "hindi-0682", "lang": "hi", "intent": "mention", "text": "मंगलवार का मतलब मंगल ग्रह का दिन होता है"}
+{"id": "hindi-0683", "lang": "hi", "intent": "mention", "text": "सुबह की हवा में कुछ बात ही अलग होती है"}
+{"id": "hindi-0684", "lang": "hi", "intent": "mention", "text": "मैं हर वक़्त तुम्हारे बारे में सोचता हूँ"}
+{"id": "hindi-0685", "lang": "hi", "intent": "mention", "text": "उसे हर रोज़ नई साड़ी पहनने का शौक़ है"}
+{"id": "hindi-0686", "lang": "hi", "intent": "mention", "text": "यह किताब मैंने एक हफ़्ते में पूरी पढ़ी थी"}
+{"id": "hindi-0687", "lang": "hi", "intent": "mention", "text": "आज शाम को सब्ज़ी मंडी में बहुत भीड़ थी, मैं बिना कुछ ख़रीदे लौट आया"}
+{"id": "hindi-0688", "lang": "hi", "intent": "mention", "text": "इस मौसम में शाम जल्दी हो जाती है, सूरज 5:30 बजे ही छिप जाता है"}
+{"id": "hindi-0689", "lang": "hi", "intent": "mention", "text": "आज का दिन मेरे लिए बहुत भारी रहा, पर कल देखा जाएगा"}
+{"id": "hindi-0690", "lang": "hi", "intent": "mention", "text": "पिछली बार शुक्रवार को दुकान पर बहुत सेल लगी थी"}
+{"id": "hindi-0691", "lang": "hi", "intent": "mention", "text": "बच्चे अब सुबह की कक्षा में जाते हैं, पहले दोपहर की होती थी"}
+{"id": "hindi-0692", "lang": "hi", "intent": "mention", "text": "रात का खाना जल्दी खाना सेहत के लिए अच्छा माना जाता है"}
+{"id": "hindi-0693", "lang": "hi", "intent": "mention", "text": "वो रोज़ मुझसे वही सवाल पूछता था और मैं रोज़ वही जवाब देता था"}
+{"id": "hindi-0694", "lang": "hi", "intent": "mention", "text": "इस ग्रह पर एक दिन 24 घंटे का होता है, लेकिन शुक्र पर बहुत लंबा"}
+{"id": "hindi-0695", "lang": "hi", "intent": "mention", "text": "हम तो दिन भर बातें करते रहे और शाम कब हो गई पता ही नहीं चला"}
+{"id": "hindi-0696", "lang": "hi", "intent": "mention", "text": "जब मैं छोटा था, हर रात दादी कहानी सुनाती थीं"}
+{"id": "hindi-0697", "lang": "hi", "intent": "mention", "text": "आज सुबह की लोकल ट्रेन में बहुत भीड़ थी"}
+{"id": "hindi-0698", "lang": "hi", "intent": "mention", "text": "इस मंदिर की आरती हर शाम सात बजे होती है, ऐसा बोर्ड पर लिखा है"}
+{"id": "hindi-0699", "lang": "hi", "intent": "mention", "text": "भाभी जी घर पर हैं, जो रोज़ रात आती है, यह सीरियल मुझे पसंद नहीं"}
+{"id": "hindi-0700", "lang": "hi", "intent": "mention", "text": "सारे दिन भागदौड़ के बाद अब जाकर थोड़ा सुकून मिला"}
+{"id": "hindi-0701", "lang": "hi", "intent": "mention", "text": "सुबह नाश्ता किए बिना ऑफ़िस जाना ठीक नहीं है, ऐसा डॉक्टर मानते हैं"}
+{"id": "hindi-0702", "lang": "hi", "intent": "mention", "text": "भाई की शादी कल है और वो पूरी तरह तैयार है"}
+{"id": "hindi-0703", "lang": "hi", "intent": "mention", "text": "बारिश तीन दिन से रुकने का नाम नहीं ले रही"}
+{"id": "hindi-0704", "lang": "hi", "intent": "mention", "text": "आज की सुबह मेरी ज़िंदगी की सबसे अच्छी सुबह थी"}
+{"id": "hindi-0705", "lang": "hi", "intent": "mention", "text": "बचपन के वो रविवार कितने सुहाने होते थे, पूरे दिन खेलना"}
+{"id": "hindi-0706", "lang": "hi", "intent": "mention", "text": "एक वक़्त था जब हम रात भर गप्पें मारते थे"}
+{"id": "hindi-0707", "lang": "hi", "intent": "mention", "text": "कल के कार्यक्रम में बहुत लोग आए थे, पूरा हॉल भरा था"}
+{"id": "hindi-0708", "lang": "hi", "intent": "mention", "text": "आज शाम तक की ख़बर: सेंसेक्स 600 अंक ऊपर"}
+{"id": "hindi-0709", "lang": "hi", "intent": "mention", "text": "हर बार वही बात, हर बार वही बहाना"}
+{"id": "hindi-0710", "lang": "hi", "intent": "mention", "text": "मेरे दोस्त का कल इंटरव्यू है, मैं बस उसे शुभकामनाएँ दे रहा हूँ"}
+{"id": "hindi-0711", "lang": "hi", "intent": "mention", "text": "आज की रात सोने से पहले मैं कुछ देर आसमान देख रहा था"}
+{"id": "hindi-0712", "lang": "hi", "intent": "mention", "text": "ये मेरा इंडिया, रोज़ कुछ नया होता है यहाँ"}
+{"id": "hindi-0713", "lang": "hi", "intent": "mention", "text": "कल हम सब मिलकर बहुत हँसे थे, वो पल बहुत अच्छा था"}
+{"id": "hindi-0714", "lang": "hi", "intent": "mention", "text": "मंगलवार की रात उसने जो कहा वो मुझे अब तक याद है"}
+{"id": "hindi-0715", "lang": "hi", "intent": "mention", "text": "आधी रात को सड़क पर चलने में डर लगता है"}
+{"id": "hindi-0716", "lang": "hi", "intent": "mention", "text": "आज की दुनिया में पल भर का भी भरोसा नहीं"}
+{"id": "hindi-0717", "lang": "hi", "intent": "mention", "text": "स्कूल का आख़िरी दिन कितना भावुक था, सब रो पड़े थे"}
+{"id": "hindi-0718", "lang": "hi", "intent": "mention", "text": "दो दिन से बुखार था, आज जाकर उतरा"}
+{"id": "hindi-0719", "lang": "hi", "intent": "mention", "text": "कल सुबह की तरह आज भी धुंध छाई हुई है"}
+{"id": "hindi-0720", "lang": "hi", "intent": "mention", "text": "पूरा सप्ताह भाग-दौड़ में निकल गया"}
+{"id": "hindi-0721", "lang": "hi", "intent": "mention", "text": "ज़िंदगी की दौड़ में हर पल क़ीमती है"}
+{"id": "hindi-0722", "lang": "hi", "intent": "mention", "text": "ऑफ़िस में हमारी मीटिंग रोज़ दस बजे होती है, पर मैं तो अब रिमोट काम करता हूँ"}
+{"id": "hindi-0723", "lang": "hi", "intent": "mention", "text": "शाम चार बजे का सूरज सर्दियों में पीला-सा दिखता है"}
+{"id": "hindi-0724", "lang": "hi", "intent": "mention", "text": "सर, आपकी घड़ी में अभी कितने बजे हैं?"}
+{"id": "hindi-0725", "lang": "hi", "intent": "mention", "text": "भारत में सबसे बड़ा त्योहार कौन सा है, दिवाली या होली?"}
+{"id": "hindi-0726", "lang": "hi", "intent": "mention", "text": "आज की तारीख़ में हर कोई ऑनलाइन है"}
+{"id": "hindi-0727", "lang": "hi", "intent": "mention", "text": "मीटिंग तीन घंटे चली, फिर भी कोई फ़ैसला नहीं हुआ"}
+{"id": "hindi-0728", "lang": "hi", "intent": "mention", "text": "आज सुबह वाली चाय बहुत ही बेकार बनी थी"}
+{"id": "hindi-0729", "lang": "hi", "intent": "mention", "text": "बुधवार का व्रत मेरी मौसी हमेशा रखती हैं"}
+{"id": "hindi-0730", "lang": "hi", "intent": "mention", "text": "दोपहर की नींद के बाद शाम को सिर भारी रहता है"}
+{"id": "hindi-0731", "lang": "hi", "intent": "mention", "text": "वो रविवार, वो चाय, वो बारिश, सब कुछ याद आता है"}
+{"id": "hindi-0732", "lang": "hi", "intent": "mention", "text": "पुराने दिनों में लोग रोज़ चिट्ठियाँ लिखते थे"}
+{"id": "hindi-0733", "lang": "hi", "intent": "mention", "text": "रात के सन्नाटे में घड़ी की टिक-टिक भी साफ़ सुनाई देती है"}
+{"id": "hindi-0734", "lang": "hi", "intent": "mention", "text": "मेरी मौसी के बेटे की परसों सगाई है, हम लोग नहीं जा रहे"}
+{"id": "hindi-0735", "lang": "hi", "intent": "mention", "text": "इस बार दिवाली में सोने का भाव 80 हज़ार तक पहुँच गया था"}
+{"id": "hindi-0736", "lang": "hi", "intent": "mention", "text": "आज सुबह से लेकर शाम तक सिर्फ़ चाय पर गुज़ारा किया"}
+{"id": "hindi-0737", "lang": "hi", "intent": "mention", "text": "आज की सुबह का अख़बार तो अभी तक आया ही नहीं"}
+{"id": "hindi-0738", "lang": "hi", "intent": "mention", "text": "आधे घंटे की देरी से मेरी फ़्लाइट रवाना हुई थी"}
+{"id": "hindi-0739", "lang": "hi", "intent": "mention", "text": "रविवार का दिन माँ के हाथ के खाने के नाम होता है हमारे यहाँ"}
+{"id": "hindi-0740", "lang": "hi", "intent": "mention", "text": "सुबह की चाय और अख़बार, यही उनकी दुनिया है"}
+{"id": "hindi-0741", "lang": "hi", "intent": "mention", "text": "इस साल की सबसे बड़ी हिट फ़िल्म कौन सी है?"}
+{"id": "hindi-0742", "lang": "hi", "intent": "mention", "text": "जैसे ही रात हुई, पूरा गाँव सो गया"}
+{"id": "hindi-0743", "lang": "hi", "intent": "mention", "text": "आज की पार्टी में सबने बहुत मज़े किए, रात के दो बजे तक"}
+{"id": "hindi-0744", "lang": "hi", "intent": "mention", "text": "सोमवार को मेरे दोस्त की परीक्षा है, मैं तो बस उसे चाय पिला दूँगा"}
+{"id": "hindi-0745", "lang": "hi", "intent": "mention", "text": "भाई हर शाम जिम जाता है और रोज़ फ़ोटो डालता है"}
+{"id": "hindi-0746", "lang": "hi", "intent": "mention", "text": "मेरे लिए आज का सबसे ख़ास पल वो था जब बेटी ने पहली बार पापा कहा"}
+{"id": "hindi-0747", "lang": "hi", "intent": "mention", "text": "आज सुबह पता चला कि बिजली का बिल दोगुना आया है, गुस्सा आ गया"}
+{"id": "hindi-0748", "lang": "hi", "intent": "mention", "text": "बाढ़ का पानी रात भर बढ़ता रहा और सुबह तक गाँव डूब गया"}
+{"id": "hindi-0749", "lang": "hi", "intent": "mention", "text": "ये रात ये चाँदनी फिर कहाँ, यह गाना मेरी नानी को पसंद था"}
+{"id": "hindi-0750", "lang": "hi", "intent": "mention", "text": "आज के दिन ही हम पहली बार मिले थे, पाँच साल पहले"}
+{"id": "hindi-0751", "lang": "hi", "intent": "mention", "text": "ऑफ़िस में आज लंच में सब ने बिरयानी मँगाई थी"}
+{"id": "hindi-0752", "lang": "hi", "intent": "mention", "text": "कल की तुलना में आज कम भीड़ है"}
+{"id": "hindi-0753", "lang": "hi", "intent": "mention", "text": "लोग कहते हैं कि शाम को झाड़ू नहीं लगानी चाहिए, पता नहीं सच है या नहीं"}
+{"id": "hindi-0754", "lang": "hi", "intent": "mention", "text": "इस ऐप का नया वर्ज़न कल रात आया है, बहुत स्लो है"}
+{"id": "hindi-0755", "lang": "hi", "intent": "mention", "text": "रात के खाने में रोटी-सब्ज़ी ही सबसे अच्छी लगती है"}
+{"id": "hindi-0756", "lang": "hi", "intent": "mention", "text": "सुबह की धूप में बैठकर चाय पीना कितना अच्छा लगता है"}
+{"id": "hindi-0757", "lang": "hi", "intent": "mention", "text": "कल सुबह तो बहुत ठंड थी, मगर आज बिल्कुल नहीं"}
+{"id": "hindi-0758", "lang": "hi", "intent": "mention", "text": "वो पिछले हफ़्ते गोवा गया था और अब तक वहाँ की फ़ोटो भेज रहा है"}
+{"id": "hindi-0759", "lang": "hi", "intent": "mention", "text": "अरे यार, आज तो पूरे दिन बारिश हुई"}
+{"id": "hindi-0760", "lang": "hi", "intent": "mention", "text": "टिकट का दाम आज सुबह 3,200 था और शाम तक 4,100 हो गया"}
+{"id": "hindi-0761", "lang": "hi", "intent": "mention", "text": "कल रात मैंने वो नई वेब सीरीज़ देखी, ठीक-ठाक थी"}
+{"id": "hindi-0762", "lang": "hi", "intent": "mention", "text": "मेरे पापा रिटायर होने के बाद रोज़ सुबह पार्क जाते हैं"}
+{"id": "hindi-0763", "lang": "hi", "intent": "mention", "text": "शनिवार की शाम को मोहल्ले में बहुत रौनक रहती है"}
+{"id": "hindi-0764", "lang": "hi", "intent": "mention", "text": "ऑफ़िस में हर वक़्त काम का प्रेशर रहता है"}
+{"id": "hindi-0765", "lang": "hi", "intent": "mention", "text": "एक पल में सब बदल गया"}
+{"id": "hindi-0766", "lang": "hi", "intent": "mention", "text": "रात में खाना खाकर तुरंत सोना ठीक नहीं होता"}
+{"id": "hindi-0767", "lang": "hi", "intent": "mention", "text": "वो अक्सर कहती है कि सुबह का वक़्त सबसे क़ीमती होता है"}
+{"id": "hindi-0768", "lang": "hi", "intent": "mention", "text": "आज की रात बहुत लंबी थी, नींद ही नहीं आई"}
+{"id": "hindi-0769", "lang": "hi", "intent": "mention", "text": "कोई बताए कि क्या भारत में रविवार को बैंक खुले रहते हैं?"}
+{"id": "hindi-0770", "lang": "hi", "intent": "mention", "text": "पिछली दीवाली पर मैंने बहुत सारी मिठाई खाई थी"}
+{"id": "hindi-0771", "lang": "hi", "intent": "mention", "text": "तीन बजे वाली बस में बहुत भीड़ थी, मैं अगली से आया"}
+{"id": "hindi-0772", "lang": "hi", "intent": "mention", "text": "आज सुबह जल्दी उठकर मैंने छत से सूर्योदय देखा, बहुत अच्छा लगा"}
+{"id": "hindi-0773", "lang": "hi", "intent": "mention", "text": "रोज़गार की तलाश में उसने दिन रात एक कर दिए"}
+{"id": "hindi-0774", "lang": "hi", "intent": "mention", "text": "बुधवार को मेरी बुआ का फ़ोन आया था, घंटा भर बात हुई"}
+{"id": "hindi-0775", "lang": "hi", "intent": "mention", "text": "यह दुकान रोज़ शाम को खुलती है, सुबह नहीं, तो सुबह मत जाना, ऐसा उसने बताया"}
+{"id": "hindi-0776", "lang": "hi", "intent": "mention", "text": "सुबह होती है शाम होती है, उम्र यूँ ही तमाम होती है"}
+{"id": "hindi-0777", "lang": "hi", "intent": "mention", "text": "आज दोपहर में मैंने सो लिया, इसलिए अब रात को नींद नहीं आएगी शायद"}
+{"id": "hindi-0778", "lang": "hi", "intent": "mention", "text": "इस साल की सर्दी पिछले साल से कम है"}
+{"id": "hindi-0779", "lang": "hi", "intent": "mention", "text": "दीदी की शादी जनवरी में हुई थी और अब बच्चा भी हो गया"}
+{"id": "hindi-0780", "lang": "hi", "intent": "mention", "text": "ये कल की बात नहीं, बहुत पुरानी बात है"}
+{"id": "hindi-0781", "lang": "hi", "intent": "mention", "text": "हर किसी का अपना वक़्त होता है"}
+{"id": "hindi-0782", "lang": "hi", "intent": "mention", "text": "आज के मैच में कुल 342 रन बने और 8 विकेट गिरे"}
+{"id": "hindi-0783", "lang": "hi", "intent": "mention", "text": "आज सुबह की पूजा में बहुत लोग आए थे"}
+{"id": "hindi-0784", "lang": "hi", "intent": "mention", "text": "आधी रात का सूरज नॉर्वे में दिखता है, यह मैंने किताब में पढ़ा"}
+{"id": "hindi-0785", "lang": "hi", "intent": "mention", "text": "जब वो आया तब रात के ग्यारह बज चुके थे"}
+{"id": "hindi-0786", "lang": "hi", "intent": "mention", "text": "ज़िंदगी में हर दिन एक नया मौक़ा होता है"}
+{"id": "hindi-0787", "lang": "hi", "intent": "mention", "text": "बाजार में आज प्याज़ 40 रुपये किलो और आलू 30 रुपये किलो मिल रहे थे"}
+{"id": "hindi-0788", "lang": "hi", "intent": "mention", "text": "रात की ख़ामोशी मुझे बहुत पसंद है"}
+{"id": "hindi-0789", "lang": "hi", "intent": "mention", "text": "वो हमेशा रविवार को ही क्यों आता है, यह मेरी समझ से बाहर है"}
+{"id": "hindi-0790", "lang": "hi", "intent": "mention", "text": "इस हफ़्ते की सबसे अच्छी बात यह रही कि मौसम साफ़ रहा"}
+{"id": "hindi-0791", "lang": "hi", "intent": "mention", "text": "भाई ने बताया कि उसका ऑफ़िस सुबह 9 बजे से शुरू होता है"}
+{"id": "hindi-0792", "lang": "hi", "intent": "mention", "text": "आज की सुबह मेरे लिए बहुत मुश्किल थी, बिस्तर से निकलना ही नहीं हुआ"}
+{"id": "hindi-0793", "lang": "hi", "intent": "mention", "text": "ऑटो वाले ने कहा कि शाम को भीड़ की वजह से किराया दोगुना है"}
+{"id": "hindi-0794", "lang": "hi", "intent": "mention", "text": "आज सुबह की चाय के बाद ही मुझे यह ख़बर मिली"}
+{"id": "hindi-0795", "lang": "hi", "intent": "mention", "text": "ऐसा क्या है इस दिन में जो सब इसे इतना ख़ास मानते हैं?"}
+{"id": "hindi-0796", "lang": "hi", "intent": "mention", "text": "कल शाम तक का समय तो बहुत था, फिर भी मैंने काम पूरा नहीं किया, ग़लती मेरी थी"}
+{"id": "hindi-0797", "lang": "hi", "intent": "mention", "text": "वीकेंड पर लोग अक्सर देर तक सोते हैं, आँकड़े भी यही बताते हैं"}
+{"id": "hindi-0798", "lang": "hi", "intent": "mention", "text": "रात की ट्रेन में सफ़र करना मुझे बहुत पसंद है"}
+{"id": "hindi-0799", "lang": "hi", "intent": "mention", "text": "दो दिन पहले तक सब ठीक था, फिर अचानक सब बिगड़ गया"}
+{"id": "hindi-0800", "lang": "hi", "intent": "mention", "text": "आज की शाम तेरे नाम, यह गाना बहुत पुराना है पर आज भी अच्छा लगता है"}

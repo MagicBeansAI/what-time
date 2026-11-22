@@ -311,6 +311,8 @@ pub fn infer_windows(windows: &[Vec<RawToken>]) -> Result<Vec<Predictions>, crat
                     scores: dispatch.scores[base..base + real].to_vec(),
                     logits: None,
                     boundary_logits: None,
+                    // The tagger runs the intent encoder only where it is needed.
+                    intent: None,
                 });
             }
         }

@@ -1,0 +1,900 @@
+{"id": "hinglish-0001", "lang": "hinglish", "intent": "mention", "text": "uski shaadi agle mahine hai, sunke accha laga"}
+{"id": "hinglish-0002", "lang": "hinglish", "intent": "mention", "text": "bachpan mein hum roz shaam ko cricket khelte the"}
+{"id": "hinglish-0003", "lang": "hinglish", "intent": "mention", "text": "subah 5 baje ki ghanti sunke jaagna padta tha hostel mein"}
+{"id": "hinglish-0004", "lang": "hinglish", "intent": "request", "text": "roz subah 7 baje school bus ka time hai"}
+{"id": "hinglish-0005", "lang": "hinglish", "intent": "mention", "text": "kal ka pura din behen ke saath bita, bahut maza aaya"}
+{"id": "hinglish-0006", "lang": "hinglish", "intent": "mention", "text": "Ye subah kaisi hai, dhundh hi dhundh"}
+{"id": "hinglish-0007", "lang": "hinglish", "intent": "request", "text": "kal subah jaldi 5 baje uth ke ghar ki safai karni hai"}
+{"id": "hinglish-0008", "lang": "hinglish", "intent": "mention", "text": "Kaun Banega Crorepati dekhte dekhte bada hua hu main"}
+{"id": "hinglish-0009", "lang": "hinglish", "intent": "mention", "text": "Kitne baje ka sunrise hota hai Mumbai mein December mein?"}
+{"id": "hinglish-0010", "lang": "hinglish", "intent": "request", "text": "kal subah 6 baje ghar se nikalna hai, Haridwar jaana hai"}
+{"id": "hinglish-0011", "lang": "hinglish", "intent": "mention", "text": "Ek Ghanta aur Ek Ghanta - ye game maine kheli thi bachpan mein"}
+{"id": "hinglish-0012", "lang": "hinglish", "intent": "mention", "text": "Subah Ki Pehli Kiran se pehle hi mandir mein bheed ho jaati hai, tab bhi har roz"}
+{"id": "hinglish-0013", "lang": "hinglish", "intent": "mention", "text": "bhai tu roz itna late kyun aata hai office?"}
+{"id": "hinglish-0014", "lang": "hinglish", "intent": "mention", "text": "raat bhar jaaga tha, ab sar dard ho raha hai"}
+{"id": "hinglish-0015", "lang": "hinglish", "intent": "request", "text": "har Monday subah 7 baje dustbin bahar rakhna yaad dilana"}
+{"id": "hinglish-0016", "lang": "hinglish", "intent": "request", "text": "aaj raat 9 baje tak mujhe invoice bhejna hai"}
+{"id": "hinglish-0017", "lang": "hinglish", "intent": "request", "text": "aaj sham ko 7 baje Pooja ki tayyari karni hai, yaad dilana"}
+{"id": "hinglish-0018", "lang": "hinglish", "intent": "request", "text": "Tuesday subah 6:30 baje bus hai Jaipur ki"}
+{"id": "hinglish-0019", "lang": "hinglish", "intent": "mention", "text": "Shaam ki gaadi mein bahut bheed thi, jaise hamesha hoti hai"}
+{"id": "hinglish-0020", "lang": "hinglish", "intent": "mention", "text": "Aaj tak ka sabse mushkil din tha wo, jab bhi yaad karta hu toh aankhein bhar aati hain"}
+{"id": "hinglish-0021", "lang": "hinglish", "intent": "request", "text": "kal 10 baje subah sasur ji ke saath hospital jaana hai"}
+{"id": "hinglish-0022", "lang": "hinglish", "intent": "request", "text": "aaj raat 8 baje dahi jamana yaad dila do"}
+{"id": "hinglish-0023", "lang": "hinglish", "intent": "mention", "text": "Kal ki baat kal pe chhodo yaar"}
+{"id": "hinglish-0024", "lang": "hinglish", "intent": "mention", "text": "Time se pehle aur kismat se zyada kisi ko kuch nahi milta"}
+{"id": "hinglish-0025", "lang": "hinglish", "intent": "mention", "text": "Shukravar ko Friday kehte hain, aur Shanivar ko Saturday"}
+{"id": "hinglish-0026", "lang": "hinglish", "intent": "request", "text": "roz sham 5 baje walk pe jaana hai, remind karna"}
+{"id": "hinglish-0027", "lang": "hinglish", "intent": "request", "text": "aaj 3 baje meeting ke liye 2:45 pe yaad dilana"}
+{"id": "hinglish-0028", "lang": "hinglish", "intent": "request", "text": "roz subah 10:30 baje chai break, bas yaad dilate raho"}
+{"id": "hinglish-0029", "lang": "hinglish", "intent": "mention", "text": "Diwali kab hai 2027 mein? kisi ne bataya nahi"}
+{"id": "hinglish-0030", "lang": "hinglish", "intent": "request", "text": "Thursday 2 baje dopahar mein ghar pe cleaners aayenge"}
+{"id": "hinglish-0031", "lang": "hinglish", "intent": "mention", "text": "aaj sham ko Vishal ne mujhe bataya ki wo Monday ko resign karega"}
+{"id": "hinglish-0032", "lang": "hinglish", "intent": "request", "text": "kal 7 baje morning mein pani ki motor chalu karna"}
+{"id": "hinglish-0033", "lang": "hinglish", "intent": "request", "text": "Sunday subah 5 baje Ganga aarti dekhne jaana hai, 4 baje uthna"}
+{"id": "hinglish-0034", "lang": "hinglish", "intent": "mention", "text": "kal tak toh sab theek tha, aaj achanak kya hua"}
+{"id": "hinglish-0035", "lang": "hinglish", "intent": "mention", "text": "Bhai Dooj aur Rakhi mein kya difference hai?"}
+{"id": "hinglish-0036", "lang": "hinglish", "intent": "request", "text": "har Wednesday raat 8 baje Hindi class zoom pe"}
+{"id": "hinglish-0037", "lang": "hinglish", "intent": "request", "text": "Mon Tue Wed teeno din subah 7 baje swimming"}
+{"id": "hinglish-0038", "lang": "hinglish", "intent": "request", "text": "Monday ko 10 baje HR ke saath one-on-one hai mera"}
+{"id": "hinglish-0039", "lang": "hinglish", "intent": "mention", "text": "Hum dono Raat Bhar baat karte rahe the us din"}
+{"id": "hinglish-0040", "lang": "hinglish", "intent": "mention", "text": "saal 2020 mein sab kuch band tha, yaad hai?"}
+{"id": "hinglish-0041", "lang": "hinglish", "intent": "request", "text": "har 2 ghante mein paani peene ka reminder do"}
+{"id": "hinglish-0042", "lang": "hinglish", "intent": "mention", "text": "ye saal toh jaise ud gaya, pata hi nahi chala"}
+{"id": "hinglish-0043", "lang": "hinglish", "intent": "mention", "text": "kal tak ka bill 4,500 ho gaya hai"}
+{"id": "hinglish-0044", "lang": "hinglish", "intent": "mention", "text": "Abhi tak toh kuch nahi hua, dekhte hain aage kya hota hai"}
+{"id": "hinglish-0045", "lang": "hinglish", "intent": "request", "text": "har mahine ki 25 tareekh ko property tax ka reminder"}
+{"id": "hinglish-0046", "lang": "hinglish", "intent": "request", "text": "aaj raat 8 baje dahi bhalle banane hain, yaad dila dena"}
+{"id": "hinglish-0047", "lang": "hinglish", "intent": "request", "text": "5 baje uthana mujhe subah, kal cricket khelna hai"}
+{"id": "hinglish-0048", "lang": "hinglish", "intent": "request", "text": "aaj raat 11 baje mujhe flight ka check-in karna hai"}
+{"id": "hinglish-0049", "lang": "hinglish", "intent": "mention", "text": "Rohit ne kal 3 sixes maare, kya khela"}
+{"id": "hinglish-0050", "lang": "hinglish", "intent": "mention", "text": "Rohan ki shaadi 12 December ko hai, pura mohalla ja raha hai"}
+{"id": "hinglish-0051", "lang": "hinglish", "intent": "mention", "text": "Is Monday bhi barish thi, pichle Monday bhi, kaisa coincidence hai"}
+{"id": "hinglish-0052", "lang": "hinglish", "intent": "mention", "text": "uska Monday ka mood hamesha kharab hota hai"}
+{"id": "hinglish-0053", "lang": "hinglish", "intent": "mention", "text": "kal ki wo movie dekhne ke baad main sochta reh gaya"}
+{"id": "hinglish-0054", "lang": "hinglish", "intent": "mention", "text": "Time Table naam ka ek purana gaana hai na"}
+{"id": "hinglish-0055", "lang": "hinglish", "intent": "mention", "text": "Wo Sunday ko Sunday nahi samajhta, kaam hi karta rehta hai"}
+{"id": "hinglish-0056", "lang": "hinglish", "intent": "request", "text": "parso subah 7 baje ke flight ke liye 4 baje taxi"}
+{"id": "hinglish-0057", "lang": "hinglish", "intent": "mention", "text": "Pichle mahine ki 15 tareekh ko meri shaadi ki saalgirah thi, humne ghar pe hi manayi"}
+{"id": "hinglish-0058", "lang": "hinglish", "intent": "mention", "text": "din mein kitne ghante sona chahiye? 7 ya 8?"}
+{"id": "hinglish-0059", "lang": "hinglish", "intent": "mention", "text": "kal bachhe ne pehli baar cycle chalayi, bahut khush tha"}
+{"id": "hinglish-0060", "lang": "hinglish", "intent": "request", "text": "5 baje tak yeh sab karna hai, 4:30 pe yaad dilana"}
+{"id": "hinglish-0061", "lang": "hinglish", "intent": "request", "text": "bhai 10 min baad bol dena ki rice check karne hain"}
+{"id": "hinglish-0062", "lang": "hinglish", "intent": "request", "text": "Saturday ko savere 6 baje trek pe nikalna hai"}
+{"id": "hinglish-0063", "lang": "hinglish", "intent": "mention", "text": "Today FM par purane gaane aate hain"}
+{"id": "hinglish-0064", "lang": "hinglish", "intent": "request", "text": "kal subah 6 baje chai pe aana hai Sinha ji ke ghar"}
+{"id": "hinglish-0065", "lang": "hinglish", "intent": "mention", "text": "meri dadi roz sham 6 baje Hanuman Chalisa padhti thi"}
+{"id": "hinglish-0066", "lang": "hinglish", "intent": "mention", "text": "Kabhi Khushi Kabhie Gham ka title song sunke rona aa jaata hai"}
+{"id": "hinglish-0067", "lang": "hinglish", "intent": "request", "text": "kal raat 1 baje tak jaagna hai, match dekhna hai, 12:45 pe remind karna"}
+{"id": "hinglish-0068", "lang": "hinglish", "intent": "request", "text": "subah ke 8 baje se pehle Nani ko good morning message bhejna hai roz"}
+{"id": "hinglish-0069", "lang": "hinglish", "intent": "request", "text": "aaj 8 baje raat ko match start hota hai, 7:45 pe yaad dilana"}
+{"id": "hinglish-0070", "lang": "hinglish", "intent": "mention", "text": "Hafte mein 40 ghante kaam karna kaafi hai, kehte hain"}
+{"id": "hinglish-0071", "lang": "hinglish", "intent": "request", "text": "kal subah ghanta bhar pehle yaad dilana ki 9 baje exam hai"}
+{"id": "hinglish-0072", "lang": "hinglish", "intent": "mention", "text": "Diwali ka mela har saal Kartik mahine mein lagta hai, hamare gaon mein"}
+{"id": "hinglish-0073", "lang": "hinglish", "intent": "mention", "text": "Mahine mein kitne din hote hain, 30 ya 31?"}
+{"id": "hinglish-0074", "lang": "hinglish", "intent": "mention", "text": "Samay bada balwan hota hai, ye kahawat purani hai"}
+{"id": "hinglish-0075", "lang": "hinglish", "intent": "request", "text": "aaj subah 11 baje se shaam 4 baje tak mujhe koi call mat dena, focus time"}
+{"id": "hinglish-0076", "lang": "hinglish", "intent": "mention", "text": "Pehle zamane mein log roz subah 4 baje uth jaate the"}
+{"id": "hinglish-0077", "lang": "hinglish", "intent": "mention", "text": "Kal ki game ke baad hum sab bahut thake hue the"}
+{"id": "hinglish-0078", "lang": "hinglish", "intent": "request", "text": "Next Monday 8 baje airport pickup hai"}
+{"id": "hinglish-0079", "lang": "hinglish", "intent": "mention", "text": "Sunday ko log zyada late uthte hain, ye sab jaante hain"}
+{"id": "hinglish-0080", "lang": "hinglish", "intent": "request", "text": "raat 9 baje Zoom class hai meri roz Mon-Fri"}
+{"id": "hinglish-0081", "lang": "hinglish", "intent": "request", "text": "har din 3 baje paani ki bottle refill karna"}
+{"id": "hinglish-0082", "lang": "hinglish", "intent": "mention", "text": "kal ka din bahut accha tha, sab kuch perfect"}
+{"id": "hinglish-0083", "lang": "hinglish", "intent": "request", "text": "roz 11 baje tak pehle laundry daalna hai, yaad dila dena sham ko"}
+{"id": "hinglish-0084", "lang": "hinglish", "intent": "request", "text": "kal dopahar 4 baje accountant se call hai mera"}
+{"id": "hinglish-0085", "lang": "hinglish", "intent": "request", "text": "har roz subah 6:30 baje yoga ka reminder"}
+{"id": "hinglish-0086", "lang": "hinglish", "intent": "request", "text": "kal subah 9 baje Wipro ke office jaana hai walk-in ke liye"}
+{"id": "hinglish-0087", "lang": "hinglish", "intent": "request", "text": "alarm laga do 4:45 am ka kal ke liye"}
+{"id": "hinglish-0088", "lang": "hinglish", "intent": "mention", "text": "Aaj Ki Taaza Khabar newspaper ka title hai kya?"}
+{"id": "hinglish-0089", "lang": "hinglish", "intent": "mention", "text": "Subah ka wo scene dekha tha na, jab bandar aaya tha chhat pe"}
+{"id": "hinglish-0090", "lang": "hinglish", "intent": "request", "text": "aaj raat 9 baje serial dekhna hai, yaad dila dena 😄"}
+{"id": "hinglish-0091", "lang": "hinglish", "intent": "mention", "text": "Ek baar Monday ko meri bike kharab ho gayi thi, tab se Monday se darr lagta hai"}
+{"id": "hinglish-0092", "lang": "hinglish", "intent": "request", "text": "hr Friday sham 6 baje office ke baad movie plan hai"}
+{"id": "hinglish-0093", "lang": "hinglish", "intent": "request", "text": "Next week Tuesday 5 baje school ka annual function hai"}
+{"id": "hinglish-0094", "lang": "hinglish", "intent": "mention", "text": "bhai kal ki party mast thi, DJ ne dhamaal macha diya"}
+{"id": "hinglish-0095", "lang": "hinglish", "intent": "mention", "text": "subah ki chai best hoti hai"}
+{"id": "hinglish-0096", "lang": "hinglish", "intent": "request", "text": "Sunday ko 11 baje mummy papa ke saath brunch hai"}
+{"id": "hinglish-0097", "lang": "hinglish", "intent": "request", "text": "Tomorrow 7am gym, uske baad 9 baje office, remind me"}
+{"id": "hinglish-0098", "lang": "hinglish", "intent": "request", "text": "agle Friday ko 10 baje court mein hazri hai"}
+{"id": "hinglish-0099", "lang": "hinglish", "intent": "request", "text": "kal dopahar 1 baje lunch pe Amit se milna hai"}
+{"id": "hinglish-0100", "lang": "hinglish", "intent": "mention", "text": "bhai 5 minute mein phone kat jaata hai mere yahan, network kharab hai"}
+{"id": "hinglish-0101", "lang": "hinglish", "intent": "request", "text": "Sunday 8 baje subah cricket practice, pehle utha dena 7 baje"}
+{"id": "hinglish-0102", "lang": "hinglish", "intent": "mention", "text": "Savan Kumar Tak ki film dekhi, mast thi"}
+{"id": "hinglish-0103", "lang": "hinglish", "intent": "mention", "text": "Pichle Sunday ko hum log Lonavala gaye the, mast tha"}
+{"id": "hinglish-0104", "lang": "hinglish", "intent": "request", "text": "hafte mein ek baar Saturday ko ghar ki laundry, shaam 4 baje"}
+{"id": "hinglish-0105", "lang": "hinglish", "intent": "mention", "text": "subah ki sair karne wale buzurg log mujhe bahut pasand hain"}
+{"id": "hinglish-0106", "lang": "hinglish", "intent": "request", "text": "roz 4 baje chai ka time hai, yaad dila diya karo"}
+{"id": "hinglish-0107", "lang": "hinglish", "intent": "request", "text": "kal raat 10 baje tak bijli ka bill bharna hai"}
+{"id": "hinglish-0108", "lang": "hinglish", "intent": "mention", "text": "Sunday ko cricket dekhna sabse badhiya time pass hai"}
+{"id": "hinglish-0109", "lang": "hinglish", "intent": "request", "text": "har raat 10 baje tak bachhon ka bag taiyar karna"}
+{"id": "hinglish-0110", "lang": "hinglish", "intent": "request", "text": "kal sham 6 baje tak mujhe yeh project submit karna hai"}
+{"id": "hinglish-0111", "lang": "hinglish", "intent": "request", "text": "bhai kal subah ki chai 6 baje tayyar rakhna, main utha dunga yaad dila dena"}
+{"id": "hinglish-0112", "lang": "hinglish", "intent": "mention", "text": "Aaj kaun si tareekh hai?"}
+{"id": "hinglish-0113", "lang": "hinglish", "intent": "mention", "text": "wo log har weekend trek par jaate hain, mast hai unki zindagi"}
+{"id": "hinglish-0114", "lang": "hinglish", "intent": "request", "text": "15 minute ke baad door pe courier aane wala hai, alert do"}
+{"id": "hinglish-0115", "lang": "hinglish", "intent": "request", "text": "bhai Sunday ko 4 baje tak free hu, uss din 2 baje ka lunch fix kar do"}
+{"id": "hinglish-0116", "lang": "hinglish", "intent": "request", "text": "alarm 6:15 am kal"}
+{"id": "hinglish-0117", "lang": "hinglish", "intent": "request", "text": "hr din sham 6 bje sabzi lene jaana hai, yaad dilana"}
+{"id": "hinglish-0118", "lang": "hinglish", "intent": "mention", "text": "subah subah uth ke dekha toh pura sheher dhund mein tha"}
+{"id": "hinglish-0119", "lang": "hinglish", "intent": "request", "text": "Monday subah 8 baje dairy se dahi lena hai, aur 8:30 pe office"}
+{"id": "hinglish-0120", "lang": "hinglish", "intent": "request", "text": "har mahine 1 tareekh ko SIP check karna"}
+{"id": "hinglish-0121", "lang": "hinglish", "intent": "request", "text": "har roz subah 6 baje Surya Namaskar, yaad dilana"}
+{"id": "hinglish-0122", "lang": "hinglish", "intent": "mention", "text": "meri behen ki flight kal subah 6 baje thi, wo pahunch gayi sahi se"}
+{"id": "hinglish-0123", "lang": "hinglish", "intent": "request", "text": "Sunday subah 9 baje se cricket match hai, 7 baje utha dena"}
+{"id": "hinglish-0124", "lang": "hinglish", "intent": "request", "text": "hafte mein ek baar Sunday 10 baje dadi ke ghar jaana hai"}
+{"id": "hinglish-0125", "lang": "hinglish", "intent": "mention", "text": "kal ke match ka score 245/6 tha"}
+{"id": "hinglish-0126", "lang": "hinglish", "intent": "mention", "text": "kal match mein Kohli ne 82 run banaye"}
+{"id": "hinglish-0127", "lang": "hinglish", "intent": "request", "text": "ek ghante baad dawai leni hai"}
+{"id": "hinglish-0128", "lang": "hinglish", "intent": "mention", "text": "Aaj Subah Se Hi Mood Kharab Hai - ye likha tha maine status mein"}
+{"id": "hinglish-0129", "lang": "hinglish", "intent": "request", "text": "aaj raat 9 baje se ek ghante ke liye padhna hai, timer lagao"}
+{"id": "hinglish-0130", "lang": "hinglish", "intent": "request", "text": "mujhe har Sunday sham 7 baje ke baad mom ko video call karna hai"}
+{"id": "hinglish-0131", "lang": "hinglish", "intent": "mention", "text": "Roz roz ek hi cheez kha ke bore ho gaya hu"}
+{"id": "hinglish-0132", "lang": "hinglish", "intent": "request", "text": "mere liye 25 minute ka timer lagao, padhai karni hai"}
+{"id": "hinglish-0133", "lang": "hinglish", "intent": "mention", "text": "6 mahine pehle Pune mein tha, ab Bangalore mein hu"}
+{"id": "hinglish-0134", "lang": "hinglish", "intent": "request", "text": "shaam 5 baje tak mujhe tailor se kapde lene hain"}
+{"id": "hinglish-0135", "lang": "hinglish", "intent": "mention", "text": "Parso ka Tuesday tha ya Wednesday, yaad nahi aa raha"}
+{"id": "hinglish-0136", "lang": "hinglish", "intent": "request", "text": "hafte mein do baar gym jaana hai, yaad dilate rehna"}
+{"id": "hinglish-0137", "lang": "hinglish", "intent": "mention", "text": "Good morning sabko, aaj ka din accha jaye"}
+{"id": "hinglish-0138", "lang": "hinglish", "intent": "request", "text": "30 min ke andar mujhe tax consultant ko call karna hai"}
+{"id": "hinglish-0139", "lang": "hinglish", "intent": "request", "text": "subah 5 baje ki alarm, roz"}
+{"id": "hinglish-0140", "lang": "hinglish", "intent": "request", "text": "har hafte Tuesday ko 8 baje raat ko trash bahar nikalna hai"}
+{"id": "hinglish-0141", "lang": "hinglish", "intent": "mention", "text": "Aaj Subah naam ka ek podcast sunna shuru kiya, accha hai"}
+{"id": "hinglish-0142", "lang": "hinglish", "intent": "mention", "text": "dopahar ki chai ka ek alag charm hota hai"}
+{"id": "hinglish-0143", "lang": "hinglish", "intent": "request", "text": "roz 8 baje raat ko Quran padhne ka reminder"}
+{"id": "hinglish-0144", "lang": "hinglish", "intent": "request", "text": "kal subah 8 baje school jaana hai bachhon ko chhodne, yaad dila dena"}
+{"id": "hinglish-0145", "lang": "hinglish", "intent": "request", "text": "15 tareekh ko insurance premium bharna hai, ek din pehle yaad dila dena"}
+{"id": "hinglish-0146", "lang": "hinglish", "intent": "request", "text": "parso raat 9 baje ghar pe party hai, 6 baje se decoration"}
+{"id": "hinglish-0147", "lang": "hinglish", "intent": "request", "text": "har pehle tareekh ko subah 9 baje rent transfer, aur Google Pay se"}
+{"id": "hinglish-0148", "lang": "hinglish", "intent": "request", "text": "aaj dopahar 1 baje lunch ke baad dawai leni hai"}
+{"id": "hinglish-0149", "lang": "hinglish", "intent": "mention", "text": "Bachpan mein har Diwali pe nayi frock milti thi"}
+{"id": "hinglish-0150", "lang": "hinglish", "intent": "request", "text": "mahine ki 1 aur 15 tareekh ko payment karna hai vendor ko"}
+{"id": "hinglish-0151", "lang": "hinglish", "intent": "mention", "text": "aajkal ka mausam kya hal hai Delhi mein?"}
+{"id": "hinglish-0152", "lang": "hinglish", "intent": "mention", "text": "Mere papa ne kabhi ek din bhi chhutti nahi li"}
+{"id": "hinglish-0153", "lang": "hinglish", "intent": "request", "text": "har pehle Monday ko monthly review meeting, 11 baje"}
+{"id": "hinglish-0154", "lang": "hinglish", "intent": "mention", "text": "1 hafte tak to maine aaloo nahi khaye, bas ye pata hai"}
+{"id": "hinglish-0155", "lang": "hinglish", "intent": "mention", "text": "Shaam ko mausam bahut suhana ho gaya hai"}
+{"id": "hinglish-0156", "lang": "hinglish", "intent": "mention", "text": "IIT ki taiyari mein bachhe 14 ghante padhte hain"}
+{"id": "hinglish-0157", "lang": "hinglish", "intent": "mention", "text": "Kal subah ka nashta bahut heavy tha"}
+{"id": "hinglish-0158", "lang": "hinglish", "intent": "mention", "text": "Holi ke din bhang ka maza hi alag hai"}
+{"id": "hinglish-0159", "lang": "hinglish", "intent": "request", "text": "agle Monday 9 baje mere paas client call hai, calendar mein daal do"}
+{"id": "hinglish-0160", "lang": "hinglish", "intent": "request", "text": "agle Monday se roz 7:30 baje office bus pakadni hai"}
+{"id": "hinglish-0161", "lang": "hinglish", "intent": "request", "text": "kal subah 7 baje tak sabzi laani hai, 6:30 pe remind karna"}
+{"id": "hinglish-0162", "lang": "hinglish", "intent": "request", "text": "kal raat 7 baje mama aa rahe hain, 5 baje ghar pe rehna"}
+{"id": "hinglish-0163", "lang": "hinglish", "intent": "request", "text": "roz subah 8 baje tak chai khatam karni hai 😂 reminder"}
+{"id": "hinglish-0164", "lang": "hinglish", "intent": "mention", "text": "din raat mehnat karke bhi kuch nahi mila"}
+{"id": "hinglish-0165", "lang": "hinglish", "intent": "request", "text": "roz 2 baje dopahar mein plants ko spray karna"}
+{"id": "hinglish-0166", "lang": "hinglish", "intent": "request", "text": "kal subah 11 baje interview hai mera, 9 baje alarm laga do"}
+{"id": "hinglish-0167", "lang": "hinglish", "intent": "mention", "text": "Sunday ko sab ghar pe hote hain, isliye Sunday ko hi mehmaan aate hain, aisa dekha hai maine"}
+{"id": "hinglish-0168", "lang": "hinglish", "intent": "request", "text": "Wake me up kal 6 baje please"}
+{"id": "hinglish-0169", "lang": "hinglish", "intent": "mention", "text": "Ek ghante mein itna sab kaise ho gaya, hairaan hu"}
+{"id": "hinglish-0170", "lang": "hinglish", "intent": "request", "text": "subah 5:15 baje ki alarm, har roz, exam tak"}
+{"id": "hinglish-0171", "lang": "hinglish", "intent": "mention", "text": "Mere ghar mein Saturday ko non-veg banta tha pehle"}
+{"id": "hinglish-0172", "lang": "hinglish", "intent": "request", "text": "har sal Dussehra pe 8 baje subah ghar pe puja, yaad dilana"}
+{"id": "hinglish-0173", "lang": "hinglish", "intent": "request", "text": "kal raat ko dahi jamana hai, 9 baje yaad dila dena"}
+{"id": "hinglish-0174", "lang": "hinglish", "intent": "mention", "text": "Ghadi ke bina zindagi pata nahi kaisi hoti"}
+{"id": "hinglish-0175", "lang": "hinglish", "intent": "mention", "text": "Aaj Ki Taaza Khabar mein kya dikhaya gaya?"}
+{"id": "hinglish-0176", "lang": "hinglish", "intent": "request", "text": "roz subah 10 baje se pehle standing desk pe baithna hai, reminder"}
+{"id": "hinglish-0177", "lang": "hinglish", "intent": "mention", "text": "Papa ka subah 5 baje ka alarm sab ko jagata tha"}
+{"id": "hinglish-0178", "lang": "hinglish", "intent": "mention", "text": "Baarish mein bheegte hue ghar aaya aaj sham ko"}
+{"id": "hinglish-0179", "lang": "hinglish", "intent": "mention", "text": "Aaj kal log har cheez ke liye Monday ka wait karte hain, sab alag hi soch"}
+{"id": "hinglish-0180", "lang": "hinglish", "intent": "mention", "text": "kal raat bahut thand thi, 8 degree tha"}
+{"id": "hinglish-0181", "lang": "hinglish", "intent": "mention", "text": "Daadi ki kahani sunte sunte raat ko so jaate the hum"}
+{"id": "hinglish-0182", "lang": "hinglish", "intent": "mention", "text": "subah ki flight mein bahut bheed thi jab main pichli baar gaya tha"}
+{"id": "hinglish-0183", "lang": "hinglish", "intent": "request", "text": "aaj dopahar 4 baje tak ka time hai mere paas, tab tak form bhar dunga, yaad dila dena"}
+{"id": "hinglish-0184", "lang": "hinglish", "intent": "mention", "text": "Raat ke 12 baje ke baad Mumbai alag lagta hai"}
+{"id": "hinglish-0185", "lang": "hinglish", "intent": "request", "text": "har Monday 9 baje standup"}
+{"id": "hinglish-0186", "lang": "hinglish", "intent": "request", "text": "kal subah 9 baje se 11 baje tak mujhe deep work karna hai, disturb mat karna"}
+{"id": "hinglish-0187", "lang": "hinglish", "intent": "request", "text": "raat 11:30 baje reminder: kal subah jaldi uthna hai"}
+{"id": "hinglish-0188", "lang": "hinglish", "intent": "request", "text": "kal subah 6:45 baje Pooja ke phool lene jaana hai"}
+{"id": "hinglish-0189", "lang": "hinglish", "intent": "request", "text": "10 baje se pehle mujhe yaad dilana ki medicines leni hain"}
+{"id": "hinglish-0190", "lang": "hinglish", "intent": "request", "text": "2 baje ek alarm laga do dopahar ka"}
+{"id": "hinglish-0191", "lang": "hinglish", "intent": "mention", "text": "Sundar ka matlab beautiful hota hai, Sunday se kuch lena dena nahi"}
+{"id": "hinglish-0192", "lang": "hinglish", "intent": "request", "text": "kal raat 9 baje Zoom pe family call hai, remind karna"}
+{"id": "hinglish-0193", "lang": "hinglish", "intent": "mention", "text": "kal ke bad parso, parso ke bad narso, aise hi time nikal gaya"}
+{"id": "hinglish-0194", "lang": "hinglish", "intent": "mention", "text": "raat 10 baje ke baad pura mohalla shant ho jaata hai, ye hamari colony ki baat hai"}
+{"id": "hinglish-0195", "lang": "hinglish", "intent": "mention", "text": "Shaam ki aarti ka time hota hai mandir mein, aise hi sab kehte hain"}
+{"id": "hinglish-0196", "lang": "hinglish", "intent": "request", "text": "roz dopahar 3 baje chai aur biscuit ka time hai, yaad dilaye kar"}
+{"id": "hinglish-0197", "lang": "hinglish", "intent": "mention", "text": "Pichli raat Sharma aunty ke ghar chori ho gayi, sab bol rahe hain"}
+{"id": "hinglish-0198", "lang": "hinglish", "intent": "request", "text": "mera naya schedule: roz raat 10 baje sona, subah 6 baje uthna, yaad dilate rehna"}
+{"id": "hinglish-0199", "lang": "hinglish", "intent": "mention", "text": "wo log har Friday raat ko party karte hain, pata hai mujhe"}
+{"id": "hinglish-0200", "lang": "hinglish", "intent": "mention", "text": "Padosi roz subah 6 baje bhajan chalate hain, mere liye ye roz ka shor hai"}
+{"id": "hinglish-0201", "lang": "hinglish", "intent": "request", "text": "parso se 5 din tak roz 6 baje sham ko tuition ke liye le jaana hai"}
+{"id": "hinglish-0202", "lang": "hinglish", "intent": "request", "text": "agle hafte Tuesday ko 9 baje HR round hai"}
+{"id": "hinglish-0203", "lang": "hinglish", "intent": "request", "text": "bhai kal 7 baje uthana, nahi to office late ho jaunga"}
+{"id": "hinglish-0204", "lang": "hinglish", "intent": "request", "text": "subah-subah 4 baje Ramzan mein sehri ke liye uthana"}
+{"id": "hinglish-0205", "lang": "hinglish", "intent": "mention", "text": "wo roz sham 5 baje chai pe aati hai hamare ghar, par aaj nahi aayi"}
+{"id": "hinglish-0206", "lang": "hinglish", "intent": "request", "text": "roz sham 7 baje Gita ka path karna hai, yaad dilana"}
+{"id": "hinglish-0207", "lang": "hinglish", "intent": "mention", "text": "Meri mummy ko Tuesday ka vrat rakhna accha lagta hai, har hafte rakhti hain"}
+{"id": "hinglish-0208", "lang": "hinglish", "intent": "mention", "text": "Mausam vibhag ke mutabik kal baarish hogi, par ye news hai, meri koi planning nahi"}
+{"id": "hinglish-0209", "lang": "hinglish", "intent": "request", "text": "ek hafte tak roz subah 9 baje dawai"}
+{"id": "hinglish-0210", "lang": "hinglish", "intent": "request", "text": "subah 7 baje kal Rohan ko pickup karna hai"}
+{"id": "hinglish-0211", "lang": "hinglish", "intent": "request", "text": "parso Holi hai, subah 8 baje se rang khelna hai, 7 baje uthana"}
+{"id": "hinglish-0212", "lang": "hinglish", "intent": "mention", "text": "pichle hafte ki baarish se sadak pe bahut gaddhe ho gaye hain"}
+{"id": "hinglish-0213", "lang": "hinglish", "intent": "request", "text": "15 August ko subah 8 baje jhanda lehrane jaana hai"}
+{"id": "hinglish-0214", "lang": "hinglish", "intent": "request", "text": "raat 2 baje cab book karni hai airport ke liye, 1 baje yaad dilana"}
+{"id": "hinglish-0215", "lang": "hinglish", "intent": "mention", "text": "Navratri ke 9 din hote hain, ye toh sabko pata hai"}
+{"id": "hinglish-0216", "lang": "hinglish", "intent": "mention", "text": "Wo kal bola ki 5 baje aayega, par aaya nahi"}
+{"id": "hinglish-0217", "lang": "hinglish", "intent": "mention", "text": "Subah subah uthke dekha toh dudh ubal gaya tha, kitna gussa aaya mujhe"}
+{"id": "hinglish-0218", "lang": "hinglish", "intent": "request", "text": "mera naya routine: 6 baje uthna, 7 baje gym, 9 baje office, roz"}
+{"id": "hinglish-0219", "lang": "hinglish", "intent": "mention", "text": "sabse zyada cheezein Monday ko hi kharab hoti hain"}
+{"id": "hinglish-0220", "lang": "hinglish", "intent": "mention", "text": "Aaj tak ka sabse bada match tha wo, 3 ghante chala"}
+{"id": "hinglish-0221", "lang": "hinglish", "intent": "mention", "text": "wo har baar late aata hai, sach mein bura lagta hai"}
+{"id": "hinglish-0222", "lang": "hinglish", "intent": "request", "text": "subha 9 baje se pehle ye mail bhej dena hai, kal remind karna"}
+{"id": "hinglish-0223", "lang": "hinglish", "intent": "request", "text": "aaj dopahar 1:30 baje team lunch hai, yaad dilana"}
+{"id": "hinglish-0224", "lang": "hinglish", "intent": "request", "text": "roz raat 9 baje ke baad no phone, reminder lagao"}
+{"id": "hinglish-0225", "lang": "hinglish", "intent": "request", "text": "Tuesday ko dopahar 2 baje doctor se milna hai"}
+{"id": "hinglish-0226", "lang": "hinglish", "intent": "request", "text": "ghar pe 7 baje tak pahunchna hai, 6 baje nikalna yaad dila dena"}
+{"id": "hinglish-0227", "lang": "hinglish", "intent": "request", "text": "15 min mein bhaiya aa rahe hain, ready rehna hai"}
+{"id": "hinglish-0228", "lang": "hinglish", "intent": "request", "text": "roz subah uth ke 8 baje BP ki goli"}
+{"id": "hinglish-0229", "lang": "hinglish", "intent": "request", "text": "reminder: aaj 6 baje ke baad Priya ko gift dena hai"}
+{"id": "hinglish-0230", "lang": "hinglish", "intent": "mention", "text": "yaad hai, school mein roz 7 baje bell bajti thi"}
+{"id": "hinglish-0231", "lang": "hinglish", "intent": "request", "text": "roz raat ko 9 baje pet ko khana dena hai"}
+{"id": "hinglish-0232", "lang": "hinglish", "intent": "request", "text": "mujhe next month ki 12 tareekh ko shaam 6 baje reception pe jaana hai"}
+{"id": "hinglish-0233", "lang": "hinglish", "intent": "request", "text": "aaj shaam 8 baje cake lene jaana hai birthday ke liye"}
+{"id": "hinglish-0234", "lang": "hinglish", "intent": "request", "text": "parso subah 11 baje driving test hai"}
+{"id": "hinglish-0235", "lang": "hinglish", "intent": "request", "text": "roz sham 6 baje papa ke liye BP check karna yaad dilana"}
+{"id": "hinglish-0236", "lang": "hinglish", "intent": "request", "text": "uthao mujhe kal 5:30 baje"}
+{"id": "hinglish-0237", "lang": "hinglish", "intent": "request", "text": "June ke end tak har hafte Saturday ko 10 baje cleaning"}
+{"id": "hinglish-0238", "lang": "hinglish", "intent": "request", "text": "kal subah 6 baje morning walk ke liye uthaana"}
+{"id": "hinglish-0239", "lang": "hinglish", "intent": "request", "text": "kal subah 9:30 baje mujhe doctor ko report dikhani hai"}
+{"id": "hinglish-0240", "lang": "hinglish", "intent": "mention", "text": "Kal ki chai aaj ki chai se behtar thi"}
+{"id": "hinglish-0241", "lang": "hinglish", "intent": "mention", "text": "Mera favourite show Kal Ki Baat hai, purana hai but mast"}
+{"id": "hinglish-0242", "lang": "hinglish", "intent": "mention", "text": "Meri behen ki shaadi December mein hui thi, 3 saal pehle"}
+{"id": "hinglish-0243", "lang": "hinglish", "intent": "mention", "text": "Ek baar subah 3 baje uth ke pura gaon ghoom aaya tha main"}
+{"id": "hinglish-0244", "lang": "hinglish", "intent": "request", "text": "dopahar 12 baje alarm lagao, nap leni hai 1 ghanta"}
+{"id": "hinglish-0245", "lang": "hinglish", "intent": "mention", "text": "wo roz raat ko 1 baje tak Netflix dekhta hai, yaar uski sehat kharab ho jayegi"}
+{"id": "hinglish-0246", "lang": "hinglish", "intent": "request", "text": "dopahar 3 baje ek reminder: sabji lani hai"}
+{"id": "hinglish-0247", "lang": "hinglish", "intent": "request", "text": "kal shaam 5 baje tak courier lena hai ghar pe rehna hai"}
+{"id": "hinglish-0248", "lang": "hinglish", "intent": "mention", "text": "bachpan mein Sunday ko Rangoli aur Chitrahaar dekhte the, sab yaad hai"}
+{"id": "hinglish-0249", "lang": "hinglish", "intent": "mention", "text": "Wo bachhe jo subah 5 baje school bus pakadte hain, unko salaam"}
+{"id": "hinglish-0250", "lang": "hinglish", "intent": "mention", "text": "kal ke bad se bahut kaam pending hai office mein, sab bol rahe hain"}
+{"id": "hinglish-0251", "lang": "hinglish", "intent": "mention", "text": "4 baje ki chai ka mazaa tabhi aata hai jab baarish ho rahi ho"}
+{"id": "hinglish-0252", "lang": "hinglish", "intent": "mention", "text": "kal ke match mein Dhoni ne last over mein 18 run banaye"}
+{"id": "hinglish-0253", "lang": "hinglish", "intent": "request", "text": "har din subah 7 baje ka alarm, weekend pe 9 baje"}
+{"id": "hinglish-0254", "lang": "hinglish", "intent": "request", "text": "raat 9 baje se pehle sab diary ka kaam khatam"}
+{"id": "hinglish-0255", "lang": "hinglish", "intent": "request", "text": "Friday tak har din 8 baje report bhejni hai, remind karna"}
+{"id": "hinglish-0256", "lang": "hinglish", "intent": "request", "text": "roz subah 7 baje paani peene ka reminder set kar do"}
+{"id": "hinglish-0257", "lang": "hinglish", "intent": "request", "text": "agle Thursday raat 10 baje ki flight hai, 7 baje airport ke liye niklunga"}
+{"id": "hinglish-0258", "lang": "hinglish", "intent": "mention", "text": "Hum Roz Milte Hain, ye kaisa gaana hai yaar"}
+{"id": "hinglish-0259", "lang": "hinglish", "intent": "request", "text": "rakhi se pehle 3 din tak roz sham 6 baje mithai ka order check"}
+{"id": "hinglish-0260", "lang": "hinglish", "intent": "request", "text": "kal duphar 1 baje puja ka saman lene jaana hai bazaar"}
+{"id": "hinglish-0261", "lang": "hinglish", "intent": "mention", "text": "Raat Ki Rani ke phool khushboo dete hain"}
+{"id": "hinglish-0262", "lang": "hinglish", "intent": "mention", "text": "10 saal pehle yahan sirf ek chaay ki dukan thi"}
+{"id": "hinglish-0263", "lang": "hinglish", "intent": "mention", "text": "aaj kal log roz raat ko late tak jaagte hain, mobile ki wajah se"}
+{"id": "hinglish-0264", "lang": "hinglish", "intent": "request", "text": "aaj 2 baje ke baad mujhe meeting nahi leni, calendar block kar do"}
+{"id": "hinglish-0265", "lang": "hinglish", "intent": "mention", "text": "Wo pichle 10 saal se roz subah ek hi bus pakadta hai, kya routine hai"}
+{"id": "hinglish-0266", "lang": "hinglish", "intent": "mention", "text": "aaj kal kaise ho yaar, bahut din baad baat ho rahi hai"}
+{"id": "hinglish-0267", "lang": "hinglish", "intent": "request", "text": "aaj shaam 6 baje Swiggy se order karna hai, yaad dila dena"}
+{"id": "hinglish-0268", "lang": "hinglish", "intent": "request", "text": "kal duphar 2 baje Divya ke saath coffee, remind me 1:30 pe"}
+{"id": "hinglish-0269", "lang": "hinglish", "intent": "mention", "text": "Meri maa ki ek aadat hai, roz subah 6 baje chai banane ki"}
+{"id": "hinglish-0270", "lang": "hinglish", "intent": "mention", "text": "Ye dopahar bahut lambi hai, kab khatam hogi"}
+{"id": "hinglish-0271", "lang": "hinglish", "intent": "mention", "text": "sab keh rahe the ki wo har roz subah 4 baje utha karta tha, sach hai kya?"}
+{"id": "hinglish-0272", "lang": "hinglish", "intent": "mention", "text": "Ek ghanta lag gaya wait karne mein restaurant mein"}
+{"id": "hinglish-0273", "lang": "hinglish", "intent": "request", "text": "parso sham 5 baje graduation ceremony hai meri"}
+{"id": "hinglish-0274", "lang": "hinglish", "intent": "mention", "text": "December mein Delhi ki sardi kaafi tez hoti hai"}
+{"id": "hinglish-0275", "lang": "hinglish", "intent": "mention", "text": "Pehle jab hum chhote the toh Diwali pe 15 din pehle safai shuru hoti thi"}
+{"id": "hinglish-0276", "lang": "hinglish", "intent": "mention", "text": "kal ki thakan abhi tak nahi gayi"}
+{"id": "hinglish-0277", "lang": "hinglish", "intent": "mention", "text": "Kya aaj Monday hai? lagta hi nahi"}
+{"id": "hinglish-0278", "lang": "hinglish", "intent": "request", "text": "kl subha 5 bje uthana hai, train pakadni hai"}
+{"id": "hinglish-0279", "lang": "hinglish", "intent": "mention", "text": "Aaj kal ke bachhe subah jaldi nahi uthte"}
+{"id": "hinglish-0280", "lang": "hinglish", "intent": "mention", "text": "Tuesday ko Mars ka din bolte hain ya Mangalvar, aisa kuch padha tha"}
+{"id": "hinglish-0281", "lang": "hinglish", "intent": "mention", "text": "bhai kal tak toh free tha, ab busy ho gaya"}
+{"id": "hinglish-0282", "lang": "hinglish", "intent": "mention", "text": "aaj ka din kitna lamba tha, bas"}
+{"id": "hinglish-0283", "lang": "hinglish", "intent": "mention", "text": "2 din se bukhar hai, ab thoda better hai"}
+{"id": "hinglish-0284", "lang": "hinglish", "intent": "request", "text": "aaj dopahar 3:45 baje bachhe ko school se lena hai"}
+{"id": "hinglish-0285", "lang": "hinglish", "intent": "request", "text": "roz raat 11 baje fone silent karne ka reminder"}
+{"id": "hinglish-0286", "lang": "hinglish", "intent": "request", "text": "aaj raat 10 baje mummy ko call karna yaad dilana"}
+{"id": "hinglish-0287", "lang": "hinglish", "intent": "request", "text": "kal 8 baje se pehle Chandni ko call karna hai, important hai"}
+{"id": "hinglish-0288", "lang": "hinglish", "intent": "request", "text": "har saal 14 February ko anniversary gift yaad dilana"}
+{"id": "hinglish-0289", "lang": "hinglish", "intent": "request", "text": "har mahine ke aakhri Friday ko team lunch hai 1 baje"}
+{"id": "hinglish-0290", "lang": "hinglish", "intent": "mention", "text": "Kal ho na ho, aaj ko jee lo - ye line mujhe pasand hai"}
+{"id": "hinglish-0291", "lang": "hinglish", "intent": "mention", "text": "Mere padosi har subah 5 baje utha dete hain apne bhajan se, ab aadat ho gayi"}
+{"id": "hinglish-0292", "lang": "hinglish", "intent": "mention", "text": "Zindagi na milegi dobara ka ek dialogue yaad aa gaya, seize the day wala"}
+{"id": "hinglish-0293", "lang": "hinglish", "intent": "mention", "text": "Wo har hafte naya haircut karwata hai, paise ka kya karna hai usne"}
+{"id": "hinglish-0294", "lang": "hinglish", "intent": "request", "text": "roz dopahar 12:30 baje Shilpa ko message karna hai"}
+{"id": "hinglish-0295", "lang": "hinglish", "intent": "mention", "text": "raat ko jaldi sona sehat ke liye theek hai, par mujhse hota nahi"}
+{"id": "hinglish-0296", "lang": "hinglish", "intent": "mention", "text": "aaj Lal Bahadur Shastri ji ki jayanti hai na? history class yaad aayi"}
+{"id": "hinglish-0297", "lang": "hinglish", "intent": "mention", "text": "Time pass karne ke liye reels dekhta hu"}
+{"id": "hinglish-0298", "lang": "hinglish", "intent": "mention", "text": "kya aaj Friday hai ya Saturday? confuse ho gaya"}
+{"id": "hinglish-0299", "lang": "hinglish", "intent": "request", "text": "aaj 4 baje ke baad printer ka kaam karna hai, yaad dilana"}
+{"id": "hinglish-0300", "lang": "hinglish", "intent": "request", "text": "agle Tuesday 3 baje school mein PTM hai, jaana hai"}
+{"id": "hinglish-0301", "lang": "hinglish", "intent": "request", "text": "raat ko 11 baje phone charge pe lagane ka reminder chahiye"}
+{"id": "hinglish-0302", "lang": "hinglish", "intent": "request", "text": "har hafte Friday ko 5 baje manager ke saath one-on-one"}
+{"id": "hinglish-0303", "lang": "hinglish", "intent": "mention", "text": "ghar se office tak 18 km hai, 1 ghanta lagta hai"}
+{"id": "hinglish-0304", "lang": "hinglish", "intent": "request", "text": "Friday ko 3 baje dentist, note kar lo"}
+{"id": "hinglish-0305", "lang": "hinglish", "intent": "mention", "text": "Wo hamesha kehta hai ki time nahi hai, par reels ke liye time hai"}
+{"id": "hinglish-0306", "lang": "hinglish", "intent": "mention", "text": "tumhe yaad hai hum log roz 4 baje cricket khelte the gali mein?"}
+{"id": "hinglish-0307", "lang": "hinglish", "intent": "mention", "text": "Savere uthne wale log zyada productive hote hain, kehte hain"}
+{"id": "hinglish-0308", "lang": "hinglish", "intent": "mention", "text": "Yaar kal ki baat bhool ja, ab move on kar"}
+{"id": "hinglish-0309", "lang": "hinglish", "intent": "mention", "text": "Amitabh ki purani film Kal Aaj Aur Kal mein bahut maza aata hai"}
+{"id": "hinglish-0310", "lang": "hinglish", "intent": "request", "text": "mahine ke pehle hafte mein 5 tareekh ko property tax"}
+{"id": "hinglish-0311", "lang": "hinglish", "intent": "request", "text": "kal se 10 din tak roz subah 7 baje antibiotic leni hai"}
+{"id": "hinglish-0312", "lang": "hinglish", "intent": "request", "text": "kal subah 8 baje Dr. Mehta ke clinic jaana hai"}
+{"id": "hinglish-0313", "lang": "hinglish", "intent": "request", "text": "parso se roz subah 5 baje padhai, bas utha diya karo"}
+{"id": "hinglish-0314", "lang": "hinglish", "intent": "mention", "text": "Raat ke 3 baje aise Mumbai ki sadak pe chalna ek alag anubhav hai"}
+{"id": "hinglish-0315", "lang": "hinglish", "intent": "mention", "text": "Subah ka naashta raja jaisa karna chahiye, kaha jaata hai"}
+{"id": "hinglish-0316", "lang": "hinglish", "intent": "request", "text": "hafte ke har din 11 baje raat ko diary likhni hai"}
+{"id": "hinglish-0317", "lang": "hinglish", "intent": "mention", "text": "kal Sunday hai ya Monday, kisi ko pata hai? calendar nahi dekha"}
+{"id": "hinglish-0318", "lang": "hinglish", "intent": "mention", "text": "pichle saal Diwali pe humne ghar pe party ki thi, mast thi"}
+{"id": "hinglish-0319", "lang": "hinglish", "intent": "request", "text": "aaj 5 baje se pehle mujhe sabko feedback dena hai"}
+{"id": "hinglish-0320", "lang": "hinglish", "intent": "mention", "text": "Weekend kaise nikal jaata hai pata hi nahi chalta"}
+{"id": "hinglish-0321", "lang": "hinglish", "intent": "request", "text": "har Monday subah 6 baje running ka reminder"}
+{"id": "hinglish-0322", "lang": "hinglish", "intent": "mention", "text": "aaj subah Rahul ka phone aaya tha, kuch khaas nahi tha"}
+{"id": "hinglish-0323", "lang": "hinglish", "intent": "mention", "text": "kabhi kabhi lagta hai sab chhod du"}
+{"id": "hinglish-0324", "lang": "hinglish", "intent": "mention", "text": "Kal rat ko 3 baje Rohan ne mujhe call kiya, pagal hai kya"}
+{"id": "hinglish-0325", "lang": "hinglish", "intent": "mention", "text": "dost ne bataya ki wo kal subah 6 baje gym gaya tha, bahut accha laga usko"}
+{"id": "hinglish-0326", "lang": "hinglish", "intent": "request", "text": "agle week Wednesday subah 10 baje visa interview"}
+{"id": "hinglish-0327", "lang": "hinglish", "intent": "request", "text": "10 minute mein oven band karna yaad dilana"}
+{"id": "hinglish-0328", "lang": "hinglish", "intent": "request", "text": "roz subah 4:30 baje Fajr ke liye alarm"}
+{"id": "hinglish-0329", "lang": "hinglish", "intent": "mention", "text": "Hum sab ek hi school mein the, roz saath 8 baje jaate the"}
+{"id": "hinglish-0330", "lang": "hinglish", "intent": "mention", "text": "Wo shaadi ke baad har subah 6 baje uthne laga hai, bahut badal gaya hai"}
+{"id": "hinglish-0331", "lang": "hinglish", "intent": "mention", "text": "Mera office 9 se 6 ka hai, par kaam kabhi khatam hi nahi hota"}
+{"id": "hinglish-0332", "lang": "hinglish", "intent": "request", "text": "15 min baad mujhe meeting ka link bhej dena aur yaad dilana"}
+{"id": "hinglish-0333", "lang": "hinglish", "intent": "mention", "text": "Kal Ka Intezaar - purani kahani ka title"}
+{"id": "hinglish-0334", "lang": "hinglish", "intent": "request", "text": "roz 9 baje subah Instagram ki post schedule karna hai"}
+{"id": "hinglish-0335", "lang": "hinglish", "intent": "request", "text": "parso Diwali ki puja raat 7 baje hai, 6 baje taiyari yaad dilana"}
+{"id": "hinglish-0336", "lang": "hinglish", "intent": "request", "text": "har Saturday shaam 5 baje football match hai apni team ka"}
+{"id": "hinglish-0337", "lang": "hinglish", "intent": "mention", "text": "Janamashtami ki raat ko mandir mein bahut bheed hoti hai, har saal"}
+{"id": "hinglish-0338", "lang": "hinglish", "intent": "request", "text": "20 din tak roz subah khali pet 7 baje ye churan lena hai"}
+{"id": "hinglish-0339", "lang": "hinglish", "intent": "request", "text": "har hafte Thursday raat 7 baje bhajan hai mandir mein"}
+{"id": "hinglish-0340", "lang": "hinglish", "intent": "request", "text": "subah 7 baje ke baad roz bike ki service ki call karni hai, aaj nahi to kal"}
+{"id": "hinglish-0341", "lang": "hinglish", "intent": "mention", "text": "Time Machine mein baithke pichle saal mein jaana chahta hu, mazaak mein bol raha hu"}
+{"id": "hinglish-0342", "lang": "hinglish", "intent": "request", "text": "set a reminder for 9 pm tonight, take the trash out"}
+{"id": "hinglish-0343", "lang": "hinglish", "intent": "mention", "text": "Aaj kal neend nahi aati, pata nahi kyun"}
+{"id": "hinglish-0344", "lang": "hinglish", "intent": "request", "text": "roz sham 6 baje Hanuman mandir jaana hai, yaad dilana"}
+{"id": "hinglish-0345", "lang": "hinglish", "intent": "request", "text": "15 din tak roz raat 8 baje eye drops daalne hain"}
+{"id": "hinglish-0346", "lang": "hinglish", "intent": "request", "text": "raat 8 baje tak meeting khatam, phir 9 baje dinner"}
+{"id": "hinglish-0347", "lang": "hinglish", "intent": "mention", "text": "Kal tak ka kaam aaj nipta diya maine, ab free hu"}
+{"id": "hinglish-0348", "lang": "hinglish", "intent": "request", "text": "Monday se Friday roz 9:30 baje office login yaad dilana"}
+{"id": "hinglish-0349", "lang": "hinglish", "intent": "request", "text": "kal subah 5 baje railway station jaana hai, auto book kar dena 4:30 pe"}
+{"id": "hinglish-0350", "lang": "hinglish", "intent": "mention", "text": "IPL mein kal ka match bahut close tha, 2 run se jeeta"}
+{"id": "hinglish-0351", "lang": "hinglish", "intent": "request", "text": "har Wednesday subah 6:30 baje cycling ka plan hai"}
+{"id": "hinglish-0352", "lang": "hinglish", "intent": "request", "text": "raat ko 12:30 baje aaj ek call aayegi Dubai se"}
+{"id": "hinglish-0353", "lang": "hinglish", "intent": "request", "text": "Tuesday tak roz shaam 5 baje Hindi ka homework karwana yaad dilao"}
+{"id": "hinglish-0354", "lang": "hinglish", "intent": "request", "text": "mera flight Sunday subah 6 baje hai, schedule mein daal do"}
+{"id": "hinglish-0355", "lang": "hinglish", "intent": "mention", "text": "Mehnat ka phal der se milta hai, kal nahi toh parso"}
+{"id": "hinglish-0356", "lang": "hinglish", "intent": "request", "text": "kal ke din subah 7 baje jim, 9 baje office, 7 baje raat ko ghar"}
+{"id": "hinglish-0357", "lang": "hinglish", "intent": "request", "text": "20 min baad yaad dila dena"}
+{"id": "hinglish-0358", "lang": "hinglish", "intent": "request", "text": "agle Saturday sham 5 baje Rohan ka birthday party hai, yaad dila dena"}
+{"id": "hinglish-0359", "lang": "hinglish", "intent": "mention", "text": "bhai Sunday Funday app download kiya kya tune? sirf pooch raha hu"}
+{"id": "hinglish-0360", "lang": "hinglish", "intent": "request", "text": "roz sham 6 baje papa ko chai dena yaad dilana"}
+{"id": "hinglish-0361", "lang": "hinglish", "intent": "request", "text": "raat ko 10 baje tak sabko dawai deni hai, aaj aur kal"}
+{"id": "hinglish-0362", "lang": "hinglish", "intent": "request", "text": "raat ke 10 baje dawai, subah 8 baje dawai, roz yaad dilana"}
+{"id": "hinglish-0363", "lang": "hinglish", "intent": "request", "text": "10 tareekh ko subah 10 baje court hearing hai mujhe"}
+{"id": "hinglish-0364", "lang": "hinglish", "intent": "request", "text": "raat 8 baje bachho ka homework check karna hai, har roz"}
+{"id": "hinglish-0365", "lang": "hinglish", "intent": "request", "text": "har Monday dopahar 12 baje biwi ko groceries ka list bhejna hai"}
+{"id": "hinglish-0366", "lang": "hinglish", "intent": "mention", "text": "Phone mein 14% battery bachi hai bas"}
+{"id": "hinglish-0367", "lang": "hinglish", "intent": "request", "text": "kal tak GST return file karna hai, 11 baje subah yaad dilana"}
+{"id": "hinglish-0368", "lang": "hinglish", "intent": "mention", "text": "meri puri subah meetings mein nikal gayi aaj"}
+{"id": "hinglish-0369", "lang": "hinglish", "intent": "mention", "text": "Mere bhai ka naam Aaj hi hai, ajeeb hai na? nahi, matlab nickname hai"}
+{"id": "hinglish-0370", "lang": "hinglish", "intent": "request", "text": "kal sham ko 4 baje salon ka appointment hai mera"}
+{"id": "hinglish-0371", "lang": "hinglish", "intent": "mention", "text": "Subah 8 baje ki lokal pakadne wale log kitne tezi se daudte hain, dekhne mein maza aata hai"}
+{"id": "hinglish-0372", "lang": "hinglish", "intent": "mention", "text": "Exam ke time sab log raat bhar padhte hain"}
+{"id": "hinglish-0373", "lang": "hinglish", "intent": "mention", "text": "Mom ne bataya ki dadi roz subah 5 baje uthti thi gaon mein"}
+{"id": "hinglish-0374", "lang": "hinglish", "intent": "request", "text": "kal 9 baje se pehle Sharma ji ka phone aayega, uthake rakhna"}
+{"id": "hinglish-0375", "lang": "hinglish", "intent": "request", "text": "mahine ke last din salary slip download karni hai, remind karna"}
+{"id": "hinglish-0376", "lang": "hinglish", "intent": "mention", "text": "kal raat ka khana basi ho gaya, fek diya"}
+{"id": "hinglish-0377", "lang": "hinglish", "intent": "mention", "text": "Monday.com ka pricing bahut mehenga hai"}
+{"id": "hinglish-0378", "lang": "hinglish", "intent": "request", "text": "parso raat 7 baje shaadi mein jaana hai, taiyaar hona hai 5 baje tak"}
+{"id": "hinglish-0379", "lang": "hinglish", "intent": "mention", "text": "Mere dost ka naam Din hai, haan sach mein, Din"}
+{"id": "hinglish-0380", "lang": "hinglish", "intent": "mention", "text": "bhai 100 meter ki race mein usne 10 second mein poori kar di"}
+{"id": "hinglish-0381", "lang": "hinglish", "intent": "mention", "text": "Pehli Raat ki yaad aaj bhi taaza hai, shaadi ke baad ki"}
+{"id": "hinglish-0382", "lang": "hinglish", "intent": "request", "text": "2 ghante baad laundry nikalni hai yaad rakhna"}
+{"id": "hinglish-0383", "lang": "hinglish", "intent": "request", "text": "parso sham 7 baje mere bhai ki sangeet hai"}
+{"id": "hinglish-0384", "lang": "hinglish", "intent": "request", "text": "raat ko 11 baje tak mujhe sona hai, reminder 10:30 pe"}
+{"id": "hinglish-0385", "lang": "hinglish", "intent": "mention", "text": "Aaj Kal Ki Baatein - uska ek blog hai"}
+{"id": "hinglish-0386", "lang": "hinglish", "intent": "mention", "text": "aaj Sensex 300 point upar band hua"}
+{"id": "hinglish-0387", "lang": "hinglish", "intent": "request", "text": "har mahine ki 12 tareekh ko car insurance ka check"}
+{"id": "hinglish-0388", "lang": "hinglish", "intent": "mention", "text": "Tumhare time zone mein kya time hai abhi?"}
+{"id": "hinglish-0389", "lang": "hinglish", "intent": "request", "text": "har mahine ki 5 tareekh ko rent"}
+{"id": "hinglish-0390", "lang": "hinglish", "intent": "mention", "text": "2 ghante ki flight thi, 4 ghante late nikli"}
+{"id": "hinglish-0391", "lang": "hinglish", "intent": "mention", "text": "Mere dada ji 90 saal ke hain aur ab bhi har subah walk pe jaate hain"}
+{"id": "hinglish-0392", "lang": "hinglish", "intent": "mention", "text": "har waqt drama karti hai wo"}
+{"id": "hinglish-0393", "lang": "hinglish", "intent": "request", "text": "subah 8 baje roz vitamin lene ka alarm"}
+{"id": "hinglish-0394", "lang": "hinglish", "intent": "request", "text": "Thursday 11 baje job interview, 10 baje tak ready rehna hai"}
+{"id": "hinglish-0395", "lang": "hinglish", "intent": "request", "text": "mera exam 20 tareekh ko hai subah 10 baje, uski date yaad rakhna"}
+{"id": "hinglish-0396", "lang": "hinglish", "intent": "request", "text": "aaj raat 12 baje Priya ko birthday wish karna yaad dila dena"}
+{"id": "hinglish-0397", "lang": "hinglish", "intent": "mention", "text": "Subah ka alarm sabse bura invention hai"}
+{"id": "hinglish-0398", "lang": "hinglish", "intent": "mention", "text": "2 baje ki bahut tez dhoop mein khelte the hum bachpan mein"}
+{"id": "hinglish-0399", "lang": "hinglish", "intent": "request", "text": "parso 9 baje dadaji ki barsi hai, taiyari 7 baje se"}
+{"id": "hinglish-0400", "lang": "hinglish", "intent": "request", "text": "ek ghante mein ping karna"}
+{"id": "hinglish-0401", "lang": "hinglish", "intent": "request", "text": "ek ghanta pehle batana, kal subah 9 baje ka meeting hai"}
+{"id": "hinglish-0402", "lang": "hinglish", "intent": "mention", "text": "Shaam ko Marine Drive ka scene alag hi hota hai"}
+{"id": "hinglish-0403", "lang": "hinglish", "intent": "mention", "text": "Kal ka din toh kuch khaas nahi tha, bas ghar pe aaram kiya"}
+{"id": "hinglish-0404", "lang": "hinglish", "intent": "mention", "text": "Mere chacha 2018 mein retire hue the"}
+{"id": "hinglish-0405", "lang": "hinglish", "intent": "mention", "text": "Time Magazine ka naya issue padha kya?"}
+{"id": "hinglish-0406", "lang": "hinglish", "intent": "mention", "text": "Din bhar ghar mein baitha raha, aaj kuch nahi kiya"}
+{"id": "hinglish-0407", "lang": "hinglish", "intent": "mention", "text": "kal 5 baje tak toh sab theek tha, phir bijli chali gayi thi"}
+{"id": "hinglish-0408", "lang": "hinglish", "intent": "request", "text": "Saturday subah 9 baje car service ke liye jaana hai"}
+{"id": "hinglish-0409", "lang": "hinglish", "intent": "request", "text": "20 minute baad jaana hai station, abhi yaad dila do"}
+{"id": "hinglish-0410", "lang": "hinglish", "intent": "mention", "text": "Sunday ko mom ke haath ka khana sabse best hota hai"}
+{"id": "hinglish-0411", "lang": "hinglish", "intent": "mention", "text": "Rozana serial ka theme song yaad hai?"}
+{"id": "hinglish-0412", "lang": "hinglish", "intent": "request", "text": "raat 10 baje sab ko good night bolna roz"}
+{"id": "hinglish-0413", "lang": "hinglish", "intent": "mention", "text": "traffic mein 2 ghante lag gaye"}
+{"id": "hinglish-0414", "lang": "hinglish", "intent": "request", "text": "mujhe hamesha 10 baje raat ko screen time band karna hai, reminder"}
+{"id": "hinglish-0415", "lang": "hinglish", "intent": "request", "text": "is mahine ki 28 tareekh ko passport appointment hai 11 baje"}
+{"id": "hinglish-0416", "lang": "hinglish", "intent": "request", "text": "aaj raat 11 baje alarm ki battery check karna yaad dilana"}
+{"id": "hinglish-0417", "lang": "hinglish", "intent": "mention", "text": "Meri maa Sunday ko special khana banati thi jab hum chhote the"}
+{"id": "hinglish-0418", "lang": "hinglish", "intent": "request", "text": "kal subah 10 baje se pehle Maa ko hospital le jaana hai"}
+{"id": "hinglish-0419", "lang": "hinglish", "intent": "mention", "text": "Subah ke 4 baje bhi Mumbai ki local chalti hai kuch routes pe"}
+{"id": "hinglish-0420", "lang": "hinglish", "intent": "mention", "text": "Subah-shaam ek hi gaana sunta hu, Kesariya"}
+{"id": "hinglish-0421", "lang": "hinglish", "intent": "request", "text": "roz sham 6 baje yoga ke baad juice peena hai"}
+{"id": "hinglish-0422", "lang": "hinglish", "intent": "request", "text": "har Friday raat Jumma ki namaz ke liye 12:30 baje yaad dilana"}
+{"id": "hinglish-0423", "lang": "hinglish", "intent": "mention", "text": "Roz Roz ki chik chik se thak gaya hu"}
+{"id": "hinglish-0424", "lang": "hinglish", "intent": "request", "text": "Wednesday ko subah 11 baje Priyanka ki shaadi ka card dena hai"}
+{"id": "hinglish-0425", "lang": "hinglish", "intent": "request", "text": "aaj dopahar 3 baje electricity bill bharna yaad dilao"}
+{"id": "hinglish-0426", "lang": "hinglish", "intent": "request", "text": "kal 6am ka alarm laga do yaar"}
+{"id": "hinglish-0427", "lang": "hinglish", "intent": "request", "text": "roz subah 7 baje Alexa jaise good morning bol ke uthana"}
+{"id": "hinglish-0428", "lang": "hinglish", "intent": "mention", "text": "kal ka match 6 wicket se haar gaye hum"}
+{"id": "hinglish-0429", "lang": "hinglish", "intent": "mention", "text": "Kal tak mujhe laga tha wo accha hai, par aaj samajh aaya"}
+{"id": "hinglish-0430", "lang": "hinglish", "intent": "request", "text": "har hafte ki Monday ko 11 baje payroll process karna hai"}
+{"id": "hinglish-0431", "lang": "hinglish", "intent": "mention", "text": "yaar Sawan ka mahina aate hi pakode ki yaad aa jaati hai"}
+{"id": "hinglish-0432", "lang": "hinglish", "intent": "request", "text": "abhi se 45 minute baad pizza nikalna yaad dilana"}
+{"id": "hinglish-0433", "lang": "hinglish", "intent": "request", "text": "har hafte Wednesday ko 4 baje therapy session hai"}
+{"id": "hinglish-0434", "lang": "hinglish", "intent": "request", "text": "aaj raat 8 baje maine bhai ko call karne ka vaada kiya hai, yaad dila dena"}
+{"id": "hinglish-0435", "lang": "hinglish", "intent": "request", "text": "Saturday ko 3 baje sasural jaana hai, 1 baje nikalna"}
+{"id": "hinglish-0436", "lang": "hinglish", "intent": "mention", "text": "Gold ka rate aaj 62,000 per 10 gram hai"}
+{"id": "hinglish-0437", "lang": "hinglish", "intent": "request", "text": "kal subah 9:15 baje cab aayegi, 8:45 tak ready"}
+{"id": "hinglish-0438", "lang": "hinglish", "intent": "request", "text": "agle hafte Monday raat 8 baje ka dinner reserve kar do, 4 logon ke liye"}
+{"id": "hinglish-0439", "lang": "hinglish", "intent": "request", "text": "hafte mein 2 baar Mon aur Thu ko 7 baje chhath ki puja ke liye safai"}
+{"id": "hinglish-0440", "lang": "hinglish", "intent": "request", "text": "raat 9 baje se roz ek ghanta guitar practice"}
+{"id": "hinglish-0441", "lang": "hinglish", "intent": "request", "text": "Shanivaar ko subah 6 baje hanuman ji ke mandir jaana hai"}
+{"id": "hinglish-0442", "lang": "hinglish", "intent": "mention", "text": "School ke din yaad aate hain, roz subah 7 baje ki prayer"}
+{"id": "hinglish-0443", "lang": "hinglish", "intent": "request", "text": "aaj raat 10 baje tak meri slides finish karni hai"}
+{"id": "hinglish-0444", "lang": "hinglish", "intent": "mention", "text": "kal sham ko bahut garmi thi"}
+{"id": "hinglish-0445", "lang": "hinglish", "intent": "mention", "text": "aaj subah wo bahut gussa tha, pata nahi kyun"}
+{"id": "hinglish-0446", "lang": "hinglish", "intent": "request", "text": "kal se roz subah 6 baje alarm laga do"}
+{"id": "hinglish-0447", "lang": "hinglish", "intent": "mention", "text": "Mere phone mein 4 alarms hain par maine kabhi nahi sune"}
+{"id": "hinglish-0448", "lang": "hinglish", "intent": "request", "text": "parso se roz sham 7 baje piano ki practice"}
+{"id": "hinglish-0449", "lang": "hinglish", "intent": "mention", "text": "kal ki rally mein 50,000 log aaye the, news mein dekha"}
+{"id": "hinglish-0450", "lang": "hinglish", "intent": "request", "text": "kal subah 5:30 pe uthna hai, bahut zaroori hai"}
+{"id": "hinglish-0451", "lang": "hinglish", "intent": "mention", "text": "Dopahar ke khane ke baad neend aana normal hai, science mein bhi hai"}
+{"id": "hinglish-0452", "lang": "hinglish", "intent": "mention", "text": "aaj tak maine aisa khana nahi khaya"}
+{"id": "hinglish-0453", "lang": "hinglish", "intent": "request", "text": "roz subah 6 baje 20 minute stretching, remind kar diya karo"}
+{"id": "hinglish-0454", "lang": "hinglish", "intent": "request", "text": "aaj raat 7 baje Bigg Boss dekhna hai, yaad dila dena 😅"}
+{"id": "hinglish-0455", "lang": "hinglish", "intent": "request", "text": "2 ghante baad paneer marinate karna hai, dinner ke liye"}
+{"id": "hinglish-0456", "lang": "hinglish", "intent": "request", "text": "Sunday tak har sham 6 baje jogging"}
+{"id": "hinglish-0457", "lang": "hinglish", "intent": "request", "text": "kal subah 4 baje utha dena, trekking ke liye jaana hai"}
+{"id": "hinglish-0458", "lang": "hinglish", "intent": "request", "text": "bhai kal raat 10 baje tak mujhe 5 slides aur banani hain, yaad dila dena"}
+{"id": "hinglish-0459", "lang": "hinglish", "intent": "mention", "text": "wo mere saath school mein Monday se Friday padhta tha, ab Australia mein hai"}
+{"id": "hinglish-0460", "lang": "hinglish", "intent": "request", "text": "raat 12 baje se pehle sab diye bujha ke sona hai, aaj remind karna"}
+{"id": "hinglish-0461", "lang": "hinglish", "intent": "request", "text": "parso shaam 6 baje Neha ke saath movie hai, mujhe ticket book karna hai"}
+{"id": "hinglish-0462", "lang": "hinglish", "intent": "request", "text": "hafte ke aakhir mein Saturday 10 baje ghar ki shopping"}
+{"id": "hinglish-0463", "lang": "hinglish", "intent": "mention", "text": "kitne din bache hain exam mein? sab pooch rahe hain, mujhe nahi pata"}
+{"id": "hinglish-0464", "lang": "hinglish", "intent": "mention", "text": "New Year ka jashn kab se shuru hota hai Goa mein? tourists pooch rahe the"}
+{"id": "hinglish-0465", "lang": "hinglish", "intent": "mention", "text": "Shaam 4 baje ka sunset Manali mein dekha tha last year"}
+{"id": "hinglish-0466", "lang": "hinglish", "intent": "request", "text": "Sunday ko 10 baje maa ka online class hai, laptop setup karna hai 9:30 tak"}
+{"id": "hinglish-0467", "lang": "hinglish", "intent": "request", "text": "har Tuesday aur Thursday 6 baje tuition ka time hai"}
+{"id": "hinglish-0468", "lang": "hinglish", "intent": "request", "text": "parso subah 8:30 baje biometric ke liye jaana hai"}
+{"id": "hinglish-0469", "lang": "hinglish", "intent": "mention", "text": "Raat Ke Hamsafar dekhi hai? purani film hai"}
+{"id": "hinglish-0470", "lang": "hinglish", "intent": "request", "text": "hafte ke end mein har Saturday 11 baje kitchen ki safai karni hai"}
+{"id": "hinglish-0471", "lang": "hinglish", "intent": "mention", "text": "Mere paas Monday se Saturday sirf ek hi shirt hai, mazaak kar raha hu"}
+{"id": "hinglish-0472", "lang": "hinglish", "intent": "mention", "text": "kal raat bahut barish hui"}
+{"id": "hinglish-0473", "lang": "hinglish", "intent": "request", "text": "agle 3 mahine tak har mahine ki 1 tareekh ko EMI bharna hai"}
+{"id": "hinglish-0474", "lang": "hinglish", "intent": "request", "text": "raat ke 1 baje alarm laga do, exam ki taiyari karni hai"}
+{"id": "hinglish-0475", "lang": "hinglish", "intent": "mention", "text": "IST aur EST mein kitna fark hai?"}
+{"id": "hinglish-0476", "lang": "hinglish", "intent": "request", "text": "kal dopahar 3 baje CA se milna hai documents ke saath"}
+{"id": "hinglish-0477", "lang": "hinglish", "intent": "request", "text": "hr sunday dopahar 12 baje barbecue hai, 10 baje se coal taiyar karna"}
+{"id": "hinglish-0478", "lang": "hinglish", "intent": "request", "text": "bas aadhe ghante mein mujhe nikalna hai, yaad dila dena"}
+{"id": "hinglish-0479", "lang": "hinglish", "intent": "mention", "text": "Hamari company har Friday ko pizza deti hai, unka rule hai"}
+{"id": "hinglish-0480", "lang": "hinglish", "intent": "mention", "text": "hamare yahan har Tuesday ko sabzi mandi lagti hai, ye purani baat hai"}
+{"id": "hinglish-0481", "lang": "hinglish", "intent": "mention", "text": "meri cousin parso aa rahi hai, mummy ne bataya, mujhe lene nahi jaana, papa jayenge"}
+{"id": "hinglish-0482", "lang": "hinglish", "intent": "mention", "text": "Jab se Sunday ko off mila hai, life set hai"}
+{"id": "hinglish-0483", "lang": "hinglish", "intent": "mention", "text": "Monday ko koi bhi jaldi nahi uthna chahta, sab bolte hain"}
+{"id": "hinglish-0484", "lang": "hinglish", "intent": "mention", "text": "Wo pichle hafte se bimar hai, sunke bura laga"}
+{"id": "hinglish-0485", "lang": "hinglish", "intent": "request", "text": "kal subah 7:15 pe cab hai, 6:30 pe alarm"}
+{"id": "hinglish-0486", "lang": "hinglish", "intent": "mention", "text": "Wo Monday ko aata hai sirf, baaki din gaayab"}
+{"id": "hinglish-0487", "lang": "hinglish", "intent": "mention", "text": "Aaj ki taaza khabar: petrol ke daam phir badhe"}
+{"id": "hinglish-0488", "lang": "hinglish", "intent": "mention", "text": "raat ko chand dekhna, ghar ki chhat se, sabse achhi feeling hai"}
+{"id": "hinglish-0489", "lang": "hinglish", "intent": "mention", "text": "aaj ka din slow tha ekdum"}
+{"id": "hinglish-0490", "lang": "hinglish", "intent": "request", "text": "subah 6 baje alarm, 6:10 pe doosra alarm, 6:20 pe teesra"}
+{"id": "hinglish-0491", "lang": "hinglish", "intent": "request", "text": "Diwali se pehle har shaam 6 baje ghar ki safai ka reminder"}
+{"id": "hinglish-0492", "lang": "hinglish", "intent": "request", "text": "aaj sham 7 baje se pehle gas ki booking karni hai"}
+{"id": "hinglish-0493", "lang": "hinglish", "intent": "mention", "text": "uska exam 3 baje khatam hua tha, aise usne bataya"}
+{"id": "hinglish-0494", "lang": "hinglish", "intent": "request", "text": "sone se pehle raat 10:30 baje roz moisturizer lagana, haha yaad dila diya karo"}
+{"id": "hinglish-0495", "lang": "hinglish", "intent": "mention", "text": "saal mein 365 din hote hain, aur kal ek din kam ho gaya"}
+{"id": "hinglish-0496", "lang": "hinglish", "intent": "mention", "text": "Beta Subah Subah Kya Kar Rahe Ho - ye meme dekha tha kya"}
+{"id": "hinglish-0497", "lang": "hinglish", "intent": "mention", "text": "shaadi ka muhurat mostly sham ya raat ka hota hai, rivaaj hai"}
+{"id": "hinglish-0498", "lang": "hinglish", "intent": "request", "text": "har Friday dopahar 4 baje weekly report bhejni hai Rahul ko"}
+{"id": "hinglish-0499", "lang": "hinglish", "intent": "mention", "text": "mera phone 2 ghante mein 100% charge ho jaata hai"}
+{"id": "hinglish-0500", "lang": "hinglish", "intent": "mention", "text": "Wo mujhse har baar kehta hai ki kal aata hu, par aata nahi"}
+{"id": "hinglish-0501", "lang": "hinglish", "intent": "mention", "text": "mera naam Samay hai, aur mere bhai ka naam Pal"}
+{"id": "hinglish-0502", "lang": "hinglish", "intent": "mention", "text": "Aaj ek din mein 3 baar chai pi li, ghar mein bore ho gaya"}
+{"id": "hinglish-0503", "lang": "hinglish", "intent": "mention", "text": "Bachpan mein roz sham ko dadi ke saath kahani sunte the"}
+{"id": "hinglish-0504", "lang": "hinglish", "intent": "mention", "text": "Diwali ka bonus mila ya nahi? office mein sab puch rahe the"}
+{"id": "hinglish-0505", "lang": "hinglish", "intent": "mention", "text": "Saturday Night Live kafi funny show hai"}
+{"id": "hinglish-0506", "lang": "hinglish", "intent": "mention", "text": "subah 5 baje uthna ek achhi aadat hai, sab kehte hain"}
+{"id": "hinglish-0507", "lang": "hinglish", "intent": "mention", "text": "meri nani roz subah 4 baje uth jaati thi"}
+{"id": "hinglish-0508", "lang": "hinglish", "intent": "mention", "text": "Mera dost Kal naam ke launde se mila, ajeeb naam hai"}
+{"id": "hinglish-0509", "lang": "hinglish", "intent": "request", "text": "agle Sunday ko 12 baje bhai ki birthday party, gift 11 baje lena hai"}
+{"id": "hinglish-0510", "lang": "hinglish", "intent": "mention", "text": "Gym mein pehle 3 mahine sabse mushkil hote hain"}
+{"id": "hinglish-0511", "lang": "hinglish", "intent": "mention", "text": "Doctor ne kaha ki roz 8 ghante sona chahiye, har kisi ko"}
+{"id": "hinglish-0512", "lang": "hinglish", "intent": "mention", "text": "Ravivar ka naam Sunday kyun hai, kabhi socha hai?"}
+{"id": "hinglish-0513", "lang": "hinglish", "intent": "mention", "text": "Mera jeevan Time Pass ban gaya hai"}
+{"id": "hinglish-0514", "lang": "hinglish", "intent": "mention", "text": "pichle mahine petrol 100 ke upar chala gaya tha"}
+{"id": "hinglish-0515", "lang": "hinglish", "intent": "mention", "text": "mera sabse favourite din Sunday hai, kyuki us din mom special banati hai"}
+{"id": "hinglish-0516", "lang": "hinglish", "intent": "mention", "text": "Rozmarra ki bhaagdaud mein khud ke liye time hi nahi bachta"}
+{"id": "hinglish-0517", "lang": "hinglish", "intent": "mention", "text": "kal subah Mumbai ki local mein bahut bheed thi"}
+{"id": "hinglish-0518", "lang": "hinglish", "intent": "mention", "text": "Monday sabse bekaar din hai"}
+{"id": "hinglish-0519", "lang": "hinglish", "intent": "mention", "text": "Dhoop mein baithna sardiyon mein sabse acchi baat hai"}
+{"id": "hinglish-0520", "lang": "hinglish", "intent": "mention", "text": "Wo roz chai ke saath 2 samose khata hai, uski aadat hai"}
+{"id": "hinglish-0521", "lang": "hinglish", "intent": "mention", "text": "Diwali kab hai is saal?"}
+{"id": "hinglish-0522", "lang": "hinglish", "intent": "mention", "text": "Kal Raat Ki Baat Hai, jab humne bhi poori raat pyaar ka gaana gaya"}
+{"id": "hinglish-0523", "lang": "hinglish", "intent": "request", "text": "mere liye alarm set karo, roz subah 5:45 pe"}
+{"id": "hinglish-0524", "lang": "hinglish", "intent": "request", "text": "agle hafte Monday se roz 7 baje subah gym ka alarm"}
+{"id": "hinglish-0525", "lang": "hinglish", "intent": "request", "text": "saturday morning 8 baje meri yoga class hai"}
+{"id": "hinglish-0526", "lang": "hinglish", "intent": "mention", "text": "sab kuch ek din mein nahi hota, time lagta hai"}
+{"id": "hinglish-0527", "lang": "hinglish", "intent": "mention", "text": "Subah ka Time sabse achha hota hai padhne ke liye, science bhi bolta hai"}
+{"id": "hinglish-0528", "lang": "hinglish", "intent": "request", "text": "har Sunday subah 8 baje mandir jaana hai"}
+{"id": "hinglish-0529", "lang": "hinglish", "intent": "request", "text": "roz subah uthke 10 minute meditation, 6:15 pe yaad dilana"}
+{"id": "hinglish-0530", "lang": "hinglish", "intent": "mention", "text": "subah 9 baje se raat 9 baje tak kaam karne wale log kaise jeete hain pata nahi"}
+{"id": "hinglish-0531", "lang": "hinglish", "intent": "mention", "text": "kal mere dost ki saalgirah thi, humne khub masti ki"}
+{"id": "hinglish-0532", "lang": "hinglish", "intent": "mention", "text": "Mera favourite season Sawan hi hai"}
+{"id": "hinglish-0533", "lang": "hinglish", "intent": "mention", "text": "mausam ka kya bharosa, subah dhoop sham ko baarish"}
+{"id": "hinglish-0534", "lang": "hinglish", "intent": "request", "text": "parso dopahar 12 baje mere dost ki engagement hai"}
+{"id": "hinglish-0535", "lang": "hinglish", "intent": "mention", "text": "school mein har roz assembly hoti thi 8 baje"}
+{"id": "hinglish-0536", "lang": "hinglish", "intent": "request", "text": "har Tuesday raat 9 baje dustbin aur recycling ka reminder"}
+{"id": "hinglish-0537", "lang": "hinglish", "intent": "request", "text": "mujhe kal 8 baje bola dena ki mom ke liye cake order karna hai"}
+{"id": "hinglish-0538", "lang": "hinglish", "intent": "request", "text": "roz subah 9 baje standup hai Mon se Fri"}
+{"id": "hinglish-0539", "lang": "hinglish", "intent": "mention", "text": "Dil Chahta Hai ki koi mujhe samjhe, bas"}
+{"id": "hinglish-0540", "lang": "hinglish", "intent": "request", "text": "mere liye reminder: har hafte Sunday ko 9 baje bike dhona"}
+{"id": "hinglish-0541", "lang": "hinglish", "intent": "mention", "text": "college mein roz subah gym jaata tha"}
+{"id": "hinglish-0542", "lang": "hinglish", "intent": "request", "text": "har Sunday raat 9 baje weekly planning ka time rakh do"}
+{"id": "hinglish-0543", "lang": "hinglish", "intent": "mention", "text": "mausam dekh ke lagta hai ki sham tak baarish hogi"}
+{"id": "hinglish-0544", "lang": "hinglish", "intent": "mention", "text": "Dopahar ke 12 baje ki dhoop mein baahar nikalna mushkil hai Delhi mein"}
+{"id": "hinglish-0545", "lang": "hinglish", "intent": "mention", "text": "kal mere bhai ne naya laptop kharida, 55,000 ka tha"}
+{"id": "hinglish-0546", "lang": "hinglish", "intent": "mention", "text": "Wo har Sunday 5 baje farmhouse pe jaate hain, rich logon ka scene hai"}
+{"id": "hinglish-0547", "lang": "hinglish", "intent": "request", "text": "mahine mein ek baar 15 tareekh ko hair cut, subah 11 baje"}
+{"id": "hinglish-0548", "lang": "hinglish", "intent": "mention", "text": "Aaj raat ki raat ke gaane purane hain"}
+{"id": "hinglish-0549", "lang": "hinglish", "intent": "request", "text": "tomorrow subah 7 baje meri Zoom class hai"}
+{"id": "hinglish-0550", "lang": "hinglish", "intent": "mention", "text": "ye Mahine ka last week hai, sab busy hain"}
+{"id": "hinglish-0551", "lang": "hinglish", "intent": "mention", "text": "kal ka din bahut thaka dene wala tha yaar"}
+{"id": "hinglish-0552", "lang": "hinglish", "intent": "request", "text": "aaj sham 6 baje Kapil ke saath gym hai"}
+{"id": "hinglish-0553", "lang": "hinglish", "intent": "mention", "text": "pichle saal 2 baar Maldives gaye the wo log, rich log"}
+{"id": "hinglish-0554", "lang": "hinglish", "intent": "mention", "text": "Aap kitne baje uthte ho, bas curious hu"}
+{"id": "hinglish-0555", "lang": "hinglish", "intent": "mention", "text": "Hafte bhar office, weekend pe family, yahi zindagi hai"}
+{"id": "hinglish-0556", "lang": "hinglish", "intent": "mention", "text": "Yeh Raat Hai Naya Naya Saa song bahut accha hai"}
+{"id": "hinglish-0557", "lang": "hinglish", "intent": "request", "text": "kal duphar 11 baje se pehle Aadhaar update karwana hai"}
+{"id": "hinglish-0558", "lang": "hinglish", "intent": "mention", "text": "Subah Hone Wali Hai - ye kis film ka gaana hai?"}
+{"id": "hinglish-0559", "lang": "hinglish", "intent": "mention", "text": "Raat Akeli Hai dekhi kya tune?"}
+{"id": "hinglish-0560", "lang": "hinglish", "intent": "request", "text": "har mahine 3 tareekh ko maid ki salary"}
+{"id": "hinglish-0561", "lang": "hinglish", "intent": "request", "text": "parso dopahar 2 baje property dealer se milna hai"}
+{"id": "hinglish-0562", "lang": "hinglish", "intent": "request", "text": "kal subah 6 baje Hanuman Chalisa padhni hai, utha dena"}
+{"id": "hinglish-0563", "lang": "hinglish", "intent": "mention", "text": "kab tak chalega ye sab, itna time lag gaya kaam mein"}
+{"id": "hinglish-0564", "lang": "hinglish", "intent": "request", "text": "aaj shaam 6 baje ke baad market jaana hai sabzi lene"}
+{"id": "hinglish-0565", "lang": "hinglish", "intent": "mention", "text": "Chand raat ko Eid ka chand dekhna sabse khubsurat cheez hai"}
+{"id": "hinglish-0566", "lang": "hinglish", "intent": "mention", "text": "2 ghante ka safar 5 ghante mein poora hua, road jaam tha"}
+{"id": "hinglish-0567", "lang": "hinglish", "intent": "request", "text": "raat 8 baje ke baad Mohit ko message karna yaad dila dena"}
+{"id": "hinglish-0568", "lang": "hinglish", "intent": "mention", "text": "Raat ke 2 baje bhi Hyderabad mein biryani milti hai"}
+{"id": "hinglish-0569", "lang": "hinglish", "intent": "mention", "text": "Rozi ke naam ki ek ladki padhti thi mere saath, ab kahan hai pata nahi"}
+{"id": "hinglish-0570", "lang": "hinglish", "intent": "request", "text": "mujhe 15 minute baad chai banane ke liye bol dena"}
+{"id": "hinglish-0571", "lang": "hinglish", "intent": "request", "text": "tomorrow subah 9 baje team call hai, 10 min pehle bol dena"}
+{"id": "hinglish-0572", "lang": "hinglish", "intent": "request", "text": "aaj sham 5:30 baje cab pakadni hai, 5 baje bol dena"}
+{"id": "hinglish-0573", "lang": "hinglish", "intent": "mention", "text": "tumne Monday ko kya kiya tha? bas poochh raha hu"}
+{"id": "hinglish-0574", "lang": "hinglish", "intent": "mention", "text": "Diwali ke din pura sheher roshan hota hai"}
+{"id": "hinglish-0575", "lang": "hinglish", "intent": "request", "text": "kal raat khane ke baad 10 baje walk, yaad dila dena"}
+{"id": "hinglish-0576", "lang": "hinglish", "intent": "mention", "text": "kal Cafe Coffee Day band mil gaya, shayad chhutti thi"}
+{"id": "hinglish-0577", "lang": "hinglish", "intent": "mention", "text": "Meri neend aajkal 5 ghante ki hi hoti hai, ye thik nahi"}
+{"id": "hinglish-0578", "lang": "hinglish", "intent": "mention", "text": "Wo jo Sunday ko 'Sunday ka funday' bolte hain na, mujhe irritating lagta hai"}
+{"id": "hinglish-0579", "lang": "hinglish", "intent": "mention", "text": "mujhe tab se raat ko neend nahi aati jab se mera cat chala gaya"}
+{"id": "hinglish-0580", "lang": "hinglish", "intent": "mention", "text": "Dopahar ki chuhal mein bachhe khelte hain, sach mein yaad aata hai woh waqt"}
+{"id": "hinglish-0581", "lang": "hinglish", "intent": "mention", "text": "sala har waqt phone mein ghusa rehta hai"}
+{"id": "hinglish-0582", "lang": "hinglish", "intent": "request", "text": "Saturday raat 10 baje late night movie hai mera plan"}
+{"id": "hinglish-0583", "lang": "hinglish", "intent": "request", "text": "subah 4 baje uth ke Vaishno Devi ki yatra shuru karni hai parso"}
+{"id": "hinglish-0584", "lang": "hinglish", "intent": "request", "text": "har roz subah 6 baje chai banane se pehle plants ko pani dena"}
+{"id": "hinglish-0585", "lang": "hinglish", "intent": "mention", "text": "Shaam Ke Saye naam ki ek kavita padhi maine"}
+{"id": "hinglish-0586", "lang": "hinglish", "intent": "mention", "text": "Aaj Mausam Bada Beimaan Hai - Loafer ka gaana"}
+{"id": "hinglish-0587", "lang": "hinglish", "intent": "mention", "text": "raat ko neend nahi aati mujhe aajkal"}
+{"id": "hinglish-0588", "lang": "hinglish", "intent": "request", "text": "10 baje raat ko mujhe yaad dilana ki kal subah jaldi uthna hai"}
+{"id": "hinglish-0589", "lang": "hinglish", "intent": "mention", "text": "shaam ki chai ke saath rusk, ye combination hi alag hai"}
+{"id": "hinglish-0590", "lang": "hinglish", "intent": "request", "text": "roz raat 8 baje tak kitchen band, yaad dila dena"}
+{"id": "hinglish-0591", "lang": "hinglish", "intent": "mention", "text": "dopahar ko 3 baje ki dhoop sabse tez hoti hai, ye science hai"}
+{"id": "hinglish-0592", "lang": "hinglish", "intent": "request", "text": "kal subah subah 6 baje delivery boy aayega, uth jaana hai"}
+{"id": "hinglish-0593", "lang": "hinglish", "intent": "mention", "text": "Is hafte ka mausam bahut ajeeb hai"}
+{"id": "hinglish-0594", "lang": "hinglish", "intent": "mention", "text": "Duniya mein sabse mehenga hota hai time, kehte hain"}
+{"id": "hinglish-0595", "lang": "hinglish", "intent": "request", "text": "kal raat 9 baje se ghar pe ek ghante ke liye meditation"}
+{"id": "hinglish-0596", "lang": "hinglish", "intent": "request", "text": "har Sunday shaam 6 baje bahar ghoomne jaana hai family ke saath"}
+{"id": "hinglish-0597", "lang": "hinglish", "intent": "request", "text": "aaj shaam ko 7 baje maa ke saath mandir jaana hai"}
+{"id": "hinglish-0598", "lang": "hinglish", "intent": "mention", "text": "Wo hamesha bolta hai kal karunga, kal karunga"}
+{"id": "hinglish-0599", "lang": "hinglish", "intent": "mention", "text": "jab 10th mein tha toh subah 5 baje uth ke padhta tha, ab nahi hota"}
+{"id": "hinglish-0600", "lang": "hinglish", "intent": "request", "text": "parso dentist ka appointment hai 4 baje"}
+{"id": "hinglish-0601", "lang": "hinglish", "intent": "mention", "text": "subah-subah mandir ki ghanti ki awaaz bahut sukoon deti hai"}
+{"id": "hinglish-0602", "lang": "hinglish", "intent": "request", "text": "mere dost ka phone aaj raat 9 baje aayega, mujhe free rehna hai"}
+{"id": "hinglish-0603", "lang": "hinglish", "intent": "request", "text": "aaj sham 5 baje Zomato se gift card bhejna hai Rahul ko"}
+{"id": "hinglish-0604", "lang": "hinglish", "intent": "request", "text": "parso 11 baje se pehle bank mein cheque daalna hai"}
+{"id": "hinglish-0605", "lang": "hinglish", "intent": "mention", "text": "Parso movie dekhi maine, bakwaas thi"}
+{"id": "hinglish-0606", "lang": "hinglish", "intent": "mention", "text": "saal ka sabse chhota din 21 December ko hota hai"}
+{"id": "hinglish-0607", "lang": "hinglish", "intent": "mention", "text": "Time ki kimat tab samajh aati hai jab kam padta hai"}
+{"id": "hinglish-0608", "lang": "hinglish", "intent": "request", "text": "aaj raat 8 baje Sharma family dinner pe aa rahi hai, 6 baje taiyari shuru"}
+{"id": "hinglish-0609", "lang": "hinglish", "intent": "mention", "text": "Baarish ke mausam mein subah ki chai ka mazaa hi kuch aur hota hai"}
+{"id": "hinglish-0610", "lang": "hinglish", "intent": "request", "text": "har hafte Sunday 6 baje subah cycling ka plan"}
+{"id": "hinglish-0611", "lang": "hinglish", "intent": "request", "text": "mera visa appointment 12 December ko 9:30 baje hai"}
+{"id": "hinglish-0612", "lang": "hinglish", "intent": "mention", "text": "Aaj Tak dekhna chhod diya maine"}
+{"id": "hinglish-0613", "lang": "hinglish", "intent": "request", "text": "aaj raat 12 baje se pehle Aman ko birthday wish karna hai"}
+{"id": "hinglish-0614", "lang": "hinglish", "intent": "request", "text": "roz sham ko 5:30 pe bachhon ko park le jaana hai, yaad dila dena"}
+{"id": "hinglish-0615", "lang": "hinglish", "intent": "request", "text": "har Saturday raat Dadi se baat karni hai 8 baje"}
+{"id": "hinglish-0616", "lang": "hinglish", "intent": "mention", "text": "Dopahar ki neend sabse pyaari cheez hai"}
+{"id": "hinglish-0617", "lang": "hinglish", "intent": "request", "text": "kal lunch ke baad 2 baje Raj se milna hai"}
+{"id": "hinglish-0618", "lang": "hinglish", "intent": "request", "text": "30 minute baad meeting join karni hai, alert dena"}
+{"id": "hinglish-0619", "lang": "hinglish", "intent": "request", "text": "har alternate din subah 5:30 baje running"}
+{"id": "hinglish-0620", "lang": "hinglish", "intent": "mention", "text": "Is time par bachhe school mein hote hain na, general baat hai"}
+{"id": "hinglish-0621", "lang": "hinglish", "intent": "mention", "text": "Aaj ki raat song bohot catchy hai"}
+{"id": "hinglish-0622", "lang": "hinglish", "intent": "mention", "text": "Fajr ki azaan ki awaaz mujhe bahut pasand hai"}
+{"id": "hinglish-0623", "lang": "hinglish", "intent": "request", "text": "kal 9 baje subah tak ye file Sharma sir ko bhejni hai"}
+{"id": "hinglish-0624", "lang": "hinglish", "intent": "request", "text": "subah 11 baje se pehle ye parcel post karna hai, kal yaad dila dena"}
+{"id": "hinglish-0625", "lang": "hinglish", "intent": "mention", "text": "Pehle Diwali pe 10 din ki chutti milti thi school mein"}
+{"id": "hinglish-0626", "lang": "hinglish", "intent": "request", "text": "bhai mujhe 3 ghante baad jagana, thodi neend leni hai"}
+{"id": "hinglish-0627", "lang": "hinglish", "intent": "request", "text": "kal subah 7 bje train hai Pune ki, 5:30 pe uthna"}
+{"id": "hinglish-0628", "lang": "hinglish", "intent": "mention", "text": "Aaj Ki Raat Mazedar Hone Wali Hai ye gaana pura sunna hai kisi din"}
+{"id": "hinglish-0629", "lang": "hinglish", "intent": "mention", "text": "Aaj ka Rashifal padha kya? meri toh kharab thi"}
+{"id": "hinglish-0630", "lang": "hinglish", "intent": "request", "text": "tonight 9:30 pm yaad dilana ki kal ke liye kapde nikalne hain"}
+{"id": "hinglish-0631", "lang": "hinglish", "intent": "mention", "text": "Sham ki chai aur pakode, kya baat hai"}
+{"id": "hinglish-0632", "lang": "hinglish", "intent": "mention", "text": "raat 8 baje ke baad dukaan band ho jaati hai yahan, aam baat hai"}
+{"id": "hinglish-0633", "lang": "hinglish", "intent": "mention", "text": "Parso ki baat hai, tum bhi the na wahan?"}
+{"id": "hinglish-0634", "lang": "hinglish", "intent": "mention", "text": "pichle saal ki tulna mein is baar sardi jaldi aayi"}
+{"id": "hinglish-0635", "lang": "hinglish", "intent": "request", "text": "har mahine ke aakhri Sunday ko ghar ka hisaab, 10 baje"}
+{"id": "hinglish-0636", "lang": "hinglish", "intent": "request", "text": "kal duphar tak mujhe visa ka form bharna hai, 12 baje reminder"}
+{"id": "hinglish-0637", "lang": "hinglish", "intent": "request", "text": "Friday ko lunch pe 1 baje Mehta ji se milna hai"}
+{"id": "hinglish-0638", "lang": "hinglish", "intent": "mention", "text": "Sunday sabse pyaara din hota hai"}
+{"id": "hinglish-0639", "lang": "hinglish", "intent": "request", "text": "mere schedule mein add kar do: har Tuesday 6 baje subah yoga class"}
+{"id": "hinglish-0640", "lang": "hinglish", "intent": "request", "text": "har pehle Sunday ko mahine ke ration lena hai, subah 10 baje"}
+{"id": "hinglish-0641", "lang": "hinglish", "intent": "request", "text": "Sunday ko 12 baje lunch pe aana hai ghar pe sabko"}
+{"id": "hinglish-0642", "lang": "hinglish", "intent": "mention", "text": "sabse accha time raat ko 11 baje hota hai, jab sab so jaate hain aur mera dimaag chalta hai"}
+{"id": "hinglish-0643", "lang": "hinglish", "intent": "request", "text": "Thursday ko shaam 7 baje cricket practice hai meri"}
+{"id": "hinglish-0644", "lang": "hinglish", "intent": "mention", "text": "Ek minute mein 60 second hote hain, ye toh bachha bhi jaanta hai"}
+{"id": "hinglish-0645", "lang": "hinglish", "intent": "request", "text": "mujhe har mahine ki 20 tareekh ko credit card ka bill yaad dilana"}
+{"id": "hinglish-0646", "lang": "hinglish", "intent": "mention", "text": "Mere mama ka Monday ko kabhi kaam nahi hota, retired hain"}
+{"id": "hinglish-0647", "lang": "hinglish", "intent": "mention", "text": "Shukravaar ko filmen release hoti hain, ye toh sab jaante hain"}
+{"id": "hinglish-0648", "lang": "hinglish", "intent": "mention", "text": "Meri life mein Sunday jaisa koi nahi"}
+{"id": "hinglish-0649", "lang": "hinglish", "intent": "mention", "text": "Laptop ki battery 4 ghante chalti hai sirf, purana hai"}
+{"id": "hinglish-0650", "lang": "hinglish", "intent": "mention", "text": "Kabhi Kabhi film ka Amitabh wala gaana mujhe bahut pasand hai"}
+{"id": "hinglish-0651", "lang": "hinglish", "intent": "request", "text": "mujhe Wednesday ko 5 baje ke baad free time hai, uss time pe badminton ka plan hai"}
+{"id": "hinglish-0652", "lang": "hinglish", "intent": "mention", "text": "kal Rahul ki bike chori ho gayi, sunke dukh hua"}
+{"id": "hinglish-0653", "lang": "hinglish", "intent": "request", "text": "roz subah 6 baje bhajan sunke uthna hai, speaker pe lagana"}
+{"id": "hinglish-0654", "lang": "hinglish", "intent": "mention", "text": "dopahar 12 baje shaam 4 baje tak ghar mein bijli nahi thi kal"}
+{"id": "hinglish-0655", "lang": "hinglish", "intent": "mention", "text": "Pichle 2 mahine mein 5 kg weight kam kiya maine"}
+{"id": "hinglish-0656", "lang": "hinglish", "intent": "mention", "text": "subah aur sham ke beech ka waqt sabse boring hota hai"}
+{"id": "hinglish-0657", "lang": "hinglish", "intent": "request", "text": "roz dopahar 1 baje lunch ka reminder, kal se"}
+{"id": "hinglish-0658", "lang": "hinglish", "intent": "request", "text": "har Sunday shaam 7 baje bhai ko call"}
+{"id": "hinglish-0659", "lang": "hinglish", "intent": "mention", "text": "Diwali pe sabse zyada mithai khayi jaati hai"}
+{"id": "hinglish-0660", "lang": "hinglish", "intent": "mention", "text": "Mahine ka end aate hi sab paise khatam"}
+{"id": "hinglish-0661", "lang": "hinglish", "intent": "mention", "text": "pichle hafte ki trip ekdum mast thi"}
+{"id": "hinglish-0662", "lang": "hinglish", "intent": "mention", "text": "Ghadi ka kaanta dheere chal raha hai aaj"}
+{"id": "hinglish-0663", "lang": "hinglish", "intent": "request", "text": "kal 7 baje morning flight hai, taxi 4:30 pe bula do"}
+{"id": "hinglish-0664", "lang": "hinglish", "intent": "request", "text": "aaj dopahar 2 baje doctor ki report lene jaana hai"}
+{"id": "hinglish-0665", "lang": "hinglish", "intent": "mention", "text": "December ki thand mein subah ka paani chhoona bhi mushkil hota hai, har saal"}
+{"id": "hinglish-0666", "lang": "hinglish", "intent": "mention", "text": "Ek hafte mein bahut kuch badal gaya hai yaar"}
+{"id": "hinglish-0667", "lang": "hinglish", "intent": "mention", "text": "Mausam badal raha hai, ab subah thodi thandi hone lagi hai"}
+{"id": "hinglish-0668", "lang": "hinglish", "intent": "mention", "text": "Raat ko jaagna aur din mein sona, aisi life hai meri pichle 2 saal se"}
+{"id": "hinglish-0669", "lang": "hinglish", "intent": "request", "text": "Friday ko sham 5 baje office se jaldi nikalna hai, doctor ka time hai"}
+{"id": "hinglish-0670", "lang": "hinglish", "intent": "mention", "text": "Mere paas 3 ghante ka free time hai, par kuch karne ka mann nahi"}
+{"id": "hinglish-0671", "lang": "hinglish", "intent": "request", "text": "Sunday 6 baje subah airport pe pahunchna hai mujhe, 3 baje uthana"}
+{"id": "hinglish-0672", "lang": "hinglish", "intent": "request", "text": "aaj raat 9:15 baje ek call hai London team se"}
+{"id": "hinglish-0673", "lang": "hinglish", "intent": "mention", "text": "Mere college mein har Saturday ko cultural event hota tha"}
+{"id": "hinglish-0674", "lang": "hinglish", "intent": "request", "text": "bas 5 min baad reminder do, chai ka paani ubal gaya hoga"}
+{"id": "hinglish-0675", "lang": "hinglish", "intent": "request", "text": "kal subah uthte hi 6 baje kutte ko walk pe le jaana hai"}
+{"id": "hinglish-0676", "lang": "hinglish", "intent": "request", "text": "parso subah 10 baje bank jaana hai"}
+{"id": "hinglish-0677", "lang": "hinglish", "intent": "mention", "text": "Parso ki taarikh yaad nahi hai, hmm kaun si thi"}
+{"id": "hinglish-0678", "lang": "hinglish", "intent": "request", "text": "Saturday ko 4 baje wedding shopping karni hai, yaad dilana"}
+{"id": "hinglish-0679", "lang": "hinglish", "intent": "request", "text": "aaj raat tak assignment bhejna hai, 9 baje reminder dena"}
+{"id": "hinglish-0680", "lang": "hinglish", "intent": "mention", "text": "beta kal school se aate hi so gaya tha, thak gaya hoga"}
+{"id": "hinglish-0681", "lang": "hinglish", "intent": "mention", "text": "Mausam ka mood subah se hi alag lag raha tha"}
+{"id": "hinglish-0682", "lang": "hinglish", "intent": "mention", "text": "Aaj Ka Din Mera Hai gaana kisne gaya hai?"}
+{"id": "hinglish-0683", "lang": "hinglish", "intent": "request", "text": "kal subah 7 baje uthaana"}
+{"id": "hinglish-0684", "lang": "hinglish", "intent": "request", "text": "agle mahine ki 3 tareekh ko flight hai Delhi ki, subah 7 baje"}
+{"id": "hinglish-0685", "lang": "hinglish", "intent": "request", "text": "har raat sone se pehle 10:30 baje book padhne ka reminder"}
+{"id": "hinglish-0686", "lang": "hinglish", "intent": "mention", "text": "Bete, Aaj Kal ki generation bahut fast hai"}
+{"id": "hinglish-0687", "lang": "hinglish", "intent": "mention", "text": "Aaj Ka Panchang ek app hai jo meri mummy use karti hai"}
+{"id": "hinglish-0688", "lang": "hinglish", "intent": "request", "text": "bhai kal subah 6 baje gym chalenge, mujhe uthana mat bhoolna"}
+{"id": "hinglish-0689", "lang": "hinglish", "intent": "request", "text": "raat 11:45 pe reminder dena, kal ki presentation check karni hai"}
+{"id": "hinglish-0690", "lang": "hinglish", "intent": "mention", "text": "papa har Sunday market le jaate the"}
+{"id": "hinglish-0691", "lang": "hinglish", "intent": "request", "text": "raat 9:30 baje Skype pe call hai US team ke saath aaj"}
+{"id": "hinglish-0692", "lang": "hinglish", "intent": "request", "text": "mujhe sham ko 6 baje gym jaana hai aaj"}
+{"id": "hinglish-0693", "lang": "hinglish", "intent": "request", "text": "kal subah 8 baje ke baad bijli wala aayega, ghar pe rehna"}
+{"id": "hinglish-0694", "lang": "hinglish", "intent": "mention", "text": "Sunday Express ki headline dekhi kya aaj? bahut badi news thi"}
+{"id": "hinglish-0695", "lang": "hinglish", "intent": "request", "text": "kal 6 baje shaam ko bijli ka mistri aayega"}
+{"id": "hinglish-0696", "lang": "hinglish", "intent": "mention", "text": "50 percent discount hai Diwali sale mein, Amazon par dekha"}
+{"id": "hinglish-0697", "lang": "hinglish", "intent": "mention", "text": "Monday blues sach mein hota hai"}
+{"id": "hinglish-0698", "lang": "hinglish", "intent": "request", "text": "ghante bhar baad batana ki khana garam karna hai"}
+{"id": "hinglish-0699", "lang": "hinglish", "intent": "request", "text": "kal subah 10:15 baje CT scan hai hospital mein"}
+{"id": "hinglish-0700", "lang": "hinglish", "intent": "request", "text": "mujhe Tuesday 4 baje se pehle kuch nahi karna, uske baad dentist hai"}
+{"id": "hinglish-0701", "lang": "hinglish", "intent": "mention", "text": "Kal Kisne Dekha Hai, aaj ko jee lo yaar"}
+{"id": "hinglish-0702", "lang": "hinglish", "intent": "request", "text": "kal tak har sham 6 baje padhai ka time hai, baki sab band"}
+{"id": "hinglish-0703", "lang": "hinglish", "intent": "mention", "text": "Savere ka sapna sach hota hai, aisa dadi kehti thi"}
+{"id": "hinglish-0704", "lang": "hinglish", "intent": "mention", "text": "Dopahar ka khana khate hi neend aati hai, kya karu"}
+{"id": "hinglish-0705", "lang": "hinglish", "intent": "mention", "text": "raat ke 11 baje tak market khula hai hamare sheher mein, ye achha hai"}
+{"id": "hinglish-0706", "lang": "hinglish", "intent": "request", "text": "aaj 5 baje ke baad Sharma ji ko fone karna hai"}
+{"id": "hinglish-0707", "lang": "hinglish", "intent": "mention", "text": "Wo kal bola ki Monday se diet shuru karega, 3 baar ye bol chuka hai"}
+{"id": "hinglish-0708", "lang": "hinglish", "intent": "mention", "text": "sabko Mubarak ho, kal Eid thi, sab ne khub dawat ki"}
+{"id": "hinglish-0709", "lang": "hinglish", "intent": "mention", "text": "Mother's Day May ke doosre Sunday ko aata hai na?"}
+{"id": "hinglish-0710", "lang": "hinglish", "intent": "mention", "text": "mere daadu har subah 5 baje sair ko jaate the"}
+{"id": "hinglish-0711", "lang": "hinglish", "intent": "mention", "text": "kal raat ko pakode khaye, ab pet kharab hai"}
+{"id": "hinglish-0712", "lang": "hinglish", "intent": "request", "text": "shaam 7 baje tak ghar pohonchna hai, 6 baje nikalne ka reminder do"}
+{"id": "hinglish-0713", "lang": "hinglish", "intent": "request", "text": "bhaiya kal shaam 5 baje mujhe airport se pick karna"}
+{"id": "hinglish-0714", "lang": "hinglish", "intent": "mention", "text": "kal Priya ne mujhe 3 baar call kiya, par maine uthaya nahi"}
+{"id": "hinglish-0715", "lang": "hinglish", "intent": "mention", "text": "wo daftar mein Monday se Friday kaam karta hai, aur weekend pe so jaata hai"}
+{"id": "hinglish-0716", "lang": "hinglish", "intent": "request", "text": "3 baje ke alarm laga do, Saturday ke liye"}
+{"id": "hinglish-0717", "lang": "hinglish", "intent": "mention", "text": "kal ke baad se meri neend ud gayi hai"}
+{"id": "hinglish-0718", "lang": "hinglish", "intent": "mention", "text": "Raat mein 3 baje tak chat karna ab bachpana lagta hai"}
+{"id": "hinglish-0719", "lang": "hinglish", "intent": "request", "text": "tonight 11 baje Priya ko good night bolna hai, mat bhoolna"}
+{"id": "hinglish-0720", "lang": "hinglish", "intent": "request", "text": "roz raat 10 baje dawai"}
+{"id": "hinglish-0721", "lang": "hinglish", "intent": "request", "text": "mujhe aaj 4 baje chai ke baad bank jaana hai"}
+{"id": "hinglish-0722", "lang": "hinglish", "intent": "request", "text": "2 min baad batao ki cooker ki seeti kitni hui hai"}
+{"id": "hinglish-0723", "lang": "hinglish", "intent": "request", "text": "kal raat 8 baje Papa ka phone aayega, ghar pe rehna hai"}
+{"id": "hinglish-0724", "lang": "hinglish", "intent": "mention", "text": "kal Delhi ka AQI 400 tha, saans lena mushkil"}
+{"id": "hinglish-0725", "lang": "hinglish", "intent": "mention", "text": "pichle Friday ko office mein kaafi kaam tha"}
+{"id": "hinglish-0726", "lang": "hinglish", "intent": "request", "text": "bhai aaj shaam 6 baje meeting hai mujhe client ke saath"}
+{"id": "hinglish-0727", "lang": "hinglish", "intent": "request", "text": "agle 5 din roz subah 9 baje doctor ke paas dressing karwani hai"}
+{"id": "hinglish-0728", "lang": "hinglish", "intent": "mention", "text": "subah ki hawa mein alag hi taazgi hai"}
+{"id": "hinglish-0729", "lang": "hinglish", "intent": "request", "text": "20 minute baad door lock check karne ke liye yaad dila dena"}
+{"id": "hinglish-0730", "lang": "hinglish", "intent": "mention", "text": "Aaj mausam khushgawar hai, hawa chal rahi hai"}
+{"id": "hinglish-0731", "lang": "hinglish", "intent": "request", "text": "har Monday 8 baje breakfast mein oats, bas yaad dila diya karo"}
+{"id": "hinglish-0732", "lang": "hinglish", "intent": "request", "text": "raat 9 baje ke baad mujhe disturb mat karna, kal se roz"}
+{"id": "hinglish-0733", "lang": "hinglish", "intent": "mention", "text": "Wo kal aayi thi, par main office mein tha"}
+{"id": "hinglish-0734", "lang": "hinglish", "intent": "request", "text": "kal 2 baje dopahar ko mujhe Sharma ji ke ghar jaana hai"}
+{"id": "hinglish-0735", "lang": "hinglish", "intent": "request", "text": "hafte mein 2 din Tuesday aur Friday shaam 6 baje football"}
+{"id": "hinglish-0736", "lang": "hinglish", "intent": "mention", "text": "kal raat 11 baje Rohit ne call kiya tha, 2 ghante baat ki"}
+{"id": "hinglish-0737", "lang": "hinglish", "intent": "request", "text": "Monday ko subah 7 baje school ki fees bharni hai"}
+{"id": "hinglish-0738", "lang": "hinglish", "intent": "request", "text": "alarm 4:30 baje kal subah ke liye"}
+{"id": "hinglish-0739", "lang": "hinglish", "intent": "mention", "text": "Bhai tera time kharab chal raha hai kya kuch din se?"}
+{"id": "hinglish-0740", "lang": "hinglish", "intent": "request", "text": "10 mins baad call karna hai Ravi ko, remind me"}
+{"id": "hinglish-0741", "lang": "hinglish", "intent": "mention", "text": "kal mere bhai ne nayi bike li hai"}
+{"id": "hinglish-0742", "lang": "hinglish", "intent": "request", "text": "Saturday subah 7 baje se trekking, 6 baje utha dena"}
+{"id": "hinglish-0743", "lang": "hinglish", "intent": "request", "text": "remind me at 5 pm to call the plumber, aaj hi"}
+{"id": "hinglish-0744", "lang": "hinglish", "intent": "request", "text": "every day 7 baje subah gym ka remind karo"}
+{"id": "hinglish-0745", "lang": "hinglish", "intent": "mention", "text": "pichle Tuesday ko hum log restaurant gaye the, khana mast tha"}
+{"id": "hinglish-0746", "lang": "hinglish", "intent": "request", "text": "parso Monday subah 10 baje GST office jaana hai"}
+{"id": "hinglish-0747", "lang": "hinglish", "intent": "mention", "text": "wo Saturday ko team ke saath trek pe jaa raha hai, Instagram pe dekha"}
+{"id": "hinglish-0748", "lang": "hinglish", "intent": "request", "text": "har do hafte mein Saturday ko kaam wali ko bulana, subah 9 baje"}
+{"id": "hinglish-0749", "lang": "hinglish", "intent": "request", "text": "parso ki subah 6 baje ki bus pakadni hai, 5 baje uthana"}
+{"id": "hinglish-0750", "lang": "hinglish", "intent": "mention", "text": "ek hi hafte mein 3 baar baarish ho gayi, itna ajeeb mausam"}
+{"id": "hinglish-0751", "lang": "hinglish", "intent": "request", "text": "aaj raat 8 baje tak Zomato pe order daal dena"}
+{"id": "hinglish-0752", "lang": "hinglish", "intent": "request", "text": "Sunday ko 11 baje paratha party hai ghar pe, mehmaan 12 baje aayenge"}
+{"id": "hinglish-0753", "lang": "hinglish", "intent": "request", "text": "har mahine ki 7 tareekh ko maid ko salary deni hai"}
+{"id": "hinglish-0754", "lang": "hinglish", "intent": "request", "text": "kal raat ko 10 baje tak laptop band karna hai, reminder lagao"}
+{"id": "hinglish-0755", "lang": "hinglish", "intent": "mention", "text": "Suno, sham ko Zubin ne bataya ki wo Friday ko aayega, par mujhe nahi pata kab"}
+{"id": "hinglish-0756", "lang": "hinglish", "intent": "request", "text": "kal dopahar 12:30 baje vet ke paas Bruno ka vaccination hai"}
+{"id": "hinglish-0757", "lang": "hinglish", "intent": "mention", "text": "bhai ghadi mein 4 bajke 10 min ho rahe hain abhi, ye clock sahi hai kya?"}
+{"id": "hinglish-0758", "lang": "hinglish", "intent": "mention", "text": "mere cousin ka naam Subah hai, bahut pyara naam hai"}
+{"id": "hinglish-0759", "lang": "hinglish", "intent": "request", "text": "aaj raat 8:30 pe Netflix pe match dekhna hai"}
+{"id": "hinglish-0760", "lang": "hinglish", "intent": "mention", "text": "sunset ka time 5:40 hai aajkal, winter mein jaldi ho jaata hai"}
+{"id": "hinglish-0761", "lang": "hinglish", "intent": "request", "text": "roz tabiyat ke liye subah 6 baje garam paani lemon ke saath"}
+{"id": "hinglish-0762", "lang": "hinglish", "intent": "request", "text": "roz 5 baje shaam ko chai ke saath news dekhna hai, haha reminder lagao"}
+{"id": "hinglish-0763", "lang": "hinglish", "intent": "mention", "text": "Sawan ke mahine mein baarish kitni acchi lagti hai"}
+{"id": "hinglish-0764", "lang": "hinglish", "intent": "request", "text": "kal raat 8 baje dinner pe jaana hai Priya ke saath"}
+{"id": "hinglish-0765", "lang": "hinglish", "intent": "request", "text": "har hafte Monday ko 10 baje team ko update bhejna"}
+{"id": "hinglish-0766", "lang": "hinglish", "intent": "mention", "text": "bachpan mein Sunday ko chitrahaar dekhne ke liye sab ek hi TV ke saamne baithte the"}
+{"id": "hinglish-0767", "lang": "hinglish", "intent": "request", "text": "alarm 5 bje"}
+{"id": "hinglish-0768", "lang": "hinglish", "intent": "mention", "text": "Wo rozana 10 km daudta hai, himmat hai uski"}
+{"id": "hinglish-0769", "lang": "hinglish", "intent": "request", "text": "Thursday ko mera presentation hai 11 baje"}
+{"id": "hinglish-0770", "lang": "hinglish", "intent": "mention", "text": "Kal Ho Naa Ho mere favourite movies mein se hai"}
+{"id": "hinglish-0771", "lang": "hinglish", "intent": "mention", "text": "Subah 6 baje uthne wale ko log pagal samajhte hain, aisa mera experience hai"}
+{"id": "hinglish-0772", "lang": "hinglish", "intent": "mention", "text": "Ek ghanta ek ghanta kar ke pura din nikal gaya"}
+{"id": "hinglish-0773", "lang": "hinglish", "intent": "mention", "text": "ek zamana tha jab hum raat bhar baatein kiya karte the"}
+{"id": "hinglish-0774", "lang": "hinglish", "intent": "request", "text": "kal subah 8 baje school ke bahar bachhe ko drop karna hai"}
+{"id": "hinglish-0775", "lang": "hinglish", "intent": "mention", "text": "Subah Subah, Yaaron Ka Time, Dil Chahta Hai - sab purane gaane yaad aate hain"}
+{"id": "hinglish-0776", "lang": "hinglish", "intent": "mention", "text": "meri Mummy ki aadat hai sham 7 baje serial dekhne ki"}
+{"id": "hinglish-0777", "lang": "hinglish", "intent": "request", "text": "dopahar 2 baje meri sister ko station se lena hai"}
+{"id": "hinglish-0778", "lang": "hinglish", "intent": "request", "text": "roz shaam 7 baje plants ko paani dena hai"}
+{"id": "hinglish-0779", "lang": "hinglish", "intent": "mention", "text": "Wo log har roz subah 4 baje milk lene jaate hain, unki roz ki zindagi hai"}
+{"id": "hinglish-0780", "lang": "hinglish", "intent": "mention", "text": "Ek ghante mein 60 minute hote hain, aur 24 ghante ka din, basic math"}
+{"id": "hinglish-0781", "lang": "hinglish", "intent": "mention", "text": "kal Rohit ne bataya ki uska interview kharab gaya"}
+{"id": "hinglish-0782", "lang": "hinglish", "intent": "request", "text": "har pehle Saturday ko bachhon ka haircut, 10 baje"}
+{"id": "hinglish-0783", "lang": "hinglish", "intent": "request", "text": "subah ke 6 baje wake up call chahiye har Saturday ko"}
+{"id": "hinglish-0784", "lang": "hinglish", "intent": "request", "text": "2 din baad subah 8 baje blood test ke liye jaana hai, fasting rakhni hai"}
+{"id": "hinglish-0785", "lang": "hinglish", "intent": "mention", "text": "is phone ki price 24,999 hai"}
+{"id": "hinglish-0786", "lang": "hinglish", "intent": "mention", "text": "Dopahar ki dhoop mein chhat pe kapde sukhane ka maza hi alag hai"}
+{"id": "hinglish-0787", "lang": "hinglish", "intent": "mention", "text": "2 saal ki beti ko sone ka time 8 baje hota hai Shreya ke ghar mein, Shreya ne bataya"}
+{"id": "hinglish-0788", "lang": "hinglish", "intent": "mention", "text": "Pichle Monday ko office mein Mukesh ne cake laaya tha"}
+{"id": "hinglish-0789", "lang": "hinglish", "intent": "request", "text": "dopahar 1 baje call hai investors ke saath, 12:45 baje bata dena"}
+{"id": "hinglish-0790", "lang": "hinglish", "intent": "mention", "text": "kal pichle saal jaisa hi mausam hai"}
+{"id": "hinglish-0791", "lang": "hinglish", "intent": "request", "text": "10 tareekh ko mera interview hai 3 baje dopahar"}
+{"id": "hinglish-0792", "lang": "hinglish", "intent": "mention", "text": "gaon mein sham 6 baje ke baad sab so jaate hain, tab bhi aisa tha, ab bhi aisa hai"}
+{"id": "hinglish-0793", "lang": "hinglish", "intent": "mention", "text": "kal subah 7 baje gym gaya tha, ab body dard kar rahi hai"}
+{"id": "hinglish-0794", "lang": "hinglish", "intent": "mention", "text": "subah ki dhoop sehat ke liye achhi hoti hai"}
+{"id": "hinglish-0795", "lang": "hinglish", "intent": "mention", "text": "Meri maa kehti hai ki subah uthne wale sukhi rehte hain"}
+{"id": "hinglish-0796", "lang": "hinglish", "intent": "request", "text": "5 min mein reminder do ki chai chhaan leni hai"}
+{"id": "hinglish-0797", "lang": "hinglish", "intent": "mention", "text": "Mera khyal hai Friday sabse accha din hai, kal se weekend shuru"}
+{"id": "hinglish-0798", "lang": "hinglish", "intent": "request", "text": "kal subah 4 baje flight hai, 2 baje uthana"}
+{"id": "hinglish-0799", "lang": "hinglish", "intent": "request", "text": "Sunday ko subah 9 baje se pehle ration lana hai, yaad dilana"}
+{"id": "hinglish-0800", "lang": "hinglish", "intent": "mention", "text": "Wo roz raat ko 2 baje tak padhti hai, meri behen ke bare mein bol raha hu"}
+{"id": "hinglish-0801", "lang": "hinglish", "intent": "request", "text": "parso ka plan: subah 10 baje property registry, dopahar mein lunch"}
+{"id": "hinglish-0802", "lang": "hinglish", "intent": "request", "text": "parso tak roz 11 baje dawai ka reminder do"}
+{"id": "hinglish-0803", "lang": "hinglish", "intent": "mention", "text": "din mein 5 baar chai peena kya zyada hai?"}
+{"id": "hinglish-0804", "lang": "hinglish", "intent": "request", "text": "roz subah 8 baje Hindu paper padhna hai 15 minute"}
+{"id": "hinglish-0805", "lang": "hinglish", "intent": "mention", "text": "hum log Sunday ko kabhi kabhi ghar se bahar nikalte hain, chhoti si baat hai"}
+{"id": "hinglish-0806", "lang": "hinglish", "intent": "mention", "text": "Monday ko office jaana sabse mushkil kaam hai"}
+{"id": "hinglish-0807", "lang": "hinglish", "intent": "mention", "text": "Meri biwi ne kal raat 10 baje khana banaya tha, bahut accha tha"}
+{"id": "hinglish-0808", "lang": "hinglish", "intent": "mention", "text": "raat ko jab sab so jaate hain, tab dimag sabse tez chalta hai mera"}
+{"id": "hinglish-0809", "lang": "hinglish", "intent": "mention", "text": "raat 2 baje ek ajeeb awaaz aayi thi, dar gaya tha main"}
+{"id": "hinglish-0810", "lang": "hinglish", "intent": "request", "text": "roz 6 baje shaam ko dog walk"}
+{"id": "hinglish-0811", "lang": "hinglish", "intent": "mention", "text": "meri dost ka naam Sawan hai"}
+{"id": "hinglish-0812", "lang": "hinglish", "intent": "mention", "text": "pichle Monday ko meeting ne mera pura din kha liya"}
+{"id": "hinglish-0813", "lang": "hinglish", "intent": "request", "text": "thodi der baad, aadhe ghante mein, yaad dilana ki fone charge karna hai"}
+{"id": "hinglish-0814", "lang": "hinglish", "intent": "mention", "text": "kal raat ko ek ajeeb sapna aaya"}
+{"id": "hinglish-0815", "lang": "hinglish", "intent": "mention", "text": "IPL har saal April se shuru hota hai"}
+{"id": "hinglish-0816", "lang": "hinglish", "intent": "request", "text": "alarm laga do 4 baje ka, nap ke baad uthna hai"}
+{"id": "hinglish-0817", "lang": "hinglish", "intent": "mention", "text": "usne bola wo har Monday 6 baje uthti hai, sach mein?"}
+{"id": "hinglish-0818", "lang": "hinglish", "intent": "request", "text": "subah-subah 5 baje uth ke padhai karni hai kal se"}
+{"id": "hinglish-0819", "lang": "hinglish", "intent": "request", "text": "mahine mein 2 baar Saturday ko car wash, subah 7 baje"}
+{"id": "hinglish-0820", "lang": "hinglish", "intent": "mention", "text": "Last week usne sabko dinner pe bulaya tha, bahut maza aaya"}
+{"id": "hinglish-0821", "lang": "hinglish", "intent": "mention", "text": "Chaar saal pehle yehi sheher kitna shant tha"}
+{"id": "hinglish-0822", "lang": "hinglish", "intent": "request", "text": "subah 5 baje roz namaz ke liye uthna hai, alarm set kar do"}
+{"id": "hinglish-0823", "lang": "hinglish", "intent": "mention", "text": "Holi is saal 14 March ko thi na?"}
+{"id": "hinglish-0824", "lang": "hinglish", "intent": "request", "text": "mere liye kal 8 baje ka alarm, uske baad snooze mat karna"}
+{"id": "hinglish-0825", "lang": "hinglish", "intent": "request", "text": "har saturday raat 8 baje pizza night"}
+{"id": "hinglish-0826", "lang": "hinglish", "intent": "request", "text": "raat 11 baje Divya ka call aayega, tab tak jaagna hai"}
+{"id": "hinglish-0827", "lang": "hinglish", "intent": "mention", "text": "abhi kitne baje hain?"}
+{"id": "hinglish-0828", "lang": "hinglish", "intent": "mention", "text": "Raat 12 baje Cinderella ka jaadu khatam ho jaata hai, kahani mein"}
+{"id": "hinglish-0829", "lang": "hinglish", "intent": "mention", "text": "hum log pichle saal Goa gaye the December mein"}
+{"id": "hinglish-0830", "lang": "hinglish", "intent": "request", "text": "aaj dopahar 2:30 baje bas pakadni hai"}
+{"id": "hinglish-0831", "lang": "hinglish", "intent": "mention", "text": "Dopahar ke 1 baje se 3 baje tak Spain mein siesta hota hai, ye maine padha tha"}
+{"id": "hinglish-0832", "lang": "hinglish", "intent": "request", "text": "ek ghante baad mujhe laundry fold karna yaad dilana"}
+{"id": "hinglish-0833", "lang": "hinglish", "intent": "mention", "text": "ye Sunday ka brunch wala concept mujhe samajh nahi aata"}
+{"id": "hinglish-0834", "lang": "hinglish", "intent": "mention", "text": "din bhar kya karte ho tum log ghar pe, general question hai"}
+{"id": "hinglish-0835", "lang": "hinglish", "intent": "mention", "text": "hafte bhar ki thakan ek Sunday mein utar jaati hai"}
+{"id": "hinglish-0836", "lang": "hinglish", "intent": "request", "text": "kal subah 10 baje Aadhaar centre jaana hai, document le jaana yaad dilana"}
+{"id": "hinglish-0837", "lang": "hinglish", "intent": "mention", "text": "Bhai kitne baje hain yaar, phone ki battery khatam hai"}
+{"id": "hinglish-0838", "lang": "hinglish", "intent": "request", "text": "Monday ko subah 10 baje presentation hai, Sunday raat ko revise karna yaad dilana"}
+{"id": "hinglish-0839", "lang": "hinglish", "intent": "mention", "text": "kal hi toh aaya tha, aaj phir chala gaya"}
+{"id": "hinglish-0840", "lang": "hinglish", "intent": "request", "text": "har mahine ki 10 tareekh ko wifi ka bill"}
+{"id": "hinglish-0841", "lang": "hinglish", "intent": "mention", "text": "kal raat 12 baje tak mohalle mein shor tha"}
+{"id": "hinglish-0842", "lang": "hinglish", "intent": "mention", "text": "Meri aadat thi roz raat ko 12 baje tak phone chalane ki, ab chhod di"}
+{"id": "hinglish-0843", "lang": "hinglish", "intent": "request", "text": "kal sham 6 baje society meeting hai, jaana hai mujhe"}
+{"id": "hinglish-0844", "lang": "hinglish", "intent": "request", "text": "har Monday aur Wednesday ko shaam 6 baje bachchon ki dance class"}
+{"id": "hinglish-0845", "lang": "hinglish", "intent": "request", "text": "agle Friday dopahar 3 baje Rahul ka farewell hai, gift lena hai"}
+{"id": "hinglish-0846", "lang": "hinglish", "intent": "mention", "text": "subah ka sunrise dekhna accha lagta hai, par uthna mushkil"}
+{"id": "hinglish-0847", "lang": "hinglish", "intent": "mention", "text": "Time bohot kam hai, kaam bohot zyada, ye mere life ka mantra hai"}
+{"id": "hinglish-0848", "lang": "hinglish", "intent": "mention", "text": "uska exam kal tha, kaisa gaya pata nahi"}
+{"id": "hinglish-0849", "lang": "hinglish", "intent": "request", "text": "kal dopahar 3:30 baje pet ko vet pe le jaana hai"}
+{"id": "hinglish-0850", "lang": "hinglish", "intent": "request", "text": "Ek ghante baad Zepto se sabzi mangwani hai yaad dilana"}
+{"id": "hinglish-0851", "lang": "hinglish", "intent": "mention", "text": "wo pichle Saturday ko aaye the, cake khake chale gaye"}
+{"id": "hinglish-0852", "lang": "hinglish", "intent": "mention", "text": "ek ghante ka lecture 3 ghante jaisa lagta hai"}
+{"id": "hinglish-0853", "lang": "hinglish", "intent": "mention", "text": "Ek ghante ki movie ka ticket 400 rupaye ka tha, mehenga hai"}
+{"id": "hinglish-0854", "lang": "hinglish", "intent": "request", "text": "Monday se Saturday roz sham 4 baje coaching jaana hai"}
+{"id": "hinglish-0855", "lang": "hinglish", "intent": "mention", "text": "Sharma ji ka beta kal Canada ja raha hai, sab keh rahe the"}
+{"id": "hinglish-0856", "lang": "hinglish", "intent": "request", "text": "mujhe 25 minute baad bhaiya ko call karna hai"}
+{"id": "hinglish-0857", "lang": "hinglish", "intent": "mention", "text": "Shaam hote hi Mumbai ki local mein bheed badh jaati hai"}
+{"id": "hinglish-0858", "lang": "hinglish", "intent": "request", "text": "subah 7:30 baje roz bachhon ko school bhejna hai, 7 baje alarm"}
+{"id": "hinglish-0859", "lang": "hinglish", "intent": "request", "text": "10 baje raat ko laptop band karne ka reminder roz"}
+{"id": "hinglish-0860", "lang": "hinglish", "intent": "request", "text": "meeting hai 4 baje, 3:50 pe bata dena"}
+{"id": "hinglish-0861", "lang": "hinglish", "intent": "request", "text": "Sunday ko dopahar 1 baje biryani banani hai, 11 baje se tayyari"}
+{"id": "hinglish-0862", "lang": "hinglish", "intent": "mention", "text": "woh jab bhi aata hai Friday ko hi aata hai"}
+{"id": "hinglish-0863", "lang": "hinglish", "intent": "request", "text": "kal sham 4 bje mujhe Rahul ko call back karna hai"}
+{"id": "hinglish-0864", "lang": "hinglish", "intent": "request", "text": "parso subah 6 baje gym ke baad 9 baje office, yaad dilana mat bhoolna"}
+{"id": "hinglish-0865", "lang": "hinglish", "intent": "request", "text": "hafte mein teen baar swimming, Mon Wed Fri 6 baje subah"}
+{"id": "hinglish-0866", "lang": "hinglish", "intent": "request", "text": "agle sal 1 January ko subah 6 baje sunrise dekhne jaana hai"}
+{"id": "hinglish-0867", "lang": "hinglish", "intent": "mention", "text": "Chaar Baje ki chai ke bina din adhura lagta hai"}
+{"id": "hinglish-0868", "lang": "hinglish", "intent": "mention", "text": "Ravivaar ko chhutti hoti hai, schools mein bhi"}
+{"id": "hinglish-0869", "lang": "hinglish", "intent": "request", "text": "1 ghante baad pani ki tanki chalu karni hai"}
+{"id": "hinglish-0870", "lang": "hinglish", "intent": "mention", "text": "10 minute mein hi kya ho jaata hai, bas aise hi bol raha hu"}
+{"id": "hinglish-0871", "lang": "hinglish", "intent": "mention", "text": "subah se pet mein dard hai, pata nahi kya khaya tha"}
+{"id": "hinglish-0872", "lang": "hinglish", "intent": "mention", "text": "Chhote the tab Sunday ko Shaktimaan aata tha, bahut mazaa aata tha"}
+{"id": "hinglish-0873", "lang": "hinglish", "intent": "request", "text": "raat ko 12 baje ke baad coffee nahi, reminder lagao 10 baje"}
+{"id": "hinglish-0874", "lang": "hinglish", "intent": "request", "text": "kl 8 bje mere paas dentist hai, 7 bje jagana"}
+{"id": "hinglish-0875", "lang": "hinglish", "intent": "mention", "text": "uska birthday 5 June ko aata hai, mujhe yaad nahi tha"}
+{"id": "hinglish-0876", "lang": "hinglish", "intent": "mention", "text": "kal dopahar ko lagbhag 40 degree temperature tha"}
+{"id": "hinglish-0877", "lang": "hinglish", "intent": "request", "text": "hr roz subah 6 bje dudh wale se dudh lena yaad dilao"}
+{"id": "hinglish-0878", "lang": "hinglish", "intent": "request", "text": "kal sham 7 baje se Ravi aur Mohit ke saath poker night hai"}
+{"id": "hinglish-0879", "lang": "hinglish", "intent": "mention", "text": "abhi abhi baarish rukki hai"}
+{"id": "hinglish-0880", "lang": "hinglish", "intent": "request", "text": "aaj raat 10:30 baje cab book karni hai airport ke liye"}
+{"id": "hinglish-0881", "lang": "hinglish", "intent": "request", "text": "roz raat sone se pehle 10 baje phone ko charging pe lagana hai"}
+{"id": "hinglish-0882", "lang": "hinglish", "intent": "request", "text": "har hafte ke Sunday 7 baje chai pe dadi se baat karni hai"}
+{"id": "hinglish-0883", "lang": "hinglish", "intent": "request", "text": "kal 5 baje dopahar mein family photo shoot hai"}
+{"id": "hinglish-0884", "lang": "hinglish", "intent": "request", "text": "parso 5 baje subah airport, raat ko 11 baje alarm lagana bhi"}
+{"id": "hinglish-0885", "lang": "hinglish", "intent": "request", "text": "kal 9 bje tak assignment submit karna hai, 7 bje yaad dilana"}
+{"id": "hinglish-0886", "lang": "hinglish", "intent": "request", "text": "is Friday raat 8 baje movie ki booking hai"}
+{"id": "hinglish-0887", "lang": "hinglish", "intent": "request", "text": "Saturday raat 11 baje train hai Mumbai ki, 9 baje nikalna hai"}
+{"id": "hinglish-0888", "lang": "hinglish", "intent": "mention", "text": "2019 mein jab main Bangalore aaya tha tab kitna alag tha sab kuch"}
+{"id": "hinglish-0889", "lang": "hinglish", "intent": "request", "text": "kal duphar 12 baje principal se milna hai bachhe ke admission ke liye"}
+{"id": "hinglish-0890", "lang": "hinglish", "intent": "mention", "text": "Kal Raat Ka Sapna - ye kahani maine padhi thi"}
+{"id": "hinglish-0891", "lang": "hinglish", "intent": "request", "text": "aaj dopahar 12 baje tak mujhe cheque deposit karna hai"}
+{"id": "hinglish-0892", "lang": "hinglish", "intent": "request", "text": "bas 10 minute mein meeting hai, yaad dila dena"}
+{"id": "hinglish-0893", "lang": "hinglish", "intent": "mention", "text": "Zomato ka delivery kal late tha, 50 minute lag gaye"}
+{"id": "hinglish-0894", "lang": "hinglish", "intent": "mention", "text": "Pichle Saturday ko bhi barish hui thi, aaj bhi"}
+{"id": "hinglish-0895", "lang": "hinglish", "intent": "request", "text": "roz 3 baje ke aas paas break lena yaad dilana"}
+{"id": "hinglish-0896", "lang": "hinglish", "intent": "request", "text": "aadhe ghante baad yaad dilana ki kapde sukhane daale hain"}
+{"id": "hinglish-0897", "lang": "hinglish", "intent": "mention", "text": "Time bahut tezi se beet raha hai, saal kaise nikla pata nahi"}
+{"id": "hinglish-0898", "lang": "hinglish", "intent": "request", "text": "aaj sham 5 baje Ravi ke saath cricket, 4:30 pe yaad dilana"}
+{"id": "hinglish-0899", "lang": "hinglish", "intent": "request", "text": "aaj raat 9 baje maa ko dawai deni hai, remind karna"}
+{"id": "hinglish-0900", "lang": "hinglish", "intent": "request", "text": "kal subah 6 baje chai banake sabko uthana hai, mujhe 5:45 pe utha dena"}

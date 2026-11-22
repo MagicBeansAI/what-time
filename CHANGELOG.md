@@ -2,6 +2,84 @@
 
 Short and honest. Scores per build live in [`SCORES.md`](SCORES.md).
 
+## 0.5.0
+
+- Interval export for steps cron cannot state: "every 5 hours", "every 7
+  minutes" now carry `intervals: [{ everySeconds, start, until?, count? }]`
+  (CLI `INTERVAL:` line, npm type, playground panel) for schedulers with
+  interval triggers. Day steps stay RRULE-only, since they would drift
+  across DST.
+- A date written without its year is its next occurrence: "on the 5th"
+  said on the 22nd is next month's 5th, "Nov 3" said in late November is
+  next year's, "the 31st" skips months without one. Dates with a year are
+  unchanged.
+- "remind me every Sunday at 8 pm to plan the week": a closing "to" with
+  words after it is the infinitive, not an unfinished range ("Monday 5pm
+  to" still is).
+- "every night at midnight": a named clock takes the day part's place.
+- A frequency word beside a dated one-off describes a noun: "pay the
+  monthly fee on December 5 at 10am" is that date, "Agle Monday 11 baje
+  weekly report" that Monday.
+- A stray relative-day label after a complete clock is skipped ("आज रात 8
+  बजे मासिक किराया" is tonight at 8). दैनिक / dainik read as daily.
+- Label repairs: "every/each/har" right before a day, unit or day part is
+  a recurrence marker; a bound marker before "in N minutes" is not a bound
+  ("catch up in 45 minutes"); nothing after बजे / baje belongs to the
+  clock ("कल सुबह 9 बजे डॉक्टर").
+- Model retrained (`neg-r4`) with a second negatives round and
+  reminder-noun / adjective contrasts. On a fresh independent contrast set
+  (197 lines nobody tuned against): 102/110 non-schedules empty (96
+  before), 62/62 recurring (60 before), 25/25 one-off. A candidate whose
+  negatives taught "every/har" to read as background was rejected.
+- GPU batch path (`--features gpu`): the context-gate weight was read
+  transposed, so scores drifted from the CPU path on about 1% of tokens
+  (one label flip in the parity set). Fixed; scores now agree on every
+  token, and the parity test also bounds score drift.
+- Sub-daily steps with a clock: "every 8 hours at 7am" fires at 7, 15
+  and 23 (the step used to restart at the next hour); "every 3 hours from
+  10am", "every 6 hours starting at 9am" and "har 4 ghante 6 baje se" run
+  from that clock to midnight each day, like "every hour after 6pm". A step
+  that does not divide the day counts on from its clock as an interval.
+- "every 24 hours" fires at midnight (it was an all-day event that already
+  included today); "every 24 hours at 9am" is daily at 9.
+- Start bounds keep their clock ("every day starting tomorrow at 9am" lost
+  the 9am), a leading bound works ("starting Monday, every day at 10am"),
+  "every 2 hours from tomorrow" starts tomorrow (it was a shift that
+  repeated one instant), and "every day starting at 9am" is daily at 9.
+- Hindi/Hinglish postposition starts: "kal se roz subah 7 baje", "कल से हर
+  दिन रात 10 बजे", "somvar se roz 9 baje" start the series on that day.
+- Fixed a panic: a phrase ending in "last" plus one word ("my flight last
+  month …" once the model dropped the rest) indexed past the end of the
+  tokens. A new test runs every corpus phrase, cut at every word boundary,
+  through the full parser (5,963 inputs) and fails on any panic.
+- "हर महीने की 1 तारीख़ को" (with the nukta) is monthly on the 1st; "in 45
+  min" reads "min" as the unit.
+- Sentence intent: results that hold a time expression carry `intent`
+  (`request` or `mention`, with the request probability), from a second,
+  smaller encoder (two blocks, ~223k parameters) over the same features. It
+  is trained on natural English and Hindi sentences with time words
+  (Tatoeba, labelled by readers who did not see the parser) and written
+  Hinglish and Hindi lines, plus generated rows; the tagger is unchanged.
+  On an independent set where every line has a time word, gating on intent
+  cut wrongly-read non-schedules from 76 to 31 of 150 and lost 3 of 141
+  real schedules. A text that is only a schedule phrase is a request. The
+  CLI prints `INTENT:`; the playground shows it. Single-phrase latency is
+  0.69 ms (0.40 ms before) when a time expression is present; text without
+  one skips the intent encoder.
+- Hindi/Hinglish genitive order: "हर महीने के आखिरी दिन" and "har mahine
+  ke aakhri din" are the last day of every month (they compiled to a daily
+  rule), "har mahine ka pehla Friday" the first Friday, "agle mahine ka
+  pehla Somvaar" the first Monday of next month. The period-first order is
+  rewritten into the English one, so every edge and position rule covers
+  both.
+- Skip steps: "ek din chhod ke ek din", "एक दिन छोड़कर", "do din chhodkar"
+  are every 2 and every 3 days.
+- Two unmarked clocks with the end not after the start run into the
+  afternoon: "every hour from 7 to 7" is 7am to 7pm (it failed as
+  end-equals-start); "4:15 to 4:45" is unchanged.
+- Pinned corpora: 685 schedules (+21 fixes, +3 negatives), 68 cron cases;
+  the Magician scheduler check covers 114 phrase/zone pairs.
+
 ## 0.4.1
 
 - Clock exceptions: "every hour except 1pm", "every 30 minutes between 9

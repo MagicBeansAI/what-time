@@ -169,8 +169,22 @@ impl Tagger {
             })
             .collect();
         let mut invalid = vec![false; jobs.len()];
+        let mut intent: Vec<Option<f32>> = vec![None; jobs.len()];
 
         for (window, prediction) in windows.iter().zip(predictions.iter()) {
+            // Intent matters only for text that holds a time expression, so
+            // the intent encoder runs only on windows the tagger labeled
+            // (most chat text has none). The most request-like window wins.
+            let holds_time = prediction.labels[window.keep_start..window.keep_end]
+                .iter()
+                .any(|label| *label != 0);
+            if holds_time
+                && let Some(logit) = crate::model::transformer::window_intent(&window.tokens)
+            {
+                let probability = 1.0 / (1.0 + (-logit).exp());
+                let slot = &mut intent[window.job];
+                *slot = Some(slot.map_or(probability, |current| current.max(probability)));
+            }
             for token in window.keep_start..window.keep_end {
                 let label = prediction.labels[token];
                 if label as usize >= crate::labels::LABELS.len() {
@@ -189,6 +203,7 @@ impl Tagger {
             .enumerate()
             .map(|(index, (job, tokens))| TagResult {
                 tokens,
+                intent: intent[index],
                 unknown_labels: invalid[index],
                 backend: "cpu",
                 timings: TagTimings {

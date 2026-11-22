@@ -427,17 +427,47 @@ pub fn resolve_dates(
                 .collect())
         }
 
-        DateSpec::Calendar { year, month, day } => Ok(vec![LocalPeriod {
-            start: calendar_date(
-                &CalendarDate {
-                    year: *year,
-                    month: *month,
-                    day: *day,
-                },
-                reference,
-            )?,
-            end: None,
-        }]),
+        DateSpec::Calendar { year, month, day } => {
+            let spec = CalendarDate {
+                year: *year,
+                month: *month,
+                day: *day,
+            };
+            // A date written without its year ("Nov 3", "on the 5th", "the
+            // 31st") is its next occurrence: a scheduled day is never
+            // already over, and a month without that day is skipped. A
+            // full date keeps exactly what it says.
+            if year.is_none()
+                && let Some(day) = day
+            {
+                let base = reference.start_of_day();
+                for step in 0..=48 {
+                    let candidate = match month {
+                        Some(month) => Civil {
+                            year: base.year + step,
+                            month: *month as i32,
+                            day: *day as i32,
+                            ..base
+                        },
+                        None => {
+                            let first = add_months(&Civil { day: 1, ..base }, step as f64);
+                            Civil {
+                                day: *day as i32,
+                                ..first
+                            }
+                        }
+                    };
+                    if is_valid(&candidate) && day_number(&candidate) >= day_number(reference) {
+                        return Ok(vec![LocalPeriod {
+                            start: candidate,
+                            end: None,
+                        }]);
+                    }
+                }
+            }
+            let start = calendar_date(&spec, reference)?;
+            Ok(vec![LocalPeriod { start, end: None }])
+        }
 
         DateSpec::CalendarPeriod {
             month,

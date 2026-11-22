@@ -1333,7 +1333,7 @@ dependencies = [
 
 [[package]]
 name = "what-time"
-version = "0.4.1"
+version = "0.5.0"
 dependencies = [
  "bytemuck",
  "chrono",
@@ -1348,7 +1348,7 @@ dependencies = [
 
 [[package]]
 name = "what-time-cli"
-version = "0.4.1"
+version = "0.5.0"
 dependencies = [
  "serde_json",
  "what-time",
@@ -1356,7 +1356,7 @@ dependencies = [
 
 [[package]]
 name = "what-time-wasm"
-version = "0.4.1"
+version = "0.5.0"
 dependencies = [
  "serde_json",
  "wasm-bindgen",
@@ -1365,7 +1365,7 @@ dependencies = [
 
 [[package]]
 name = "what-time-web"
-version = "0.4.1"
+version = "0.5.0"
 dependencies = [
  "serde",
  "serde_json",

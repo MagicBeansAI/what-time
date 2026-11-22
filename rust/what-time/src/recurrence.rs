@@ -485,10 +485,18 @@ pub fn expand_recurrence(
         0
     };
 
-    for offset in 0..366 * 8 * steps_per_day {
+    // "every 8 hours at 7am": the clock anchors the step, so the first
+    // occurrence is a whole number of steps from it (7, 15, 23), not the
+    // first hour after the reference.
+    let seed_step: i64 = if sub_daily && clause.time.is_some() {
+        rule.interval
+    } else {
+        1
+    };
+    for offset in 0..366 * 8 * steps_per_day / seed_step {
         let date = add_civil(
             &beginning,
-            offset as f64,
+            (offset * seed_step) as f64,
             if generated_clock {
                 clock_unit
             } else {

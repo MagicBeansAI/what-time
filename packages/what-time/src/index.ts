@@ -66,6 +66,20 @@ export interface ParseResult {
    * `unsupported-cron` diagnostic and stays available in `rrules`.
    */
   crons: string[];
+  /**
+   * Elapsed-time steps for sub-daily rules cron cannot state ("every 5
+   * hours"): fire at `start`, then every `everySeconds`. For schedulers
+   * with interval triggers.
+   */
+  intervals: { everySeconds: number; start: string; until?: string; count?: number }[];
+  /**
+   * Whether the text asks for something to be scheduled ("request") or only
+   * talks about time ("mention": past events, habits, facts, titles,
+   * idioms). `score` is the request probability. The time expressions are
+   * reported either way; create a schedule only for a request. Absent when
+   * the bundled model has no intent head.
+   */
+  intent?: { label: "request" | "mention"; score: number };
   truncated: boolean;
   diagnostics: Diagnostic[];
   timings: {

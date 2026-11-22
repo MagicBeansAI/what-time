@@ -601,7 +601,14 @@ function render(body) {
         <div class="occ-time">${escapeHtml(item.detail)}</div>
       </div>
     </li>`).join("");
-  $("notices").innerHTML = result.diagnostics.map((d) =>
+  // The model's sentence intent: a request to schedule, or only a mention
+  // of time. The occurrences above are shown either way.
+  const intent = result.intent
+    ? (result.intent.label === "request"
+      ? `<div class="notice"><code>intent</code>Request to schedule · ${(result.intent.score * 100).toFixed(0)}%</div>`
+      : `<div class="notice warning"><code>intent</code>Talks about time but asks for nothing to schedule · request ${(result.intent.score * 100).toFixed(0)}%</div>`)
+    : "";
+  $("notices").innerHTML = intent + result.diagnostics.map((d) =>
     `<div class="notice ${d.severity}"><code>${escapeHtml(d.code)}</code>${escapeHtml(d.message)}</div>`).join("");
   $("context").textContent = formatted.context;
 
@@ -609,6 +616,11 @@ function render(body) {
   if (result.rrules && result.rrules.length) {
     extras.push(`<details class="panel" open><summary>RRULE export</summary><div class="panel-body rrules">`);
     extras.push(result.rrules.map((rule) => `<pre>${escapeHtml(rule)}</pre>`).join(""));
+    extras.push(`</div></details>`);
+  }
+  if (result.intervals && result.intervals.length) {
+    extras.push(`<details class="panel" open><summary>Interval <span class="note">for rules cron cannot state</span></summary><div class="panel-body rrules">`);
+    extras.push(result.intervals.map((step) => `<pre>every ${step.everySeconds} s from ${escapeHtml(step.start)}${step.until ? " until " + escapeHtml(step.until) : ""}</pre>`).join(""));
     extras.push(`</div></details>`);
   }
   if (result.crons && result.crons.length) {

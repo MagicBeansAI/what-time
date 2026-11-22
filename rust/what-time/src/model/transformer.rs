@@ -32,8 +32,31 @@ pub struct TransformerWeights {
     pub(crate) head: (Vec<f32>, Vec<f32>),   // [2d, 64]
     pub(crate) output: (Vec<f32>, Vec<f32>), // [64, role_classes + 1]
     pub(crate) blocks: Vec<BlockWeights>,
+    /// The sentence-intent head, absent from weights trained before it.
+    pub(crate) intent: Option<IntentWeights>,
     /// Tokenizer row id -> embedding row; `feature_rows` marks padding.
     pub(crate) row_map: Vec<u16>,
+}
+
+/// Sentence intent (request vs mention): a small encoder of its own over
+/// the same feature rows as the tagger (so it sees the words, not only the
+/// tagger's view of them), its final states pooled three ways (mean, max,
+/// attention with one learned query), a tanh layer and one logit. Mirrors
+/// `IntentEncoder` in the training code.
+pub(crate) struct IntentWeights {
+    pub(crate) d_model: usize,
+    pub(crate) heads: usize,
+    pub(crate) ffn: usize,
+    pub(crate) embedding: Vec<f32>,
+    pub(crate) position: Vec<f32>,
+    pub(crate) blocks: Vec<BlockWeights>,
+    pub(crate) ln_f: (Vec<f32>, Vec<f32>),
+    pub(crate) query: Vec<f32>,              // [d]
+    pub(crate) hidden: (Vec<f32>, Vec<f32>), // [3d, h]
+    pub(crate) output: (Vec<f32>, Vec<f32>), // [h, 1]
+    pub(crate) width: usize,
+    /// Request probability at or above which the label is "request".
+    pub(crate) threshold: f32,
 }
 
 pub(crate) struct BlockWeights {
@@ -147,7 +170,41 @@ pub(crate) fn load() -> Result<&'static TransformerWeights, String> {
                     ff2: pair(&format!("{prefix}.ff2"))?,
                 });
             }
+            let intent = match document.get("intentEncoder") {
+                Some(config) => {
+                    let width = config["hidden"].as_u64().unwrap_or(64) as usize;
+                    let intent_layers = config["layers"].as_u64().unwrap_or(2) as usize;
+                    let mut intent_blocks = Vec::with_capacity(intent_layers);
+                    for index in 0..intent_layers {
+                        let prefix = format!("intent.blocks.{index}");
+                        intent_blocks.push(BlockWeights {
+                            ln1: pair(&format!("{prefix}.ln1"))?,
+                            qkv: pair(&format!("{prefix}.qkv"))?,
+                            attn_out: pair(&format!("{prefix}.attn_out"))?,
+                            ln2: pair(&format!("{prefix}.ln2"))?,
+                            ff1: pair(&format!("{prefix}.ff1"))?,
+                            ff2: pair(&format!("{prefix}.ff2"))?,
+                        });
+                    }
+                    Some(IntentWeights {
+                        d_model: config["dModel"].as_u64().unwrap_or(64) as usize,
+                        heads: config["heads"].as_u64().unwrap_or(4) as usize,
+                        ffn: config["ffn"].as_u64().unwrap_or(128) as usize,
+                        embedding: tensor(tensors, "intent.embedding")?.0,
+                        position: tensor(tensors, "intent.position")?.0,
+                        blocks: intent_blocks,
+                        ln_f: pair("intent.ln_f")?,
+                        query: tensor(tensors, "intent.query")?.0,
+                        hidden: flat("intent.hidden")?,
+                        output: flat("intent.output")?,
+                        width,
+                        threshold: config["threshold"].as_f64().unwrap_or(0.5) as f32,
+                    })
+                }
+                None => None,
+            };
             Ok(TransformerWeights {
+                intent,
                 d_model,
                 heads,
                 layers,
@@ -307,64 +364,60 @@ fn softmax(scores: &mut [f32]) {
     }
 }
 
-/// One sequence of tokenizer feature rows (`ROWS_PER_TOKEN` per token), one
-/// label per token.
-pub fn infer_rows(rows: &[u16]) -> Result<Predictions, crate::Error> {
-    infer_rows_per_token(rows, ROWS_PER_TOKEN)
+/// The parameters of one encoder: summed feature-row embeddings plus
+/// positions, pre-LayerNorm blocks, a final LayerNorm. The tagger and the
+/// intent encoder share this forward pass.
+pub(crate) struct EncoderView<'a> {
+    pub(crate) d: usize,
+    pub(crate) heads: usize,
+    pub(crate) ffn: usize,
+    pub(crate) embedding: &'a [f32],
+    pub(crate) position: &'a [f32],
+    pub(crate) blocks: &'a [BlockWeights],
+    pub(crate) ln_f: &'a (Vec<f32>, Vec<f32>),
 }
 
-/// As [`infer_rows`], for row blocks of another width (parity fixtures
-/// record the width they were exported with).
-pub fn infer_rows_per_token(
+/// The final (LayerNormed) token states, `[count, d]`, of one sequence.
+fn encode(
+    view: &EncoderView<'_>,
     rows: &[u16],
     rows_per_token: usize,
-) -> Result<Predictions, crate::Error> {
-    let model = load().map_err(crate::Error::model_unavailable)?;
-    let map = &model.row_map;
+    map: &[u16],
+    feature_rows: usize,
+) -> Vec<f32> {
     let count = rows.len() / rows_per_token;
-    let d = model.d_model;
-    let heads = model.heads;
+    let d = view.d;
+    let heads = view.heads;
     let d_head = d / heads;
-    let classes = model.role_classes;
-
-    let mut labels = vec![0u8; count];
-    let mut clause_starts = vec![0u8; count];
-    let mut scores = vec![0f32; count];
-    let mut all_logits = vec![0f32; count * classes];
-    let mut all_boundaries = vec![0f32; count];
-
     let mut embedded = vec![0f32; count * d];
     for token in 0..count {
         let mut sum = vec![0f64; d];
         for feature in 0..rows_per_token {
             let source = rows[token * rows_per_token + feature] as usize;
             // Rows past this table (a fixture padded for a wider one) are padding.
-            let mapped = map
-                .get(source)
-                .copied()
-                .unwrap_or(model.feature_rows as u16);
-            if mapped as usize == model.feature_rows {
+            let mapped = map.get(source).copied().unwrap_or(feature_rows as u16);
+            if mapped as usize == feature_rows {
                 continue;
             }
             let base = mapped as usize * d;
             for (j, slot) in sum.iter_mut().enumerate() {
-                *slot += f64::from(model.embedding[base + j]);
+                *slot += f64::from(view.embedding[base + j]);
             }
         }
         for j in 0..d {
-            embedded[token * d + j] = sum[j] as f32 + model.position[token * d + j];
+            embedded[token * d + j] = sum[j] as f32 + view.position[token * d + j];
         }
     }
 
     let mut x = embedded;
     let mut norm = vec![0f32; count * d];
     let mut qkv = vec![0f32; count * 3 * d];
-    let mut hidden = vec![0f32; count * model.ffn];
+    let mut hidden = vec![0f32; count * view.ffn];
     let mut attn_scores = vec![0f32; heads * count * count];
     let mut attended = vec![0f32; d];
     let mut delta = vec![0f32; d];
 
-    for block in &model.blocks {
+    for block in view.blocks {
         for token in 0..count {
             layer_norm(
                 &x[token * d..(token + 1) * d],
@@ -431,20 +484,20 @@ pub fn infer_rows_per_token(
                 &norm[token * d..(token + 1) * d],
                 &block.ff1.0,
                 &block.ff1.1,
-                model.ffn,
+                view.ffn,
                 d,
-                &mut hidden[token * model.ffn..(token + 1) * model.ffn],
+                &mut hidden[token * view.ffn..(token + 1) * view.ffn],
             );
-            for value in hidden[token * model.ffn..(token + 1) * model.ffn].iter_mut() {
+            for value in hidden[token * view.ffn..(token + 1) * view.ffn].iter_mut() {
                 *value = gelu_tanh(*value);
             }
             delta.iter_mut().for_each(|value| *value = 0.0);
             linear(
-                &hidden[token * model.ffn..(token + 1) * model.ffn],
+                &hidden[token * view.ffn..(token + 1) * view.ffn],
                 &block.ff2.0,
                 &block.ff2.1,
                 d,
-                model.ffn,
+                view.ffn,
                 &mut delta,
             );
             for j in 0..d {
@@ -456,11 +509,66 @@ pub fn infer_rows_per_token(
     for token in 0..count {
         layer_norm(
             &x[token * d..(token + 1) * d],
-            &model.ln_f.0,
-            &model.ln_f.1,
+            &view.ln_f.0,
+            &view.ln_f.1,
             &mut norm[token * d..(token + 1) * d],
         );
     }
+
+    norm
+}
+
+/// One sequence of tokenizer feature rows (`ROWS_PER_TOKEN` per token), one
+/// label per token. The intent is left out: the tagger asks for it only
+/// when a window holds a time expression ([`window_intent`]).
+pub fn infer_rows(rows: &[u16]) -> Result<Predictions, crate::Error> {
+    let mut predictions = infer_tagger(rows, ROWS_PER_TOKEN)?;
+    predictions.intent = None;
+    Ok(predictions)
+}
+
+/// As [`infer_rows_per_token`] without the intent encoder.
+fn infer_tagger(rows: &[u16], rows_per_token: usize) -> Result<Predictions, crate::Error> {
+    infer_rows_inner(rows, rows_per_token, false)
+}
+
+/// As [`infer_rows`], for row blocks of another width (parity fixtures
+/// record the width they were exported with).
+pub fn infer_rows_per_token(
+    rows: &[u16],
+    rows_per_token: usize,
+) -> Result<Predictions, crate::Error> {
+    infer_rows_inner(rows, rows_per_token, true)
+}
+
+fn infer_rows_inner(
+    rows: &[u16],
+    rows_per_token: usize,
+    with_intent: bool,
+) -> Result<Predictions, crate::Error> {
+    let model = load().map_err(crate::Error::model_unavailable)?;
+    let map = &model.row_map;
+    let count = rows.len() / rows_per_token;
+    let d = model.d_model;
+    let heads = model.heads;
+    let classes = model.role_classes;
+
+    let mut labels = vec![0u8; count];
+    let mut clause_starts = vec![0u8; count];
+    let mut scores = vec![0f32; count];
+    let mut all_logits = vec![0f32; count * classes];
+    let mut all_boundaries = vec![0f32; count];
+
+    let view = EncoderView {
+        d,
+        heads,
+        ffn: model.ffn,
+        embedding: &model.embedding,
+        position: &model.position,
+        blocks: &model.blocks,
+        ln_f: &model.ln_f,
+    };
+    let norm = encode(&view, rows, rows_per_token, map, model.feature_rows);
 
     // Mean-pooled context gate, then the shared head.
     let mut pooled = vec![0f32; d];
@@ -485,6 +593,11 @@ pub fn infer_rows_per_token(
     for j in 0..d {
         context[j] = sigmoid(context[j]) * pooled[j];
     }
+    let intent = model
+        .intent
+        .as_ref()
+        .filter(|_| with_intent)
+        .map(|head| intent_logit(head, rows, rows_per_token, map, model.feature_rows));
 
     let mut joined = vec![0f32; 2 * d];
     let mut hidden64 = vec![0f32; 64];
@@ -539,7 +652,102 @@ pub fn infer_rows_per_token(
         scores,
         logits: Some(all_logits),
         boundary_logits: Some(all_boundaries),
+        intent,
     })
+}
+
+/// The intent logit of one window: the intent encoder's final states,
+/// pooled by mean, max and one learned attention query, then the head.
+fn intent_logit(
+    head: &IntentWeights,
+    rows: &[u16],
+    rows_per_token: usize,
+    map: &[u16],
+    feature_rows: usize,
+) -> f32 {
+    let d = head.d_model;
+    let view = EncoderView {
+        d,
+        heads: head.heads,
+        ffn: head.ffn,
+        embedding: &head.embedding,
+        position: &head.position,
+        blocks: &head.blocks,
+        ln_f: &head.ln_f,
+    };
+    let norm = encode(&view, rows, rows_per_token, map, feature_rows);
+    let count = rows.len() / rows_per_token;
+    let mut total = vec![0f64; d];
+    let mut maximum = vec![f32::MIN; d];
+    let mut scores = vec![0f32; count];
+    let scale = 1.0 / (d as f32).sqrt();
+    for token in 0..count {
+        let state = &norm[token * d..(token + 1) * d];
+        for j in 0..d {
+            total[j] += f64::from(state[j]);
+            maximum[j] = maximum[j].max(state[j]);
+        }
+        scores[token] = dot(state, &head.query) * scale;
+    }
+    softmax(&mut scores);
+    let mut attended = vec![0f32; d];
+    for (token, weight) in scores.iter().enumerate() {
+        for (slot, value) in attended.iter_mut().zip(&norm[token * d..(token + 1) * d]) {
+            *slot += weight * value;
+        }
+    }
+    let mut features = Vec::with_capacity(3 * d);
+    features.extend(total.iter().map(|sum| (sum / count.max(1) as f64) as f32));
+    features.extend_from_slice(&maximum);
+    features.extend_from_slice(&attended);
+    let mut hidden = vec![0f32; head.width];
+    linear_t(
+        &features,
+        &head.hidden.0,
+        &head.hidden.1,
+        head.width,
+        3 * d,
+        &mut hidden,
+    );
+    for value in hidden.iter_mut() {
+        *value = f64::from(*value).tanh() as f32;
+    }
+    let mut output = [0f32; 1];
+    linear_t(
+        &hidden,
+        &head.output.0,
+        &head.output.1,
+        1,
+        head.width,
+        &mut output,
+    );
+    output[0]
+}
+
+/// The intent logit of one window of tokens, when the weights carry an
+/// intent encoder (the GPU path calls this per window).
+pub fn window_intent(tokens: &[RawToken]) -> Option<f32> {
+    let model = load().ok()?;
+    let head = model.intent.as_ref()?;
+    let mut rows = vec![FEATURE_ROWS as u16; tokens.len() * ROWS_PER_TOKEN];
+    for (index, token) in tokens.iter().enumerate() {
+        for (feature, row) in feature_rows(token).iter().enumerate() {
+            rows[index * ROWS_PER_TOKEN + feature] = *row;
+        }
+    }
+    Some(intent_logit(
+        head,
+        &rows,
+        ROWS_PER_TOKEN,
+        &model.row_map,
+        model.feature_rows,
+    ))
+}
+
+/// The request probability above which a window reads as a request, when
+/// the loaded weights carry an intent head.
+pub fn intent_threshold() -> Option<f32> {
+    load().ok()?.intent.as_ref().map(|head| head.threshold)
 }
 
 /// Token-level entry: builds feature rows and runs the forward pass.

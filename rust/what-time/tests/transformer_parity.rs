@@ -28,11 +28,27 @@ fn matches_pytorch_logits_from_quantized_weights() {
     let mut max_error: f32 = 0.0;
     let mut row_offset = 0usize;
     let mut logit_offset = 0usize;
-    for length in &lengths {
+    // An export with an intent head adds one logit per fixture sequence;
+    // the fixture and the head move together.
+    let intent_path = directory.join("transformer-parity.intent.bin");
+    let intents: Option<Vec<f32>> = intent_path.exists().then(|| read_bin(&intent_path));
+    let mut intent_error: f32 = 0.0;
+    for (sequence, length) in lengths.iter().enumerate() {
         let length = *length as usize;
         let rows_slice = &rows[row_offset..row_offset + length * width];
         let expected = &logits[logit_offset..logit_offset + length * classes];
         let predictions = transformer::infer_rows_per_token(rows_slice, width).unwrap();
+        match (&intents, predictions.intent) {
+            (Some(reference), Some(logit)) => {
+                intent_error = intent_error.max((logit - reference[sequence]).abs());
+            }
+            (None, None) => {}
+            (reference, logit) => panic!(
+                "intent fixture present: {}, intent head present: {}; they move together",
+                reference.is_some(),
+                logit.is_some()
+            ),
+        }
         for token in 0..length {
             let predicted = &predictions.logits.as_ref().unwrap()[token * 40..(token + 1) * 40];
             let reference = &expected[token * classes..token * classes + 40];
@@ -78,6 +94,13 @@ fn matches_pytorch_logits_from_quantized_weights() {
         max_error < 2e-3,
         "max logit drift {max_error:.6} exceeds gate"
     );
+    if intents.is_some() {
+        eprintln!("intent parity: max logit drift {intent_error:.2e}");
+        assert!(
+            intent_error < 2e-3,
+            "intent logit drift {intent_error:.6} exceeds gate"
+        );
+    }
     assert!(
         argmax_mismatches <= (checked / 200).max(1),
         "{argmax_mismatches} argmax mismatches out of {checked} tokens"

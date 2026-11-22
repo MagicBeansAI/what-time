@@ -62,17 +62,17 @@ repeated. Reserved carrier phrases remain excluded from training.
 See [`packages/training/V2_RUN.md`](packages/training/V2_RUN.md) for the
 commands, measured comparison, training proportions and remaining gaps.
 
-## Metrics (current checkpoint — `neg-r1`, shipped as v0.4.1)
+## Metrics (current checkpoint — `neg-r4`, shipped as v0.5.0)
 
 Per-build history lives in [`SCORES.md`](SCORES.md).
 
-- Pinned corpora: 661/661 schedule cases (zero known gaps), 60/60 cron
+- Pinned corpora: 685/685 schedule cases (zero known gaps), 68/68 cron
   cases end to end, 86/86 cron lines read back, 15/15 multilingual
-  fixtures, 22/22 end-to-end occurrence cases, and 100 phrase/zone pairs
+  fixtures, 22/22 end-to-end occurrence cases, and 114 phrase/zone pairs
   whose exported cron fires identically under the `cron` crate.
 - Recurrence families (`torch/recurrence_families.py`, never-trained
-  seeds): 0.9989 exact on 4,701 rows, negatives included.
-- LLM held-out: 1.0000 exact token-label/boundary sequences on a 2,000-row
+  seeds): 0.9998 exact on 4,701 rows, negatives included.
+- LLM held-out: 0.9990 exact token-label/boundary sequences on a 2,000-row
   union slice (1,000 of them from a never-trained external-model corpus).
 - Structural generator held-out: 0.9850 on 5,000 rows (0.9868 for the
   v0.3.0 weights). The slice wraps expressions in carrier sentences
@@ -87,7 +87,23 @@ Per-build history lives in [`SCORES.md`](SCORES.md).
   real day, even a past one ("last night was cold"), is a date expression,
   not a negative.
 - Independent evaluation (271 phrases written without seeing the parser):
-  265 match on the first four occurrences (261 for the v0.3.0 weights).
+  268 match on the first four occurrences (261 for the v0.3.0 weights).
+  The three left are readings the author marked ambiguous: "every 5 hours"
+  and "every 7 minutes" (the author read them per day, as cron's `*/5`
+  would; what-time counts on from now and exports an interval, since cron
+  cannot keep that rhythm) and "on the last day of the month" (read as one
+  date, not a monthly rule).
+- A second independent contrast set (197 lines, written by a separate
+  author who saw neither the parser nor its training data, and kept out of
+  training): 102/110 non-schedules return nothing, 62/62 recurring
+  schedules and 25/25 one-off dates parse correctly. The v0.4.1 weights,
+  with the same compiler, score 96, 60 and 25.
+- A rejected candidate shows why negatives need pairing: one whose
+  negatives used "every/har" before people ("har koi", "every student")
+  without matching schedules learned to ignore "every quarter", "each
+  month" and "har ghante" (recurring recall fell to 55/62). The shipped
+  model trains every such negative against two real schedules with the
+  same marker.
 - Word-form rows ablation, same data and seed: without them 0.9858
   structural, 0.9938 extra, 0.9985 recurrence, so they add a little on every
   slice and stay.
@@ -96,12 +112,70 @@ Per-build history lives in [`SCORES.md`](SCORES.md).
 - Numeric parity: exported fixtures reproduce the quantized training
   network's logits within 2e-3 with identical argmax.
 
+## Intent encoder (`intent-r4`, shipped as v0.5.0)
+
+A second, smaller encoder decides whether a text asks for something to be
+scheduled (`request`) or only talks about time (`mention`: past events,
+habits, facts, titles, idioms). The tagger finds time expressions; it cannot
+make that call, and template negatives did not teach it to (they fixed only
+the patterns they copied).
+
+- Architecture: two pre-LayerNorm blocks, width 64, four heads, feed-forward
+  128, over the tagger's own feature rows (word-form rows included, with 30%
+  training dropout); final states pooled by mean, max and one learned
+  attention query; a 64-unit tanh layer; one logit. ~223k parameters, int8,
+  exported with an `intent.` prefix beside the tagger's tensors, which are
+  copied unchanged (labels, boundaries and parity fixtures are identical).
+  Rust runs it through the tagger's encoder pass; parity with PyTorch is
+  2.4e-6 on the fixture sequences. A head on the frozen tagger's token
+  states was tried first and missed even "remind me every 2 hours".
+- Data: 7,025 natural sentences with time words from Tatoeba (6,000
+  English, 1,025 Hindi, CC-BY 2.0 FR), labelled request/mention by readers
+  who saw neither the parser nor its data (`data/intent/labels-*.jsonl`;
+  "unsure" dropped); 900 Hinglish and 800 Hindi chat lines written with
+  their intent (Tatoeba has no Hinglish and few Hindi requests); generated
+  rows (a row with a time span is a request, an all-O row a mention).
+  Classes are balanced per source, so the head cannot read the source's
+  writing style as the label.
+- Cut-off: the request probability that keeps 95% of held-out natural
+  requests (0.0553); at it, 79% of held-out natural mentions are rejected.
+  Generated held-out rows: 99.6%.
+- Independent evaluation (300 lines written for this, every one containing
+  a time word, scored once): with the tagger alone, 74/150 non-schedules
+  return nothing and 141/150 real schedules parse; gated on intent, 119/150
+  and 138/150. By language, non-schedules: English 37→58/80, Hindi
+  16→29/30, Hinglish 21→32/40.
+- It runs only when the tagger labelled a time word. With a time
+  expression, a single parse takes 0.69 ms (0.40 ms without the encoder).
+- Limits: English past and duration chatter often still scores as a request
+  ("My boss emailed me at 11pm last night", "It took me 45 minutes to find
+  parking yesterday"); a long task description after the time lowers a
+  request's score ("remind me in 30 minutes to take the noodles off the
+  stove" is near the cut-off). The labels for the natural sentences and the
+  written lines come from language models, as does the evaluation set, so
+  real users may differ. A text that is nothing but a time expression is
+  always a request.
+
 ## Known limitations
 
-- Some mentions still read as schedules: "quarterly earnings beat
-  expectations", "roz roz ki chik chik se thak gaya", "Monday is my
-  favourite day". Callers that create schedules from free text should
-  confirm with the user.
+
+- Mentions read as schedules. The tagger finds time expressions; it does
+  not decide whether the user is asking for one. On a third independent set
+  (240 lines, written after this model was trained, scored once before any
+  change), 98 of 130 non-schedules return nothing; 65/70 recurring and
+  39/40 one-off phrases parse. The misses are past habits ("I used to jog
+  every morning", "papa roz subah walk pe jaate the"), titles and names
+  ("Last Christmas", "Monday.com", "दैनिक जागरण", "naam April hai"),
+  numbers shaped like times ("pages 11 to 45", "24/7"), and real dates in
+  chatter ("too easy today"). A candidate trained on template negatives for
+  titles, subjects and idioms (`neg-r5`) gained 3 of those 130 and lost two
+  pinned schedules, so it was not shipped. Callers that create schedules
+  from free text should confirm with the user; telling a request from a
+  mention needs a sentence-level intent signal, which this model lacks.
+- Model labelling misses remain in some sentences ("water the plants on
+  alternate days, mornings around 7" leaves "alternate" and "mornings"
+  unlabelled; "Hourly reminders …" leaves "Hourly" unlabelled), so those
+  phrases return nothing; the same words parse in plainer sentences.
 
 - Seconds and seasons are not schedules: "every 10 seconds" and "every
   summer" return diagnostics. Cron has no seconds field either.

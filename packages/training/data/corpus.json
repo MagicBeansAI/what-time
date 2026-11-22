@@ -59,5 +59,15 @@
     "selection": {
       "limit": 50000
     }
+  },
+  "intentProse": {
+    "purpose": "Natural sentences with time words for the intent encoder (torch/fetch_intent_prose.py); labels in data/intent/labels-*.jsonl",
+    "license": "CC-BY-2.0-FR",
+    "attribution": "Sentences from Tatoeba (https://tatoeba.org), CC-BY 2.0 FR.",
+    "seed": 20261122,
+    "sources": [
+      {"language": "en", "url": "https://downloads.tatoeba.org/exports/per_language/eng/eng_sentences.tsv.bz2", "sha256": "b16a5f3451a517cd49529713620df90f4d78e679ee65e55e3171d3955819c302"},
+      {"language": "hi", "url": "https://downloads.tatoeba.org/exports/per_language/hin/hin_sentences.tsv.bz2", "sha256": "1bc68cacee2961d3e39d31ae9b0d660c88333c3086f5271328081a2c5e5393c7", "retrievedAt": "2026-11-22"}
+    ]
   }
 }

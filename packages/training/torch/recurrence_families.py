@@ -134,8 +134,8 @@ DEVANAGARI_UNITS = {"minute": ["मिनट"], "hour": ["घंटे", "घं
                     "week": ["हफ़्ते", "हफ्ते"], "month": ["महीने"], "year": ["साल"]}
 ROMAN_PARTS = ["subah", "dopahar", "shaam", "raat"]
 DEVANAGARI_PARTS = ["सुबह", "दोपहर", "शाम", "रात"]
-ROMAN_DAILY = ["roz", "roz", "rozana", "har roz", "har din", "pratidin"]
-DEVANAGARI_DAILY = ["रोज़", "रोज", "रोज़ाना", "हर रोज़", "हर दिन", "प्रतिदिन"]
+ROMAN_DAILY = ["roz", "roz", "rozana", "har roz", "har din", "pratidin", "dainik"]
+DEVANAGARI_DAILY = ["रोज़", "रोज", "रोज़ाना", "हर रोज़", "हर दिन", "प्रतिदिन", "दैनिक"]
 ROMAN_MONTHS = ["january", "february", "march", "april", "may", "june", "july",
                 "august", "september", "october", "november", "december"]
 DEVANAGARI_MONTHS = ["जनवरी", "फरवरी", "मार्च", "अप्रैल", "मई", "जून", "जुलाई",
@@ -826,6 +826,171 @@ HINDI_NEGATIVES = [
 ]
 
 
+# Round two: the shapes that still read as schedules after the first round.
+FREQ_ADJECTIVES = ["daily", "weekly", "monthly", "quarterly", "yearly", "annual", "nightly", "hourly"]
+FREQ_NOUNS = ["earnings", "numbers", "sales", "figures", "fee", "subscription", "budget", "rainfall",
+              "average", "rate", "traffic", "turnover", "readership", "allowance", "wage", "limit"]
+FREQ_PREDICATES = ["beat expectations", "went up again", "look terrible", "were published",
+                   "costs more now", "is too high", "dropped sharply", "surprised everyone",
+                   "is under review", "doubled this year"]
+COMPOUNDS = ["{n} hour {thing}", "{n}-hour {thing}", "a {n} minute {thing}", "the {n}-minute {thing}",
+             "a {n}-to-{m} job", "{n} day {thing}"]
+COMPOUND_THINGS = ["store", "pharmacy", "diner", "flight", "drive", "shift", "fast", "news channel",
+                   "gym", "helpline", "walk", "commute", "warranty", "trial"]
+COMPOUND_TAILS = ["closed down", "is near my place", "was exhausting", "is open again", "saved us",
+                  "is too long", "was cancelled", "is my favourite"]
+DAY_TOPICS = ["{day} is my favourite day", "{day} is my least favourite day", "{day} always feels long",
+              "{day} was invented to test us", "I love a slow {day}", "{day} mood again",
+              "{part}s are so peaceful", "{part} people annoy me", "the {part} air smells nice"]
+TOPIC_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+TOPIC_PARTS = ["morning", "evening", "night", "afternoon"]
+VAGUE = ["once in a while", "from time to time", "now and then",
+         "at some point", "sooner or later", "around the clock"]
+VAGUE_FRAMES = ["{v} I think about it", "we meet {v}", "{v} it gets better", "it happens {v}",
+                "they work {v}", "I call her {v}"]
+HINGLISH_IDIOMS = [
+    "roz roz ki {x} se thak gaya", "roz ka yahi {x} hai", "subah ki {y} acchi lagti hai",
+    "shaam ki {y} yaad aati hai", "raat ki {y} alag hi hai", "kabhi kabhi {x} hota hai",
+]
+HINGLISH_X = ["chik chik", "bak bak", "tension", "drama", "jhanjhat", "kitkit"]
+HINGLISH_Y = ["dhoop", "chai", "hawa", "sair", "baat", "neend"]
+HINDI_IDIOMS = [
+    "रोज़ रोज़ की किचकिच से थक गया", "सुबह की धूप अच्छी लगती है", "शाम की चाय याद आती है",
+    "रात की बात ही अलग है", "कभी कभी ऐसा होता है", "सोमवार मुझे पसंद नहीं",
+]
+
+
+def negative_round_two(s: Sentence) -> None:
+    rng = s.rng
+    kind = rng.random()
+    if kind < 0.28:
+        text = f"the {rng.choice(FREQ_ADJECTIVES)} {rng.choice(FREQ_NOUNS)} {rng.choice(FREQ_PREDICATES)}"
+        if rng.random() < 0.4:
+            text = text[4:]
+    elif kind < 0.46:
+        n = rng.choice([2, 4, 5, 9, 10, 12, 24, 30, 48])
+        text = rng.choice(COMPOUNDS).format(n=n, m=n + 8, thing=rng.choice(COMPOUND_THINGS))
+        text = f"{rng.choice(['the', 'that', 'our', 'a'])} {text} {rng.choice(COMPOUND_TAILS)}".replace(
+            "the a ", "a ").replace("that a ", "a ").replace("our a ", "a ").replace("a the ", "the ")
+    elif kind < 0.64:
+        text = rng.choice(DAY_TOPICS).format(day=rng.choice(TOPIC_DAYS), part=rng.choice(TOPIC_PARTS))
+    elif kind < 0.76:
+        text = rng.choice(VAGUE_FRAMES).format(v=rng.choice(VAGUE))
+    elif kind < 0.92:
+        text = rng.choice(HINGLISH_IDIOMS).format(x=rng.choice(HINGLISH_X), y=rng.choice(HINGLISH_Y))
+    else:
+        text = rng.choice(HINDI_IDIOMS)
+    if rng.random() < 0.3:
+        text = text[0].upper() + text[1:]
+    s.add(text)
+
+
+def adjective_contrast(s: Sentence) -> None:
+    """The same words as real schedules: "post the quarterly numbers every
+    quarter on the 1st", "send the monthly fee on the 5th of every month"."""
+    rng = s.rng
+    s.in_expression = False
+    s.add(f"{rng.choice(['post', 'send', 'review', 'check', 'share'])} the "
+          f"{rng.choice(FREQ_ADJECTIVES)} {rng.choice(FREQ_NOUNS)}")
+    s.in_expression = True
+    pick(rng, [(day_of_month, 3), (weekday_of_month, 1), (frequency_word, 2), (sub_hourly, 1)])(s)
+
+
+REMINDER_NOUNS = ["reminder", "alarm", "alert", "notification", "ping", "nudge"]
+PLAIN_NOUNS = ["fee", "rent", "bill", "report", "newsletter", "subscription", "invoice", "payment"]
+
+
+def reminder_frequency(s: Sentence) -> None:
+    """Set a monthly reminder on the 5th; create a weekly alarm for Fridays at 7."""
+    rng = s.rng
+    freq = rng.choice(["daily", "weekly", "monthly", "monthly", "yearly", "nightly", "hourly"])
+    s.in_expression = False
+    s.add(rng.choice(["set a", "create a", "add a", "I need a", "make a", "schedule a"]))
+    s.in_expression = True
+    s.add(freq, "FREQ")
+    s.add(rng.choice(REMINDER_NOUNS))
+    if freq == "monthly":
+        s.add(rng.choice(["on the", "for the"]))
+        digits_ordinal(s, rng.choice([1, 5, 10, 15, 25, rng.randint(1, 28)]), "DOM")
+    elif freq in ("weekly",):
+        s.add(rng.choice(["on", "for"]))
+        weekdays(s, plural=0.5, limit=2)
+    elif freq == "yearly":
+        s.add("on")
+        s.add(rng.choice(MONTHS), "MONTH")
+        s.add(str(rng.randint(1, 28)), "DOM")
+    if rng.random() < 0.7 and freq != "hourly":
+        at_clock(s)
+    s.in_expression = False
+    if rng.random() < 0.6:
+        s.add(rng.choice(["to pay the rent", "to call home", "to back up the laptop",
+                          "to water the plants", "to review the budget"]))
+
+
+def adjective_one_off(s: Sentence) -> None:
+    """pay the monthly fee on December 5 at 10am: the frequency word is an
+    adjective; only the date is a schedule."""
+    rng = s.rng
+    s.in_expression = False
+    s.add(f"{rng.choice(['pay', 'send', 'renew', 'submit', 'check'])} the "
+          f"{rng.choice(FREQ_ADJECTIVES)} {rng.choice(PLAIN_NOUNS)}")
+    s.in_expression = True
+    s.add(rng.choice(["on", "by"]))
+    if rng.random() < 0.5:
+        s.add(rng.choice(MONTHS), "MONTH")
+        s.add(str(rng.randint(1, 28)), "DOM")
+    else:
+        s.add(rng.choice(["next", "this"]), "DEICTIC")
+        weekday(s, plural=0)
+    if rng.random() < 0.6:
+        at_clock(s)
+
+
+EACH_THINGS = ["student", "child", "member", "player", "guest", "employee", "box", "page", "room",
+               "customer", "team", "file"]
+EACH_TAILS = ["passed", "got a gift", "signed the card", "was checked", "needs a label",
+              "agreed", "was late", "has a desk"]
+HINGLISH_EACH = ["har koi {t}", "har ek {t}", "har bachcha {t}", "har insaan {t}"]
+HINGLISH_EACH_TAILS = ["khush tha", "aa gaya", "thak gaya", "alag hai"]
+
+
+def every_contrast(s: Sentence) -> None:
+    """every/each/har before a person or thing names no time; before a unit
+    or a day it is a recurrence. Two schedules for every non-schedule, so
+    the marker itself never reads as background."""
+    rng = s.rng
+    if rng.random() < 1 / 3:
+        if rng.random() < 0.7:
+            s.add(f"{rng.choice(['every', 'each'])} {rng.choice(EACH_THINGS)} {rng.choice(EACH_TAILS)}")
+        else:
+            s.add(rng.choice(HINGLISH_EACH).format(t=rng.choice(HINGLISH_EACH_TAILS)))
+        return
+    s.clause()
+    if rng.random() < 0.65:
+        s.add(rng.choice(["every", "each", "every", "every"]), "RECUR")
+        kind = rng.random()
+        if kind < 0.35:
+            period(s, ["month", "quarter", "week", "year", "day", "hour", "morning", "night"])
+        elif kind < 0.7:
+            weekday(s, plural=0)
+        else:
+            s.add("month", "UNIT")
+            s.add("on the")
+            digits_ordinal(s, rng.choice([1, 5, 15, 28]), "DOM")
+    else:
+        s.add(rng.choice(["har", "Har", "हर"]), "RECUR")
+        if rng.random() < 0.2:
+            s.add("quarter", "UNIT")
+        else:
+            hindi_unit(s, rng.choice(["hour", "day", "week", "month"]), devanagari=False)
+    if rng.random() < 0.5:
+        at_clock(s)
+    if rng.random() < 0.5:
+        s.in_expression = False
+        s.add(rng.choice(["remind me", "please", "to pay the maid", "to file expenses",
+                          "paani peene ka reminder", "yaad dilana"]))
+
+
 def negative(s: Sentence) -> None:
     rng = s.rng
     kind = rng.random()
@@ -929,6 +1094,8 @@ ENGLISH = [
     (exceptions, 4),
     (plural_days, 5),
     (clock_exception, 5),
+    (reminder_frequency, 4),
+    (adjective_one_off, 3),
     (clock_bound, 4),
     (event_anchor, 3),
     (period_edge, 3),
@@ -953,15 +1120,26 @@ def render(rng: random.Random) -> Sentence:
     if roll < 0.04:
         sentence.add(rng.choice(NEGATIVES))
         return sentence
-    if roll < 0.14:
-        negative(sentence)
-        if rng.random() < 0.3:
+    if roll < 0.26:
+        if roll < 0.06:
+            every_contrast(sentence)
+            return sentence
+        roll = roll - 0.06
+        if roll < 0.09:
+            negative(sentence)
+        elif roll < 0.17:
+            negative_round_two(sentence)
+        else:
+            sentence.clause()
+            adjective_contrast(sentence)
+            return sentence
+        if roll < 0.17 and rng.random() < 0.3:
             # A negative beside a real schedule: only the schedule is labeled.
             sentence.add(rng.choice([",", "and", "so"]))
             sentence.clause()
             pick(rng, ENGLISH)(sentence)
         return sentence
-    language = "english" if roll < 0.58 else "hinglish" if roll < 0.82 else "hindi"
+    language = "english" if roll < 0.62 else "hinglish" if roll < 0.84 else "hindi"
     devanagari = language == "hindi"
     tasks = {"english": TASKS, "hinglish": HINGLISH_TASKS, "hindi": HINDI_TASKS}[language]
     trailers = {

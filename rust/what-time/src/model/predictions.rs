@@ -9,4 +9,7 @@ pub struct Predictions {
     pub logits: Option<Vec<f32>>,
     /// Raw boundary logits per token (evaluation only).
     pub boundary_logits: Option<Vec<f32>>,
+    /// The window's sentence-intent logit (positive: a request to
+    /// schedule), when the weights carry an intent head.
+    pub intent: Option<f32>,
 }

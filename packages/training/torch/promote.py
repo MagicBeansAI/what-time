@@ -27,6 +27,14 @@ def main() -> None:
     shutil.copy2(weights, RUST / "what-time" / "assets" / weights.name)
     for path in fixtures:
         shutil.copy2(path, RUST / "evals" / "active" / path.name)
+    # The intent fixture exists only for an export with an intent head; a
+    # stale one must not outlive the weights it was made from.
+    intent = export / "transformer-parity.intent.bin"
+    active_intent = RUST / "evals" / "active" / intent.name
+    if intent.exists():
+        shutil.copy2(intent, active_intent)
+    elif active_intent.exists():
+        active_intent.unlink()
     print(f"promoted {sys.argv[1]}: run cargo test --manifest-path rust/Cargo.toml")
 
 

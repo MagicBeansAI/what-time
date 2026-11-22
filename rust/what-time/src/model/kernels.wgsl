@@ -204,7 +204,8 @@ fn head(@builtin(global_invocation_id) gid: vec3<u32>) {
     for (var j: u32 = 0u; j < D; j = j + 1u) {
         var acc = params[OFF_GB + j];
         for (var d: u32 = 0u; d < D; d = d + 1u) {
-            acc = acc + pooled[d] * params[OFF_GW + j * D + d];
+            // Input-major, like the CPU's linear_t and the head weights below.
+            acc = acc + pooled[d] * params[OFF_GW + d * D + j];
         }
         context[j] = 1.0 / (1.0 + exp(-acc)) * pooled[j];
     }

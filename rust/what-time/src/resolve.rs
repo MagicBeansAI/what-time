@@ -129,6 +129,7 @@ pub(crate) fn resolve_prepared(
     let mut occurrences: Vec<NumericOccurrence> = Vec::new();
     let mut rrules: Vec<String> = Vec::new();
     let mut cron_specs: Vec<crate::cron::CronSpec> = Vec::new();
+    let mut intervals: Vec<crate::types::IntervalExport> = Vec::new();
     let mut diagnostics: Vec<Diagnostic> = Vec::new();
     let mut truncated = false;
 
@@ -197,7 +198,39 @@ pub(crate) fn resolve_prepared(
                                 cron_specs.extend(specs);
                             }
                             Err(message) => {
-                                diagnostics.push(warning("unsupported-cron", message));
+                                let plan = &export.plan;
+                                let step = match plan.freq {
+                                    Frequency::minutely => Some(plan.interval * 60),
+                                    Frequency::hourly => Some(plan.interval * 3600),
+                                    _ => None,
+                                };
+                                let plain = plan.by_day.is_none()
+                                    && plan.by_month.is_empty()
+                                    && plan.by_month_day.is_empty()
+                                    && plan.slots.is_none()
+                                    && !plan.exdates;
+                                match (step, &series.first) {
+                                    (Some(every_seconds), Some(first)) if plain => {
+                                        intervals.push(crate::types::IntervalExport {
+                                            every_seconds,
+                                            start: iso(first.start, &options.time_zone)?,
+                                            until: match series.until {
+                                                Some(end) => {
+                                                    Some(iso(end - 1.0, &options.time_zone)?)
+                                                }
+                                                None => None,
+                                            },
+                                            count: rule.count,
+                                        });
+                                        diagnostics.push(warning(
+                                            "unsupported-cron",
+                                            format!(
+                                                "{message} An interval export carries it instead."
+                                            ),
+                                        ));
+                                    }
+                                    _ => diagnostics.push(warning("unsupported-cron", message)),
+                                }
                             }
                         }
                     }
@@ -256,6 +289,7 @@ pub(crate) fn resolve_prepared(
             .iter()
             .map(crate::cron::render)
             .collect(),
+        intervals,
         truncated: truncated || occurrences.len() > *limit,
         diagnostics,
     })

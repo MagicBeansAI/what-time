@@ -221,6 +221,28 @@ fn main() -> ExitCode {
                 for cron in &result.crons {
                     println!("CRON:{cron}");
                 }
+                for interval in &result.intervals {
+                    println!(
+                        "INTERVAL:every {}s from {}{}",
+                        interval.every_seconds,
+                        interval.start,
+                        interval
+                            .until
+                            .as_ref()
+                            .map(|until| format!(" until {until}"))
+                            .unwrap_or_default()
+                    );
+                }
+                if let Some(intent) = &result.intent {
+                    println!(
+                        "INTENT:{} {:.2}",
+                        match intent.label {
+                            what_time::IntentLabel::Request => "request",
+                            what_time::IntentLabel::Mention => "mention",
+                        },
+                        intent.score
+                    );
+                }
                 for diagnostic in &result.diagnostics {
                     if diagnostic.severity == what_time::Severity::error {
                         eprintln!("error: [{}] {}", diagnostic.code, diagnostic.message);

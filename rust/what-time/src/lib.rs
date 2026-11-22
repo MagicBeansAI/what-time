@@ -49,9 +49,10 @@ mod stopwatch;
 pub use schedule::ScheduleParser;
 pub use types::{
     Backend, BareWeekday, BareWeekdaysPolicy, Clause, ClockTime, DateOrder, DateSpec, DayPart,
-    Diagnostic, Duration, Frequency, NamedClock, NextWeekday, Occurrence, OpenBound, ParseContext,
-    ParseResult, ParserOptions, Quantity, RawToken, Recurrence, ResolveOptions, Resolved, Schedule,
-    Severity, Shift, TimeRange, TimeSpec, WeekStart, Weekday,
+    Diagnostic, Duration, Frequency, Intent, IntentLabel, IntervalExport, NamedClock, NextWeekday,
+    Occurrence, OpenBound, ParseContext, ParseResult, ParserOptions, Quantity, RawToken,
+    Recurrence, ResolveOptions, Resolved, Schedule, Severity, Shift, TimeRange, TimeSpec,
+    WeekStart, Weekday,
 };
 
 /// The library version, mirroring the workspace `Cargo.toml`.
@@ -193,6 +194,7 @@ impl Parser {
         let mut entries: Vec<(f64, TimeRange)> = Vec::new();
         let mut rrules: Vec<String> = Vec::new();
         let mut crons: Vec<String> = Vec::new();
+        let mut intervals: Vec<IntervalExport> = Vec::new();
         let mut diagnostics: Vec<Diagnostic> = Vec::new();
         for expression in &parsed.expressions {
             diagnostics.extend(expression.diagnostics.iter().cloned());
@@ -240,6 +242,7 @@ impl Parser {
                             crons.push(cron);
                         }
                     }
+                    intervals.extend(result.intervals);
                     diagnostics.extend(result.diagnostics.into_iter().map(|mut value| {
                         value.start = expression.start;
                         value.end = expression.end;
@@ -272,6 +275,7 @@ impl Parser {
             occurrences,
             rrules,
             crons,
+            intervals,
             diagnostics,
             backend: parsed.backend,
             timings: types::PublicTimings {
@@ -280,6 +284,16 @@ impl Parser {
                 resolve_ms: parsed.timings.compile_ms + started.elapsed_ms(),
             },
             fallback_reason: parsed.fallback_reason,
+            intent: parsed.intent.map(|score| types::Intent {
+                label: if parsed.bare
+                    || score >= model::transformer::intent_threshold().unwrap_or(0.5)
+                {
+                    types::IntentLabel::Request
+                } else {
+                    types::IntentLabel::Mention
+                },
+                score,
+            }),
         })
     }
 

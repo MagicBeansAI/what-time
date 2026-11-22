@@ -58,3 +58,11 @@
 {"id": "cron-none-last-day", "text": "last day of every month", "crons": [], "rrules": ["RRULE:FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=-1"]}
 {"id": "cron-none-last-working-day", "text": "last working day of every month", "crons": [], "rrules": ["RRULE:FREQ=MONTHLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-1"]}
 {"id": "cron-none-hinglish-other-day", "text": "har doosre din", "crons": [], "rrules": ["RRULE:FREQ=DAILY;INTERVAL=2"]}
+{"id": "cron-step-anchored-clock", "text": "every 8 hours at 7am", "crons": ["0 7-23/8 * * *"]}
+{"id": "cron-step-from-clock", "text": "every 3 hours from 10am", "crons": ["0 10-22/3 * * *"]}
+{"id": "cron-step-starting-at-clock", "text": "every 6 hours starting at 9am", "crons": ["0 9-21/6 * * *"]}
+{"id": "cron-every-24-hours", "text": "every 24 hours", "crons": ["0 0 * * *"]}
+{"id": "cron-every-24-hours-clock", "text": "every 24 hours at 9am", "crons": ["0 9 * * *"]}
+{"id": "cron-hinglish-step-se", "text": "har 4 ghante subah 6 baje se", "crons": ["0 6-22/4 * * *"]}
+{"id": "cron-range-equal-unmarked-ends", "text": "every hour from 7 to 7", "crons": ["0 7-19 * * *"]}
+{"id": "cron-hindi-skip-one", "text": "एक दिन छोड़कर रात 9 बजे दवा", "crons": [], "rrules": ["RRULE:FREQ=DAILY;INTERVAL=2"]}

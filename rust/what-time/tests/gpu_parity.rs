@@ -48,11 +48,11 @@ fn gpu_batch_matches_cpu_labels_and_boundaries() {
     let inputs: Vec<&str> = texts.iter().map(String::as_str).collect();
 
     // CPU reference
-    let mut cpu_labels: Vec<Vec<(String, u8, u8)>> = Vec::new();
+    let mut cpu_labels: Vec<Vec<(String, u8, u8, f32)>> = Vec::new();
     let parser = what_time::ScheduleParser::new(Default::default());
     for text in &texts {
         let tokens = &parser.parse(text).unwrap().tokens;
-        let flat: Vec<(String, u8, u8)> = tokens
+        let flat: Vec<(String, u8, u8, f32)> = tokens
             .iter()
             .flatten()
             .map(|token| {
@@ -63,6 +63,7 @@ fn gpu_batch_matches_cpu_labels_and_boundaries() {
                         .position(|name| *name == token.label)
                         .unwrap_or(0) as u8,
                     u8::from(token.clause_start),
+                    token.score,
                 )
             })
             .collect();
@@ -85,7 +86,11 @@ fn gpu_batch_matches_cpu_labels_and_boundaries() {
     let windows = what_time::testing::gpu::debug_windows(&inputs);
     let gpu = what_time::testing::gpu::infer_windows_debug(&windows).unwrap();
 
+    // Labels must agree exactly, and scores closely: a weight read in the
+    // wrong layout (the context gate once was) moves scores on uncertain
+    // tokens long before it flips a label.
     let mut mismatches = 0;
+    let mut max_score_drift = 0f32;
     for (index, tokens) in windows.iter().enumerate() {
         let reference = &cpu_labels[index];
         // whitespace tokens are masked out of supervision and ignored by the
@@ -97,7 +102,8 @@ fn gpu_batch_matches_cpu_labels_and_boundaries() {
             }
             let gpu_label = gpu[index].labels[position];
             let gpu_start = gpu[index].clause_starts[position];
-            let (_, cpu_label, cpu_start) = reference[position];
+            let (_, cpu_label, cpu_start, cpu_score) = reference[position];
+            max_score_drift = max_score_drift.max((gpu[index].scores[position] - cpu_score).abs());
             if gpu_label != cpu_label || gpu_start != cpu_start {
                 mismatches += 1;
                 eprintln!(
@@ -107,7 +113,12 @@ fn gpu_batch_matches_cpu_labels_and_boundaries() {
             }
         }
     }
+    eprintln!("gpu parity: max score drift {max_score_drift:.2e}");
     assert_eq!(mismatches, 0, "GPU/CPU label disagreement");
+    assert!(
+        max_score_drift < 1e-3,
+        "GPU scores drift {max_score_drift} from the CPU path"
+    );
 }
 
 #[test]

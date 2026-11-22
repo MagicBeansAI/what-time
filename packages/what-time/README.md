@@ -163,6 +163,8 @@ Returns `ParseResult`:
 | :-- | :-- | :-- |
 | `occurrences` | `TimeRange[]` | `{ start, end?, allDay?, open? }` — ISO strings. |
 | `rrules` | `string[]` | RFC 5545 lines for recurring results. |
+| `intent` | `{ label: "request" \| "mention", score }?` | Whether the text asks for something to be scheduled; `score` is the request probability. Present when the text holds a time expression. The expressions above are reported either way; create a schedule only for a request. |
+| `intervals` | `{ everySeconds, start, until?, count? }[]` | For a sub-daily rule cron cannot state ("every 5 hours", "every 7 minutes"): fire at `start`, then every `everySeconds` — an interval trigger. Day steps stay RRULE-only, since they would drift across DST. |
 | `crons` | `string[]` | Five-field cron (`minute hour day month weekday`, weekday names) in `timeZone`, for each recurring rule cron can state exactly; otherwise an `unsupported-cron` diagnostic. |
 | `diagnostics` | `Diagnostic[]` | `{ code, message, severity, start?, end? }`. |
 | `truncated` | `boolean` | Whether `limit` cut the preview. |

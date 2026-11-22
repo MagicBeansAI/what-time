@@ -707,3 +707,288 @@ fn reads_this_weekday_as_the_coming_one() {
     let monday = resolved("this Monday", &["DEICTIC", "WEEKDAY"]);
     assert_eq!(starts(&monday, 1), ["2026-11-23T00:00"]);
 }
+
+#[test]
+fn exports_an_interval_for_a_step_cron_cannot_state() {
+    let five = resolved("every 5 hours", &["RECUR", "NUM", "UNIT"]);
+    assert!(five.crons.is_empty());
+    assert_eq!(five.intervals.len(), 1);
+    assert_eq!(five.intervals[0].every_seconds, 5 * 3600);
+    // The first fire is the preview's first occurrence.
+    assert_eq!(five.intervals[0].start, five.occurrences[0].start);
+    let seven = resolved("every 7 minutes", &["RECUR", "NUM", "UNIT"]);
+    assert_eq!(seven.intervals[0].every_seconds, 7 * 60);
+    // Steps cron can state, and day steps (which would drift across DST),
+    // get no interval.
+    assert!(
+        resolved("every 15 minutes", &["RECUR", "NUM", "UNIT"])
+            .intervals
+            .is_empty()
+    );
+    assert!(
+        resolved("every 3 days", &["RECUR", "NUM", "UNIT"])
+            .intervals
+            .is_empty()
+    );
+    let bounded = resolved(
+        "every 5 hours until 8pm today",
+        &[
+            "RECUR",
+            "NUM",
+            "UNIT",
+            "BOUND_END",
+            "HOUR",
+            "MERIDIEM",
+            "REL_DAY",
+        ],
+    );
+    assert_eq!(
+        bounded.intervals[0].until.as_deref(),
+        Some("2026-11-22T20:00:00+05:30")
+    );
+}
+
+// ---------------------------------------- found by the second independent set
+
+#[test]
+fn reads_a_trailing_to_as_the_infinitive_when_words_follow() {
+    let text = "remind me every Sunday at 8 pm to plan the week";
+    let labels = [
+        "O",
+        "O",
+        "RECUR",
+        "WEEKDAY",
+        "GLUE",
+        "HOUR",
+        "MERIDIEM",
+        "RANGE_END",
+        "O",
+        "O",
+        "O",
+    ];
+    assert_eq!(crons(text, &labels), ["0 20 * * SUN"]);
+}
+
+#[test]
+fn lets_a_named_clock_take_the_day_parts_place() {
+    assert_eq!(
+        crons(
+            "every night at midnight",
+            &["RECUR", "DAYPART", "GLUE", "TIME_NAMED"]
+        ),
+        ["0 0 * * *"]
+    );
+}
+
+#[test]
+fn reads_a_frequency_word_beside_a_dated_one_off_as_an_adjective() {
+    let text = "pay the monthly fee on December 5 at 10am";
+    let tokens = oracle(
+        text,
+        &[
+            "O", "O", "FREQ", "O", "GLUE", "MONTH", "DOM", "GLUE", "HOUR", "MERIDIEM",
+        ],
+    );
+    let expressions = compile_predictions(text, &tokens, DateOrder::MDY);
+    assert_eq!(expressions.len(), 1, "{expressions:?}");
+    let result = resolve(expressions[0].schedule.as_ref().unwrap(), &context()).unwrap();
+    assert!(result.rrules.is_empty());
+    assert_eq!(starts(&result, 2), ["2026-12-05T10:00"]);
+}
+
+#[test]
+fn skips_a_stray_relative_day_label_after_a_complete_clock() {
+    assert_eq!(
+        starts(
+            &resolved(
+                "आज रात 8 बजे मासिक",
+                &["REL_DAY", "DAYPART", "HOUR", "MERIDIEM", "REL_DAY"]
+            ),
+            1
+        ),
+        ["2026-11-22T20:00"]
+    );
+}
+
+#[test]
+fn resolves_a_date_without_its_year_to_its_next_occurrence() {
+    // Sunday 2026-11-22: the 5th has passed this month, Nov 3 this year.
+    assert_eq!(
+        starts(&resolved("on the 5th", &["GLUE", "GLUE", "DOM", "GLUE"]), 1),
+        ["2026-12-05T00:00"]
+    );
+    assert_eq!(
+        starts(&resolved("Nov 3", &["MONTH", "DOM"]), 1),
+        ["2027-11-03T00:00"]
+    );
+    // A date that names its year keeps it, past or not.
+    assert_eq!(
+        starts(&resolved("Nov 3 2026", &["MONTH", "DOM", "YEAR"]), 1),
+        ["2026-11-03T00:00"]
+    );
+    // The 31st rolls to the next month that has one.
+    assert_eq!(
+        starts(&resolved("the 31st", &["GLUE", "DOM", "GLUE"]), 1),
+        ["2026-12-31T00:00"]
+    );
+}
+
+// ------------------------------------------------- anchored steps and bounds
+
+#[test]
+fn anchors_a_sub_daily_step_on_its_clock() {
+    let labels = ["RECUR", "NUM", "UNIT", "GLUE", "HOUR", "MERIDIEM"];
+    // 15:30 now: 7am + n·8h gives 23:00 next, not the next hour.
+    let eight = resolved("every 8 hours at 7am", &labels);
+    assert_eq!(
+        starts(&eight, 4),
+        [
+            "2026-11-22T23:00",
+            "2026-11-23T07:00",
+            "2026-11-23T15:00",
+            "2026-11-23T23:00"
+        ]
+    );
+    assert_eq!(eight.crons, ["0 7-23/8 * * *"]);
+    // A step that does not divide the day keeps counting from its clock, as
+    // an interval.
+    let five = resolved("every 5 hours at 9am", &labels);
+    assert_eq!(starts(&five, 2), ["2026-11-22T19:00", "2026-11-23T00:00"]);
+    assert!(five.crons.is_empty());
+    assert_eq!(five.intervals[0].start, "2026-11-22T19:00:00+05:30");
+    // 24 hours at a clock is daily at that clock.
+    let daily = resolved("every 24 hours at 9am", &labels);
+    assert_eq!(starts(&daily, 1), ["2026-11-23T09:00"]);
+    assert_eq!(daily.crons, ["0 9 * * *"]);
+    // Without a clock, 24 hours fire at midnight, not as an all-day event
+    // that already includes today.
+    let bare = resolved("every 24 hours", &["RECUR", "NUM", "UNIT"]);
+    assert_eq!(starts(&bare, 1), ["2026-11-23T00:00"]);
+    assert_eq!(bare.crons, ["0 0 * * *"]);
+}
+
+#[test]
+fn opens_a_daily_window_from_a_step_start_clock() {
+    // The model's "from" reads as a shift and "starting" as a date bound;
+    // after a sub-daily step both open the step's window to midnight.
+    for (text, labels) in [
+        (
+            "every 3 hours from 10am",
+            vec!["RECUR", "NUM", "UNIT", "DIR_AFTER", "HOUR", "MERIDIEM"],
+        ),
+        (
+            "every 3 hours starting at 10am",
+            vec![
+                "RECUR",
+                "NUM",
+                "UNIT",
+                "BOUND_START",
+                "GLUE",
+                "HOUR",
+                "MERIDIEM",
+            ],
+        ),
+    ] {
+        let result = resolved(text, &labels);
+        assert_eq!(
+            starts(&result, 3),
+            ["2026-11-22T16:00", "2026-11-22T19:00", "2026-11-22T22:00"],
+            "{text}"
+        );
+        assert_eq!(result.crons, ["0 10-22/3 * * *"], "{text}");
+    }
+}
+
+#[test]
+fn keeps_a_start_bound_clock_and_a_leading_start_bound() {
+    let trailing = resolved(
+        "every day starting tomorrow at 9am",
+        &[
+            "RECUR",
+            "UNIT",
+            "BOUND_START",
+            "REL_DAY",
+            "GLUE",
+            "HOUR",
+            "MERIDIEM",
+        ],
+    );
+    assert_eq!(
+        starts(&trailing, 2),
+        ["2026-11-23T09:00", "2026-11-24T09:00"]
+    );
+    let leading = resolved(
+        "starting tomorrow, every day at 9am",
+        &[
+            "BOUND_START",
+            "REL_DAY",
+            "JOIN",
+            "RECUR",
+            "UNIT",
+            "GLUE",
+            "HOUR",
+            "MERIDIEM",
+        ],
+    );
+    assert_eq!(
+        starts(&leading, 2),
+        ["2026-11-23T09:00", "2026-11-24T09:00"]
+    );
+    // A start bound that does not name the clock leaves the rule's own.
+    let clocked = resolved(
+        "every day at 9am starting Wednesday",
+        &[
+            "RECUR",
+            "UNIT",
+            "GLUE",
+            "HOUR",
+            "MERIDIEM",
+            "BOUND_START",
+            "WEEKDAY",
+        ],
+    );
+    assert_eq!(starts(&clocked, 1), ["2026-11-25T09:00"]);
+}
+
+#[test]
+fn reads_a_hindi_postposition_start_bound() {
+    // "kal se": the marker follows its date.
+    for (text, labels) in [
+        (
+            "kal se roz subah 7 baje",
+            vec![
+                "REL_DAY",
+                "RANGE_START",
+                "RECUR",
+                "DAYPART",
+                "HOUR",
+                "MERIDIEM",
+            ],
+        ),
+        (
+            "कल से रोज़ सुबह 7 बजे",
+            vec!["REL_DAY", "O", "RECUR", "DAYPART", "HOUR", "MERIDIEM"],
+        ),
+    ] {
+        let result = resolved(text, &labels);
+        assert_eq!(
+            starts(&result, 2),
+            ["2026-11-23T07:00", "2026-11-24T07:00"],
+            "{text}"
+        );
+    }
+    // "6 baje se" after a step still opens the window.
+    let window = resolved(
+        "har 4 ghante subah 6 baje se",
+        &[
+            "RECUR",
+            "NUM",
+            "UNIT",
+            "DAYPART",
+            "HOUR",
+            "MERIDIEM",
+            "RANGE_START",
+        ],
+    );
+    assert_eq!(window.crons, ["0 6-22/4 * * *"]);
+}

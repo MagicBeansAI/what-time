@@ -463,6 +463,24 @@ pub struct Occurrence {
     pub clause: usize,
 }
 
+/// A fixed elapsed-time step for a rule cron cannot state ("every 5 hours",
+/// "every 7 minutes"): fire at `start`, then every `every_seconds`, for
+/// schedulers with interval triggers. Only sub-daily steps with no day
+/// selectors or clock window get one; a step in days would drift across
+/// DST, so those stay with the RRULE.
+#[derive(Clone, PartialEq, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct IntervalExport {
+    pub every_seconds: i64,
+    /// ISO instant of the first fire.
+    pub start: String,
+    /// The last instant the series may fire at, when it is bounded.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub until: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub count: Option<i64>,
+}
+
 #[derive(Clone, PartialEq, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Resolved {
@@ -474,6 +492,9 @@ pub struct Resolved {
     /// `unsupported-cron` diagnostic instead.
     #[serde(default)]
     pub crons: Vec<String>,
+    /// Elapsed-time steps for rules cron cannot state; see [`IntervalExport`].
+    #[serde(default)]
+    pub intervals: Vec<IntervalExport>,
     pub truncated: bool,
     pub diagnostics: Vec<Diagnostic>,
 }
@@ -507,12 +528,36 @@ pub struct ParseResult {
     /// [`Resolved::crons`].
     #[serde(default)]
     pub crons: Vec<String>,
+    /// Elapsed-time steps for rules cron cannot state; see [`IntervalExport`].
+    #[serde(default)]
+    pub intervals: Vec<IntervalExport>,
     pub truncated: bool,
     pub diagnostics: Vec<Diagnostic>,
     pub backend: &'static str,
     pub timings: PublicTimings,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub fallback_reason: Option<String>,
+    /// Whether the text asks for something to be scheduled, when the model
+    /// has an intent head. The time expressions above are reported either
+    /// way; a caller that creates schedules acts only on a request.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub intent: Option<Intent>,
+}
+
+/// Sentence intent: a request to schedule, or a mention of time (past
+/// events, habits, facts, titles, idioms).
+#[derive(Clone, Copy, PartialEq, Eq, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum IntentLabel {
+    Request,
+    Mention,
+}
+
+#[derive(Clone, Copy, PartialEq, Debug, Serialize, Deserialize)]
+pub struct Intent {
+    pub label: IntentLabel,
+    /// Probability that the text is a request (0..1).
+    pub score: f32,
 }
 
 /// Options for constructing a reusable parser instance.
@@ -544,6 +589,12 @@ pub struct Expression {
 #[derive(Clone, PartialEq, Debug)]
 pub struct ScheduleResult {
     pub expressions: Vec<Expression>,
+    /// Request probability (0..1) when the model has an intent head.
+    pub intent: Option<f32>,
+    /// Every word of the text belongs to a time expression ("every Monday
+    /// at 9", "kal subah 7 baje"): nothing else is said, so the text is the
+    /// schedule itself, whatever the intent score.
+    pub bare: bool,
     pub backend: &'static str,
     pub timings: ScheduleTimings,
     pub tokens: Option<Vec<PublicToken>>,
@@ -582,6 +633,8 @@ pub enum Backend {
 #[derive(Clone, PartialEq, Debug)]
 pub struct TagResult {
     pub tokens: Vec<Token>,
+    /// Request probability (0..1): the most request-like window of the text.
+    pub intent: Option<f32>,
     pub unknown_labels: bool,
     pub backend: &'static str,
     pub timings: TagTimings,

@@ -140,6 +140,8 @@ fn frequency_word(word: &str) -> Option<(Frequency, bool)> {
         | "rozz"
         | "rozana"
         | "pratidin"
+        | "dainik"
+        | "दैनिक"
         | "रोज़"
         | "रोज"
         | "रोज़ाना"
@@ -491,10 +493,16 @@ fn compile_time(
     let can_infer_working_hours =
         clocks[0].needs_meridiem && clocks.get(1).is_some_and(|value| value.needs_meridiem);
     if can_infer_working_hours {
-        let start_hour = clocks[0].value.as_hm().map(|(hour, _, _)| hour);
-        let end_hour = clocks[1].value.as_hm().map(|(hour, _, _)| hour);
-        if let (Some(start_hour), Some(end_hour)) = (start_hour, end_hour)
-            && end_hour < start_hour
+        let minutes = |value: &ClockTime| value.as_hm().map(|(hour, minute, _)| hour * 60 + minute);
+        let start_minutes = minutes(&clocks[0].value);
+        let end_minutes = minutes(&clocks[1].value);
+        // "from 9 to 5", and "from 8 to 8": two unmarked clocks whose end
+        // is not after the start run into the afternoon ("4:15 to 4:45"
+        // already is after it).
+        if let (Some(start_minutes), Some(end_minutes)) = (start_minutes, end_minutes)
+            && end_minutes <= start_minutes
+            && end_minutes + 720 > start_minutes
+            && end_minutes + 720 < 1440
         {
             if let ClockTime::Hm { hour, .. } = &mut clocks[1].value {
                 *hour += 12;
@@ -643,6 +651,12 @@ fn compile_date_and_time(
                         .map(|pair| hindi_relative_offset(pair, context, token.raw.start))
                 });
                 let Some(offset) = offset else {
+                    // "आज रात 8 बजे मासिक किराया": a word that drew this label
+                    // after a complete date or clock is not a day; skip it.
+                    if clause.date.is_some() || !clocks.is_empty() {
+                        index += 1;
+                        continue;
+                    }
                     return fail(token, "unsupported", "Unknown relative day.");
                 };
                 // "tonight at 10" is 22:00.
@@ -993,9 +1007,11 @@ fn compile_date_and_time(
                 let Some(part) = day_part(&word) else {
                     return fail(token, "unsupported", "Unknown day part.");
                 };
-                let hour_later = tokens[index + 1..]
-                    .iter()
-                    .any(|item| matches!(item.label, Role::Hour | Role::ClockOffset));
+                // "every night at midnight": a named clock later still
+                // takes the day part's place.
+                let hour_later = tokens[index + 1..].iter().any(|item| {
+                    matches!(item.label, Role::Hour | Role::ClockOffset | Role::TimeNamed)
+                });
                 if hour_later {
                     pending_day_part = Some(part);
                 } else if let Some(clock) = clocks.last_mut().filter(|clock| clock.needs_meridiem) {
@@ -1580,7 +1596,9 @@ fn period_edge_days(mut tokens: Vec<Token>) -> Vec<Token> {
                 "day" | "din" | "दिन"
             )
     };
-    let period_follows = tokens[position + 2..]
+    let period_follows = tokens
+        .get(position + 2..)
+        .unwrap_or_default()
         .iter()
         .find(|token| token.label != Role::O && token.label != Role::Deictic)
         .is_some_and(|token| {
@@ -1632,6 +1650,133 @@ fn prepose_frequency_count(mut tokens: Vec<Token>) -> Vec<Token> {
     let count: Vec<Token> = tokens.drain(count_start..=times).collect();
     for (offset, token) in count.into_iter().enumerate() {
         tokens.insert(period + offset, token);
+    }
+    tokens
+}
+
+/// Hindi and Hinglish put the period first, in the genitive: "har mahine
+/// ke aakhri din" is "the last day of every month", "agle mahine ka pehla
+/// Somvaar" "the first Monday of next month". Rewrite the period-first
+/// order into the English one the grammar reads, so every edge and
+/// position rule covers both languages.
+fn genitive_period_order(mut tokens: Vec<Token>) -> Vec<Token> {
+    let words: Vec<usize> = (0..tokens.len())
+        .filter(|index| tokens[*index].raw.kind != 3)
+        .collect();
+    for window in words.windows(5) {
+        let [marker, period, genitive, position, day] = [
+            &tokens[window[0]],
+            &tokens[window[1]],
+            &tokens[window[2]],
+            &tokens[window[3]],
+            &tokens[window[4]],
+        ];
+        let names_period = period.label == Role::Unit
+            && matches!(
+                unit(&period.raw.text.to_lowercase()),
+                Some(Unit::week | Unit::month | Unit::quarter | Unit::year)
+            );
+        let names_day = day.label == Role::Weekday
+            || (matches!(day.label, Role::Unit | Role::DayGroup)
+                && unit(&day.raw.text.to_lowercase()) == Some(Unit::day));
+        if matches!(marker.label, Role::Recur | Role::Deictic)
+            && names_period
+            && matches!(
+                genitive.raw.text.to_lowercase().as_str(),
+                "ke" | "ki" | "ka" | "के" | "की" | "का"
+            )
+            && position.label == Role::Ord
+            && names_day
+        {
+            let mut of = genitive.clone();
+            of.label = Role::Glue;
+            of.raw.text = "of".into();
+            let reordered = [
+                position.clone(),
+                day.clone(),
+                of,
+                marker.clone(),
+                period.clone(),
+            ];
+            // Move the words and their labels, not the tokens: each slot
+            // keeps its source offsets, so spans stay in text order.
+            for (slot, token) in window.iter().zip(reordered) {
+                tokens[*slot].label = token.label;
+                tokens[*slot].raw.text = token.raw.text;
+            }
+            return tokens;
+        }
+    }
+    tokens
+}
+
+/// "ek din chhod ke ek din", "एक दिन छोड़कर", "do din chhodkar": skipping
+/// N units between runs is a step of N + 1 ("every 2 days"). The skip
+/// verb is a closed set, like "except"; the rest is the quantity and unit
+/// the model already labels. Rewritten into "every N+1 units".
+fn skip_step(mut tokens: Vec<Token>) -> Vec<Token> {
+    let words: Vec<usize> = (0..tokens.len())
+        .filter(|index| tokens[*index].raw.kind != 3)
+        .collect();
+    let skips = |text: &str| {
+        matches!(
+            text,
+            "chhod" | "chhodkar" | "chhodke" | "chod" | "chodkar"
+                // छोड़, with ड़ decomposed (ड + nukta) or precomposed.
+                | "\u{91b}\u{94b}\u{921}\u{93c}"
+                | "\u{91b}\u{94b}\u{921}\u{93c}\u{915}\u{930}"
+                | "\u{91b}\u{94b}\u{921}\u{93c}\u{915}\u{947}"
+                | "\u{91b}\u{94b}\u{95c}"
+                | "\u{91b}\u{94b}\u{95c}\u{915}\u{930}"
+                | "\u{91b}\u{94b}\u{95c}\u{915}\u{947}"
+        )
+    };
+    for position in 0..words.len().saturating_sub(2) {
+        let (count, period, verb) = (words[position], words[position + 1], words[position + 2]);
+        // "do din chhodkar": the model may read Hinglish "do" as the
+        // English verb; inside the skip construction it is the count.
+        if !matches!(tokens[count].label, Role::Num | Role::O)
+            || tokens[period].label != Role::Unit
+            || !skips(&tokens[verb].raw.text.to_lowercase())
+        {
+            continue;
+        }
+        let Some(skipped) = number(&tokens[count].raw.text.to_lowercase()) else {
+            continue;
+        };
+        if skipped.fract() != 0.0
+            || skipped < 1.0
+            || unit(&tokens[period].raw.text.to_lowercase()).is_none()
+        {
+            continue;
+        }
+        let period_text = tokens[period].raw.text.clone();
+        tokens[count].label = Role::Recur;
+        tokens[count].raw.text = "every".into();
+        tokens[period].label = Role::Num;
+        tokens[period].raw.text = format!("{}", skipped as i64 + 1);
+        tokens[verb].label = Role::Unit;
+        tokens[verb].raw.text = period_text.clone();
+        // "ke"/"kar" after the verb, and the repeated "ek din", restate it.
+        let mut rest = position + 3;
+        if words.get(rest).is_some_and(|&w| {
+            matches!(
+                tokens[w].raw.text.to_lowercase().as_str(),
+                "ke" | "kar" | "के" | "कर"
+            )
+        }) {
+            tokens[words[rest]].label = Role::Glue;
+            rest += 1;
+        }
+        if let (Some(&n), Some(&u)) = (words.get(rest), words.get(rest + 1))
+            && tokens[n].label == Role::Num
+            && tokens[u].label == Role::Unit
+            && unit(&tokens[u].raw.text.to_lowercase()) == unit(&period_text.to_lowercase())
+        {
+            tokens[n].label = Role::Glue;
+            tokens[u].label = Role::Glue;
+        }
+        return tokens;
     }
     tokens
 }
@@ -1714,6 +1859,38 @@ fn compile_clause(
                         | Role::ClockOffset
                 )
             });
+        // "remind me every Sunday at 8 pm to plan the week": a closing "to"
+        // with nothing after it and no "from"/"between" before it is the
+        // infinitive, not a range.
+        // A sentence that stops at "to" ("Monday 5pm to") is unfinished.
+        let word_follows = context.iter().any(|token| {
+            token.raw.kind != 3
+                && token.raw.start >= last.raw.end
+                && token.raw.text.chars().any(char::is_alphabetic)
+        });
+        let infinitive = matches!(word.as_str(), "to" | "till")
+            && word_follows
+            && !input.iter().any(|token| token.label == Role::RangeStart)
+            && input.iter().any(|token| {
+                matches!(
+                    token.label,
+                    Role::Hour
+                        | Role::TimeNamed
+                        | Role::Weekday
+                        | Role::DayGroup
+                        | Role::Dom
+                        | Role::Unit
+                        | Role::RelDay
+                )
+            });
+        if infinitive {
+            let trimmed: Vec<Token> = input
+                .iter()
+                .filter(|token| token.raw.start != last.raw.start)
+                .cloned()
+                .collect();
+            return compile_clause(&trimmed, diagnostics, context);
+        }
         if !postposed {
             if word == "until"
                 && input
@@ -2301,8 +2478,11 @@ fn compile_clause(
                 marker_end += 1;
             }
             let mut end = marker_end + 1;
+            // "starting tomorrow, every day at 9am": the bound's date ends
+            // where the recurrence begins.
             while end < tokens.len()
                 && !recurrence_bounds(tokens[end].label)
+                && !matches!(tokens[end].label, Role::Recur | Role::Freq)
                 && tokens[end].label != Role::Dur
                 && !(tokens[end].label == Role::Num
                     && tokens
@@ -2312,7 +2492,36 @@ fn compile_clause(
                 end += 1;
             }
 
-            let bound = &tokens[marker_end + 1..end];
+            let mut bound = &tokens[marker_end + 1..end];
+            while bound
+                .last()
+                .is_some_and(|last| matches!(last.label, Role::Join | Role::Glue | Role::O))
+            {
+                bound = &bound[..bound.len() - 1];
+            }
+            // "kal se roz": a postposition marker follows its date.
+            let mut preposed: Vec<Token> = Vec::new();
+            if bound.is_empty()
+                && token.label == Role::BoundStart
+                && matches!(token.raw.text.to_lowercase().as_str(), "se" | "से")
+            {
+                while body.last().is_some_and(|last| {
+                    matches!(
+                        last.label,
+                        Role::RelDay
+                            | Role::Weekday
+                            | Role::Month
+                            | Role::Dom
+                            | Role::Year
+                            | Role::Deictic
+                            | Role::Ord
+                            | Role::Unit
+                    ) || (last.raw.kind == 3 && !preposed.is_empty())
+                }) {
+                    preposed.insert(0, body.pop().unwrap());
+                }
+                bound = &preposed;
+            }
             if bound.is_empty() {
                 return fail(token, "invalid-bound", "A bound needs a date.");
             }
@@ -2360,7 +2569,9 @@ fn compile_clause(
                 index = end;
                 continue;
             }
-            if bound_time.is_none() && token.label == Role::Except {
+            // "every day starting tomorrow at 9am": a start bound's clock
+            // is the rule's too, unless the rule names its own.
+            if bound_time.is_none() && matches!(token.label, Role::Except | Role::BoundStart) {
                 bound_time = bound_clause.time.clone();
             }
             // "until 8pm today", "until 8pm": the end bound keeps its clock.
@@ -2418,6 +2629,12 @@ fn compile_clause(
     }
     if let Some(duration) = duration {
         clause.duration = Some(duration);
+    }
+    if let Some(rule) = recurrence.as_mut()
+        && let Some(date) = starting_date.take()
+    {
+        // The recurrence followed its leading start bound.
+        rule.start = Some(Box::new(date));
     }
     if let Some(starting_date) = starting_date {
         if clause.date.is_some() {
@@ -2500,9 +2717,29 @@ fn compile_clause(
             rule.freq = Frequency::hourly;
             rule.interval /= 60;
         }
-        if rule.freq == Frequency::hourly && rule.interval % 24 == 0 && clause.time.is_none() {
+        if rule.freq == Frequency::hourly
+            && rule.interval % 24 == 0
+            && clause.time.as_ref().is_some_and(|time| time.end.is_none())
+        {
+            // "every 24 hours at 9am" is daily at 9.
             rule.freq = Frequency::daily;
             rule.interval /= 24;
+        }
+        if rule.freq == Frequency::hourly && rule.interval % 24 == 0 && clause.time.is_none() {
+            // An hour step stays timed: on the wall-clock grid every other
+            // hour step uses, 24 hours fire at midnight ("0 0 * * *"), not
+            // as an all-day event that already includes today.
+            rule.freq = Frequency::daily;
+            rule.interval /= 24;
+            clause.time = Some(TimeSpec {
+                start: ClockTime::Hm {
+                    hour: 0,
+                    minute: 0,
+                    second: None,
+                },
+                end: None,
+                open: None,
+            });
         }
         if matches!(rule.freq, Frequency::minutely | Frequency::hourly)
             && rule.span.is_none()
@@ -3149,6 +3386,156 @@ fn repair_labels(tokens: &[Token]) -> Vec<Token> {
             {
                 repaired[index].label = Role::Num;
             }
+            // "remind me to take out the trash every Tuesday night": a
+            // recurrence marker right before a day, a unit or a day part is
+            // never background ("every customer" has no such word after it).
+            Role::O
+                if matches!(
+                    token.raw.text.to_lowercase().as_str(),
+                    "every" | "each" | "har" | "हर"
+                ) && next.is_some_and(|n| {
+                    matches!(n.label, Role::Weekday | Role::DayGroup | Role::DayPart)
+                        || (n.label == Role::Unit
+                            && crate::lexicon::unit(&n.raw.text.to_lowercase()).is_some())
+                }) =>
+            {
+                repaired[index].label = Role::Recur;
+            }
+            // "every 3 hours from 10am", "every 2 hours starting (at) 8am":
+            // after a sub-daily step, "from" / "starting" before a clock
+            // opens the step's daily window, not a shift or a date bound.
+            Role::DirAfter | Role::BoundStart
+                if matches!(
+                    token.raw.text.to_lowercase().as_str(),
+                    "from" | "starting" | "beginning"
+                ) && previous.is_some_and(|p| {
+                    p.label == Role::Unit
+                        && matches!(
+                            crate::lexicon::unit(&p.raw.text.to_lowercase()),
+                            Some(Unit::hour | Unit::minute)
+                        )
+                }) && before_previous
+                    .is_some_and(|b| matches!(b.label, Role::Recur | Role::Num | Role::Freq))
+                    && words[position + 1..]
+                        .iter()
+                        .map(|&n| &tokens[n])
+                        .find(|n| n.label != Role::Glue)
+                        .is_some_and(|n| matches!(n.label, Role::Hour | Role::TimeNamed))
+                    // "every hour starting 3pm tomorrow" stays a dated start.
+                    && !words[position + 1..].iter().any(|&n| {
+                        matches!(
+                            tokens[n].label,
+                            Role::RelDay | Role::Weekday | Role::Month | Role::Dom
+                        )
+                    }) =>
+            {
+                repaired[index].label = Role::RangeStart;
+            }
+            // "kal se roz 7 baje": a postposition "se" after a date and
+            // before a recurrence starts the series (from tomorrow).
+            Role::RangeStart | Role::DirAfter | Role::Glue | Role::O
+                if matches!(token.raw.text.to_lowercase().as_str(), "se" | "से")
+                    && previous.is_some_and(|p| {
+                        matches!(
+                            p.label,
+                            Role::RelDay | Role::Weekday | Role::Month | Role::Dom | Role::Unit
+                        ) || (p.label == Role::O
+                            && crate::lexicon::weekday(&p.raw.text.to_lowercase()).is_some())
+                    })
+                    && next.is_some_and(|n| matches!(n.label, Role::Recur | Role::Freq)) =>
+            {
+                repaired[index].label = Role::BoundStart;
+                // "सोमवार से रोज़": the weekday the series starts on.
+                let day = words[position - 1];
+                if tokens[day].label == Role::O {
+                    repaired[day].label = Role::Weekday;
+                }
+            }
+            // "hourly from 8 to 8": a start-bound "from" before a clock that
+            // a range end follows is the range's start.
+            Role::BoundStart
+                if next.is_some_and(|n| matches!(n.label, Role::Hour | Role::TimeNamed))
+                    && words[position + 1..]
+                        .iter()
+                        .take(4)
+                        .any(|&n| tokens[n].label == Role::RangeEnd) =>
+            {
+                repaired[index].label = Role::RangeStart;
+            }
+            // "every 2 hours from tomorrow": after a recurrence, "from"
+            // before a date starts the series; it is not a shift.
+            Role::DirAfter
+                if token.raw.text.eq_ignore_ascii_case("from")
+                    && words[..position]
+                        .iter()
+                        .any(|&p| matches!(tokens[p].label, Role::Recur | Role::Freq))
+                    && next.is_some_and(|n| {
+                        matches!(n.label, Role::RelDay | Role::Weekday | Role::Month)
+                    }) =>
+            {
+                repaired[index].label = Role::BoundStart;
+            }
+            // "every day starting at 9am": "starting" before a clock names
+            // the time of a daily-or-longer series, not a date bound.
+            Role::BoundStart
+                if matches!(
+                    token.raw.text.to_lowercase().as_str(),
+                    "starting" | "beginning"
+                ) && words[..position]
+                    .iter()
+                    .any(|&p| matches!(tokens[p].label, Role::Recur | Role::Freq))
+                    && words[position + 1..]
+                        .iter()
+                        .map(|&n| &tokens[n])
+                        .find(|n| n.label != Role::Glue)
+                        .is_some_and(|n| matches!(n.label, Role::Hour | Role::TimeNamed))
+                    && !words[position + 1..].iter().any(|&n| {
+                        matches!(
+                            tokens[n].label,
+                            Role::RelDay | Role::Weekday | Role::Month | Role::Dom
+                        )
+                    }) =>
+            {
+                repaired[index].label = Role::Glue;
+            }
+            // "catch up in 45 minutes": a bound marker right before "in N
+            // minutes" is not a bound.
+            Role::BoundEnd | Role::BoundStart
+                if next.is_some_and(|n| matches!(n.label, Role::DirAfter | Role::DirBefore)) =>
+            {
+                repaired[index].label = Role::O;
+            }
+            // "हर महीने की 1 तारीख़ को": after a day of month, a day-part
+            // label on a word that names no day part is the date's own marker.
+            // Elsewhere an unknown day part still fails with a diagnostic.
+            Role::DayPart
+                if day_part(&token.raw.text.to_lowercase()).is_none()
+                    && previous.is_some_and(|p| p.label == Role::Dom) =>
+            {
+                repaired[index].label = Role::Glue;
+            }
+            // "remind me in 45 min": a unit word right after "in N" is the
+            // quantity's unit.
+            Role::O
+                if previous.is_some_and(|p| p.label == Role::Num)
+                    && before_previous
+                        .is_some_and(|b| matches!(b.label, Role::DirAfter | Role::DirBefore))
+                    && crate::lexicon::unit(&token.raw.text.to_lowercase()).is_some() =>
+            {
+                repaired[index].label = Role::Unit;
+            }
+            // "कल सुबह 9 बजे डॉक्टर": बजे / baje closes the clock, so a word
+            // after it is not part of the clock's marker.
+            Role::Meridiem
+                if previous.is_some_and(|p| {
+                    matches!(
+                        p.raw.text.to_lowercase().as_str(),
+                        "बजे" | "baje" | "bje" | "बज"
+                    )
+                }) =>
+            {
+                repaired[index].label = Role::O;
+            }
             // "monthly on day 25"
             Role::Hour
                 if previous.is_some_and(|p| {
@@ -3220,10 +3607,14 @@ pub fn compile_predictions(
     tokens: &[Token],
     date_order: crate::types::DateOrder,
 ) -> Vec<Expression> {
-    let repaired = repair_labels(tokens);
+    // The skip construction spans words the model leaves unlabeled, so it
+    // is rewritten before the sentence is split into expressions.
+    let repaired = genitive_period_order(skip_step(repair_labels(tokens)));
     let tokens = repaired.as_slice();
     let expressions: Vec<Expression> = rejoin_clocks(split_expressions(tokens), tokens)
         .into_iter()
+        .map(|expression| strip_adjective_frequency(expression, tokens))
+        .filter(|expression| !expression.is_empty())
         .map(|expression| {
             let ordered = numeric_date_order(&expression, date_order);
             compile_expression(text, ordered, tokens)
@@ -3299,6 +3690,34 @@ fn drop_subject_day_mentions(expressions: Vec<Expression>, tokens: &[Token]) -> 
             introduced || after < 2
         })
         .collect()
+}
+
+/// "Agle Monday subah 11 baje weekly report bhejni hai": a frequency word
+/// that ends a dated one-off expression and runs into a noun ("weekly
+/// report") describes the noun; the date is the schedule.
+fn strip_adjective_frequency(mut expression: Vec<Token>, tokens: &[Token]) -> Vec<Token> {
+    let Some(last) = expression.last() else {
+        return expression;
+    };
+    if last.label != Role::Freq {
+        return expression;
+    }
+    let dated = expression.iter().any(|token| {
+        matches!(
+            token.label,
+            Role::Deictic | Role::RelDay | Role::Month | Role::Dom | Role::Year
+        )
+    }) && !expression.iter().any(|token| token.label == Role::Recur);
+    let noun_follows = tokens
+        .iter()
+        .find(|token| token.raw.kind != 3 && token.raw.start >= last.raw.end)
+        .is_some_and(|token| {
+            token.label == Role::O && token.raw.text.chars().any(char::is_alphabetic)
+        });
+    if dated && noun_follows {
+        expression.pop();
+    }
+    expression
 }
 
 /// "every night before bed at 10:30", "daily after lunch at 2": a stray
@@ -3406,15 +3825,25 @@ fn drop_redundant_frequencies(expressions: Vec<Expression>) -> Vec<Expression> {
             })
         })
     };
+    // "pay the monthly fee on December 5 at 10am": beside a dated one-off,
+    // a bare frequency word describes a noun.
+    let dated_one_off = |expression: &Expression| {
+        expression.schedule.as_ref().is_some_and(|schedule| {
+            !schedule.clauses.is_empty()
+                && schedule
+                    .clauses
+                    .iter()
+                    .all(|clause| clause.recurrence.is_none() && clause.date.is_some())
+        })
+    };
     let redundant: Vec<bool> = expressions
         .iter()
         .enumerate()
         .map(|(index, expression)| {
             bare_frequency(expression).is_some_and(|freq| {
-                expressions
-                    .iter()
-                    .enumerate()
-                    .any(|(other, candidate)| other != index && specific(candidate, freq))
+                expressions.iter().enumerate().any(|(other, candidate)| {
+                    other != index && (specific(candidate, freq) || dated_one_off(candidate))
+                })
             })
         })
         .collect();

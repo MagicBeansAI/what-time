@@ -63,8 +63,22 @@ impl ScheduleParser {
                 })
                 .collect()
         });
+        let words: Vec<&crate::types::Token> = result
+            .tokens
+            .iter()
+            .filter(|token| {
+                token.raw.kind != 3 && token.raw.text.chars().any(char::is_alphanumeric)
+            })
+            .collect();
+        let bare = !expressions.is_empty()
+            && !words.is_empty()
+            && words
+                .iter()
+                .all(|token| token.label != crate::labels::Role::O);
         ScheduleResult {
+            bare,
             expressions,
+            intent: result.intent,
             backend: result.backend,
             timings: ScheduleTimings {
                 tokenize_ms: result.timings.tokenize_ms,

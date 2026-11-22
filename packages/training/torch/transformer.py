@@ -113,3 +113,69 @@ class TimeTransformer(nn.Module):
         hidden = torch.tanh(joined @ self.head_weight + self.head_bias)
         output = hidden @ self.output_weight + self.output_bias
         return output[..., :ROLE_CLASSES], output[..., ROLE_CLASSES]
+
+
+INTENT_HIDDEN = 64
+
+
+class IntentEncoder(nn.Module):
+    """Sentence intent: does the text ask for something to be scheduled
+    ("request") or only talk about time ("mention": past events, habits,
+    facts, titles, idioms)?
+
+    A small encoder of its own over the tagger's feature rows, so it reads
+    the words (lexical rows included) rather than the tagger's token states,
+    which carry little sentence-level meaning. Its final states are pooled
+    three ways — mean (overall content), max (any cue token: "used to", था,
+    "remind"), attention with one learned query (which tokens matter) —
+    then a tanh layer and one logit; positive means request. Exported with
+    an `intent.` prefix beside the tagger's tensors; the same ops as the
+    tagger, so Rust mirrors it with the tagger's encoder pass.
+    """
+
+    def __init__(
+        self,
+        feature_rows: int = FEATURE_ROWS,
+        d_model: int = 64,
+        layers: int = 2,
+        heads: int = 4,
+        ffn: int = 128,
+        max_positions: int = 128,
+    ) -> None:
+        super().__init__()
+        self.feature_rows = feature_rows
+        self.d_model = d_model
+        self.heads = heads
+        self.d_head = d_model // heads
+        self.embedding = nn.Parameter(torch.empty(feature_rows, d_model))
+        self.position = nn.Parameter(torch.empty(max_positions, d_model))
+        self.blocks = nn.ModuleList(
+            [TimeTransformer._block(self, d_model, heads, ffn) for _ in range(layers)]
+        )
+        self.ln_f = nn.LayerNorm(d_model)
+        self.query = nn.Parameter(torch.empty(d_model))
+        self.hidden_weight = nn.Parameter(torch.empty(d_model * 3, INTENT_HIDDEN))
+        self.hidden_bias = nn.Parameter(torch.zeros(INTENT_HIDDEN))
+        self.output_weight = nn.Parameter(torch.empty(INTENT_HIDDEN, 1))
+        self.output_bias = nn.Parameter(torch.zeros(1))
+        for parameter in self.parameters():
+            if parameter.dim() > 1:
+                nn.init.normal_(parameter, std=0.02)
+        nn.init.normal_(self.query, std=0.02)
+
+    def forward(self, rows: Tensor, valid: Tensor) -> Tensor:
+        row_mask = (rows != self.feature_rows).unsqueeze(-1)
+        embedded = F.embedding(rows.clamp_max(self.feature_rows - 1), self.embedding)
+        x = (embedded * row_mask).sum(dim=2) * valid.unsqueeze(-1)
+        x = x + self.position[: x.shape[1]].unsqueeze(0)
+        for block in self.blocks:
+            x = block(x, valid)
+        x = self.ln_f(x) * valid.unsqueeze(-1)
+        mean = x.sum(dim=1) / valid.sum(dim=1, keepdim=True).clamp_min(1)
+        maximum = x.masked_fill(~valid.unsqueeze(-1), torch.finfo(x.dtype).min).max(dim=1).values
+        scores = (x @ self.query) / math.sqrt(self.d_model)
+        scores = scores.masked_fill(~valid, torch.finfo(scores.dtype).min)
+        attended = (torch.softmax(scores, dim=1).unsqueeze(-1) * x).sum(dim=1)
+        features = torch.cat((mean, maximum, attended), dim=-1)
+        hidden = torch.tanh(features @ self.hidden_weight + self.hidden_bias)
+        return (hidden @ self.output_weight + self.output_bias)[:, 0]

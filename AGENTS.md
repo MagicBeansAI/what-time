@@ -47,6 +47,12 @@ into `packages/what-time/wasm/`.
   non-held-out pool row if it is ever lost).
 - LLM-authored corpus data must pass `torch/validate_llm_corpus.py` before
   training and stays ≤25% of any training mix.
+- The intent encoder trains with `torch/train_intent.py` from an existing
+  tagger export (`--init`), which it copies unchanged. Its data lives in
+  `data/intent/`: Tatoeba samples (`fetch_intent_prose.py`, pinned in
+  `corpus.json` as `intentProse`), their request/mention labels, and
+  `*-written.jsonl` lines with their intent. Never add evaluation-set lines
+  to it, and calibrate the cut-off on held-out training rows only.
 - Keep `natural.py::RESERVED` phrases out of training corpora; they back
   the unseen-carrier evaluation.
 - Timezone and calendar arithmetic stays in exact Rust code, never in the

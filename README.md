@@ -89,6 +89,7 @@ disk.
 | **Exact resolution** | Bundled IANA timezone database, DST-correct transitions, RFC 5545 (RRULE) and cron export, exact recurrence expansion down to the minute. The model never touches dates or timezones. |
 | **Every surface** | Rust library + CLI, WebAssembly module (SIMD: Chrome/Edge 91+, Firefox 89+, Safari 16.4+, Node 16.4+), npm package for TS/JS, a single-file static playground, and an optional local HTTP API. |
 | **GPU batch mode** | Optional wgpu backend (`--features gpu`) dispatches batches of ≥64 windows to Metal/Vulkan — **~6–10× faster** on 10k+ phrase sweeps, with output verified identical to CPU. |
+| **Request or mention** | An `intent` on every result that holds a time expression: `request` ("remind me every Monday at 9", "kal subah 7 baje uthaana") or `mention` ("I used to run every morning", "दादी रोज़ शाम को भजन गाती थीं"), with the request probability. Create schedules only for a request. |
 | **Honest failures** | Ambiguity and unknown vocabulary return typed diagnostics (`code`, `message`, `severity`), never silent wrong dates. |
 | **Verifiable training** | Corpus generators, a mechanical validation gate for LLM-authored data, int8 quantization with exported parity fixtures — `cargo test` fails closed if predictions shift. |
 
@@ -120,6 +121,10 @@ disk.
    reference date.
 4. **Resolution** — the resolver applies timezone and DST rules to produce
    occurrences and RFC 5545 rules.
+5. **Intent** — a second, smaller encoder (two blocks, ~223k parameters) over
+   the same features reads the whole sentence and scores whether it asks for
+   something to be scheduled. It runs only when the tagger found a time
+   expression; a text that is nothing but a schedule phrase is a request.
 
 Full details: [`MODEL_CARD.md`](MODEL_CARD.md) — training data, metrics,
 and known limitations.
@@ -201,8 +206,15 @@ English only for now.
 Cron is the common five-field dialect with weekday names. A rule it cannot
 state exactly — every other week, the first Monday of a month, the last day
 of a month — prints nothing, exits 1, and says why on stderr; the RRULE in
-JSON mode still carries it. Start dates, end dates and counts do not fit in
-cron either, so those print with a `cron-unbounded` warning.
+JSON mode still carries it. A sub-daily step that does not divide the day
+("every 5 hours", "every 7 minutes") also gets an `intervals` entry — fire at
+`start`, then every `everySeconds` — for schedulers with interval triggers.
+The fires sit on a fixed grid from `start`, so a scheduler should anchor
+them there rather than count each one from the last run; in Magician that
+is `{"kind": {"Interval": {"seconds": everySeconds}}, "starts_at": start,
+"ends_at": until, "max_runs": count}`. Start dates, end dates and counts do
+not fit in cron either, so those print with a `cron-unbounded` warning; the
+RRULE's `DTSTART` / `UNTIL` / `COUNT` carry them.
 
 ---
 
@@ -217,6 +229,14 @@ cron either, so those print with a `cron-unbounded` warning.
 - **Real-user accuracy is unmeasured.** In-distribution scores are excellent
   (568 pinned corpus cases, zero known gaps, LLM held-out 0.995) but generated corpora share
   training families.
+- **Intent is a probability, not a verdict.** On an independent set where
+  every line contains a time word, gating on `intent` cut wrongly-read
+  non-schedules from 76 to 31 of 150 and lost 3 of 141 real schedules. Past
+  and duration chatter in English still often reads as a request ("my boss
+  emailed me at 11pm last night"), and a long task description can lower a
+  request's score. The label uses a high-recall cut-off; `intent.score` is
+  there for a stricter one. Confirm before creating a schedule from free
+  text.
 - **GPU mode pays only in bulk.** Single phrases are fastest on CPU (~0.4 ms);
   the GPU path activates at ≥64 phrases per call.
 - **Not for high-stakes scheduling** — legal, medical, or billing dates need
