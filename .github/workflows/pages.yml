@@ -5,6 +5,11 @@ name: Pages
 # commit on main, so the site always runs exactly that model and grammar,
 # whether or not rust/site/what-time.html was rebuilt before the push. The
 # built module must parse a recurring phrase before anything deploys.
+#
+# Build and deploy are separate jobs, as in GitHub's Pages template: the
+# deploy job starts after the build job has finished, so the uploaded
+# artifact is listed by then. In one job, deploy-pages queried the run's
+# artifacts a second after the upload and found none.
 on:
   push:
     branches: [main]
@@ -20,10 +25,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -63,5 +65,13 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
+
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v4
