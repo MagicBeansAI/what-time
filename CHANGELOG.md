@@ -2,6 +2,13 @@
 
 Short and honest. Scores per build live in [`SCORES.md`](SCORES.md).
 
+## Unreleased
+
+- GitHub Pages builds the playground from source on every push to `main`
+  (wasm with SIMD, then the single-file page), smoke-tests that the fresh
+  module turns a recurring phrase into cron, and only then deploys; the
+  live site no longer depends on a rebuilt `what-time.html` being committed.
+
 ## 0.3.0
 
 - Cron export: every result carries `crons`, five-field expressions

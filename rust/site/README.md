@@ -19,6 +19,12 @@ Rebuild after changing the library or model weights:
 ./build.sh   # wasm + glue; the page itself is copied from what-time-web assets
 ```
 
+GitHub Pages does not use the committed `what-time.html`: on every push to
+`main`, `.github/workflows/pages.yml` runs `build.sh` from source, checks the
+fresh module turns a recurring phrase into the expected cron lines, and only
+then deploys. Rebuild and commit the file anyway, for the offline single-file
+download and the npm `wasm/` copy.
+
 Files: `index.html` (page) and `wasm/` (bindgen glue + module). The wasm
 embeds the int8-quantized weights (~575k parameters) and the bundled IANA
 timezone database, so timezone resolution is exact and offline. It is built

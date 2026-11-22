@@ -73,7 +73,8 @@ echo "कल शाम को आठ बजे" | what-time -j -r 2026-09-13T10:
 ```
 
 **Zero-install playground:** try it live at
-[magicbeansai.github.io/what-time](https://magicbeansai.github.io/what-time/) —
+[magicbeansai.github.io/what-time](https://magicbeansai.github.io/what-time/)
+(rebuilt from source on every push to `main`) —
 or grab [`rust/site/what-time.html`](rust/site/what-time.html), one self-contained
 file (wasm inlined) that runs the full trilingual model offline, straight from
 disk.

@@ -1,8 +1,10 @@
 name: Pages
 
-# Deploy the self-contained playground to GitHub Pages. The page embeds
-# the wasm, so the deployed site always exercises the exact model and
-# grammar committed on main.
+# Deploy the self-contained playground to GitHub Pages, built from source:
+# the wasm module (SIMD) and the single-file page are regenerated from the
+# commit on main, so the site always runs exactly that model and grammar,
+# whether or not rust/site/what-time.html was rebuilt before the push. The
+# built module must parse a recurring phrase before anything deploys.
 on:
   push:
     branches: [main]
@@ -25,6 +27,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.92.0
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust
+      - name: Install wasm-bindgen-cli
+        run: cargo install wasm-bindgen-cli --version 0.2.128
+      - name: Build the wasm module and the single-file playground
+        run: bash rust/site/build.sh
+      - name: Verify the page is self-contained
+        run: |
+          grep -q "WASM_B64" rust/site/what-time.html
+          test -s rust/site/what-time.html
+      - name: Smoke-test the built module
+        run: |
+          node --input-type=module -e '
+            import { readFileSync } from "node:fs";
+            import { initSync, parse, version } from "./rust/site/wasm/what_time_wasm.js";
+            initSync({ module: readFileSync("rust/site/wasm/what_time_wasm_bg.wasm") });
+            const result = JSON.parse(parse("every 15 minutes between 9am and 6pm on weekdays",
+              "2026-11-22T10:00:00Z", "Asia/Kolkata", 3n, "MDY"));
+            const want = ["*/15 9-17 * * MON-FRI", "0 18 * * MON-FRI"];
+            if (JSON.stringify(result.crons) !== JSON.stringify(want)) {
+              console.error("unexpected parse result", JSON.stringify(result));
+              process.exit(1);
+            }
+            console.log(`what-time ${version()} ok: ${result.crons.join(" | ")}`);
+          '
       - name: Assemble site
         run: |
           mkdir -p _site

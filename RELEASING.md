@@ -36,7 +36,7 @@ If the publish step fails:
 2. Regenerate everything from the new version:
 
    ```sh
-   rust/site/build.sh                                  # wasm + single-file playground (badge version)
+   rust/site/build.sh                                  # wasm + single-file playground (badge version; Pages rebuilds its own copy from source)
    pnpm --filter @magicbeansai/what-time build         # wrapper dist + VERSION export
    ```
 
